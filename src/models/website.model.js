@@ -37,7 +37,6 @@ export default dvaModelExtend(commonModel, {
   effects: {
     * websitesQuery({ payload }, { put, call, select }) {
       let { token } = yield select(state => state.authModel);
-      token = yield call(getStoredToken, { token });
 
       const { data } = yield call(getWebsites, { token });
       const { websites, error } = data;
@@ -64,9 +63,7 @@ export default dvaModelExtend(commonModel, {
 
       yield put({
         type: 'updateState',
-        payload: {
-          websites
-        }
+        payload: { websites }
       });
     },
 

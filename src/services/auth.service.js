@@ -20,6 +20,16 @@ export const getStoredToken = ({ token }) => {
 };
 
 /**
+ * @export
+ * @param {string} token
+ * @return {string}
+ */
+export const getXHRToken = ({ token }) => {
+  token = getStoredToken({ token });
+  return `Basic ${token}`;
+};
+
+/**
  * @function
  * @export
  * @param {string} email

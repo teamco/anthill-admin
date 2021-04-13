@@ -72,15 +72,15 @@ export default dvaModelExtend(commonModel, {
     },
 
     * defineAbilities({ payload }, { put, call, select }) {
-      let { token } = yield select(state => state.authModel);
-      token = yield call(getStoredToken, { token });
+      let { token, ability } = yield select(state => state.authModel);
 
-      if (token) {
-        const { data } = yield call(getCurrentUser, { token });
-        const { user, error } = data;
+      const res = yield call(getCurrentUser, { token });
+
+      if (res?.data) {
+        const { user, error } = res?.data;
 
         if (user) {
-          const ability = yield call(defineAbilityFor, { user });
+          ability = yield call(defineAbilityFor, { user });
           return yield put({
             type: 'updateState',
             payload: { ability, user }
@@ -93,7 +93,14 @@ export default dvaModelExtend(commonModel, {
         }
 
       } else {
-        yield put({ type: 'signOut' });
+        ability = yield call(defineAbilityFor, { user: null });
+        yield put({
+          type: 'updateState',
+          payload: {
+            ability,
+            user: null
+          }
+        });
       }
     }
   },

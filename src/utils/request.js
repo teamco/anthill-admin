@@ -111,7 +111,6 @@ function xhr(opts, errorMsg, fallbackUrl) {
   return axios(opts).catch(() => {
     errorMsg && errorMsg();
     setTimeout(() => {
-      debugger
       // fallbackUrl && (window.location.href = fallbackUrl);
     }, 2000);
   });

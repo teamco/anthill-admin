@@ -2,6 +2,7 @@ import { API } from '@/services/config';
 import request from '@/utils/request';
 import i18n from '@/utils/i18n';
 import { errorDeleteMsg, errorGetMsg, errorSaveMsg } from '@/utils/message';
+import { getXHRToken } from '@/services/auth.service';
 
 /**
  * @function
@@ -12,7 +13,7 @@ import { errorDeleteMsg, errorGetMsg, errorSaveMsg } from '@/utils/message';
 export function getWebsites({ token }) {
   const opts = request.config({
     url: API.websites.getAllWebsites,
-    headers: { 'Authorization': token }
+    headers: { 'Authorization': getXHRToken({ token })}
   });
   return request.xhr(
     opts,
