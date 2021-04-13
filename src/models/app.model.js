@@ -17,21 +17,21 @@ export default dvaModelExtend(commonModel, {
       pageBreadcrumbs: false,
       pageHeader: false,
       mainFooter: false,
-      mainMenu: false,
+      mainMenu: false
     },
     activeTab: true,
     collapsedMenu: true,
     menus: [],
     activeForm: {
-      form: null,
+      form: null
     },
     activeModel: {
       isEdit: false,
-      title: '',
-    },
+      title: ''
+    }
   },
   effects: {
-    *query({ payload }, { put, select }) {
+    * appQuery({ payload }, { put, select }) {
       const { mode } = yield select((state) => state.appModel);
 
       if (mode) {
@@ -41,19 +41,19 @@ export default dvaModelExtend(commonModel, {
       yield put({
         type: 'updateState',
         payload: {
-          menus,
-        },
+          menus
+        }
       });
 
       yield put({
         type: 'adminLayout',
         payload: {
-          visible: true,
-        },
+          visible: true
+        }
       });
     },
 
-    *adminLayout({ payload }, { put }) {
+    * adminLayout({ payload }, { put }) {
       yield put({
         type: 'updateState',
         payload: {
@@ -62,58 +62,59 @@ export default dvaModelExtend(commonModel, {
             pageBreadcrumbs: payload.visible,
             pageHeader: payload.visible,
             mainFooter: payload.visible,
-            mainMenu: payload.visible,
-          },
-        },
+            mainMenu: payload.visible
+          }
+        }
       });
     },
 
-    *storeForm({ payload }, { put }) {
+    * storeForm({ payload }, { put }) {
       yield put({
         type: 'updateState',
         payload: {
-          activeForm: payload,
-        },
+          activeForm: payload
+        }
       });
     },
 
-    *activeModel({ payload }, { put }) {
+    * activeModel({ payload }, { put }) {
       yield put({
         type: 'updateState',
         payload: {
-          activeModel: { ...payload },
-        },
+          activeModel: { ...payload }
+        }
       });
     },
 
-    *activeButtons({ payload }, { put }) {
+    * activeButtons({ payload }, { put }) {
       yield put({
         type: 'updateState',
         payload: {
-          activeButtons: { ...payload },
-        },
+          activeButtons: { ...payload }
+        }
       });
     },
 
-    *toggleMenu({ payload }, { put }) {
+    * toggleMenu({ payload }, { put }) {
       yield put({
         type: 'updateState',
         payload: {
-          collapsedMenu: payload.collapse,
-        },
+          collapsedMenu: payload.collapse
+        }
       });
     },
 
-    *checkActiveTab({ payload }, { put }) {
+    * checkActiveTab({ payload }, { put }) {
       yield put({
         type: 'updateState',
         payload: {
-          activeTab: payload,
-        },
+          activeTab: payload
+        }
       });
     },
 
-    *notification(_, { put }) {},
+    * notification(_, { put }) {
+    }
   },
-  reducers: {},
+  reducers: {}
 });

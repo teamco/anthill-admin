@@ -17,8 +17,9 @@ const { Content } = Layout;
 
 class AppLayout extends Component {
   componentDidMount() {
-    const { onActiveTab } = this.props;
+    const { onActiveTab, onQuery } = this.props;
     // handleActiveTab(onActiveTab);
+    onQuery();
   }
 
   render() {
@@ -30,7 +31,7 @@ class AppLayout extends Component {
       loading,
       onToggleMenu,
       onNotification,
-      onRoute,
+      onRoute
     } = this.props;
 
     const {
@@ -45,8 +46,8 @@ class AppLayout extends Component {
         mainHeader,
         mainFooter,
         pageHeader,
-        pageBreadcrumbs,
-      },
+        pageBreadcrumbs
+      }
     } = appModel;
 
     const { user } = authModel;
@@ -54,24 +55,19 @@ class AppLayout extends Component {
     return (
       <div>
         {user ? (
-          <Suspense
-            fallback={
-              <Loader fullScreen spinning={loading.effects['appModel/query']} />
-            }
-          >
+          <Suspense fallback={
+            <Loader fullScreen
+                    spinning={loading.effects['appModel/query']} />
+          }>
             {/* Have to refresh for production environment */}
-            <Layout
-              style={{ minHeight: '100vh' }}
-              key={language ? language : 'en-US'}
-            >
+            <Layout style={{ minHeight: '100vh' }}
+                    key={language ? language : 'en-US'}>
               {mainMenu && (
-                <Main.Menu
-                  data={menus}
-                  onRoute={onRoute}
-                  model={activeModel}
-                  collapsed={collapsedMenu}
-                  onCollapse={onToggleMenu}
-                />
+                <Main.Menu data={menus}
+                           onRoute={onRoute}
+                           model={activeModel}
+                           collapsed={collapsedMenu}
+                           onCollapse={onToggleMenu} />
               )}
               <Layout className={'site-layout'}>
                 {mainHeader && <Main.Header />}
@@ -79,25 +75,21 @@ class AppLayout extends Component {
                   <Loader fullScreen spinning={spinningLocal(loading)} />
                   <Form.Provider>
                     {pageHeader && (
-                      <Main.PageHeader
-                        metadata={{
-                          model: activeModel,
-                          buttons: activeButtons,
-                          form: activeForm.form,
-                        }}
-                      />
+                      <Main.PageHeader metadata={{
+                        model: activeModel,
+                        buttons: activeButtons,
+                        form: activeForm.form
+                      }} />
                     )}
                     {pageBreadcrumbs && <Main.Breadcrumbs />}
-                    <div className="site-layout-content">{children}</div>
+                    <div className='site-layout-content'>{children}</div>
                   </Form.Provider>
                 </Content>
                 {mainFooter && (
-                  <Main.Footer
-                    author={t('author', {
-                      name: 'Team©',
-                      year: 2020,
-                    })}
-                  />
+                  <Main.Footer author={t('author', {
+                    name: 'Team©',
+                    year: 2020
+                  })} />
                 )}
               </Layout>
             </Layout>
@@ -117,7 +109,7 @@ export default withRouter(
       return {
         appModel,
         authModel,
-        loading,
+        loading
       };
     },
     (dispatch) => ({
@@ -128,18 +120,21 @@ export default withRouter(
       onToggleMenu(collapse) {
         dispatch({
           type: `appModel/toggleMenu`,
-          payload: { collapse },
+          payload: { collapse }
         });
       },
       onActiveTab(payload) {
         dispatch({
           type: 'appModel/checkActiveTab',
-          payload,
+          payload
         });
+      },
+      onQuery() {
+        dispatch({ type: 'appModel/appQuery' });
       },
       onNotification() {
         dispatch({ type: 'appModel/notification' });
-      },
-    }),
-  )(withTranslation()(memo(AppLayout))),
+      }
+    })
+  )(withTranslation()(memo(AppLayout)))
 );

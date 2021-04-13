@@ -58,6 +58,8 @@ export default dvaModelExtend(commonModel, {
     },
 
     * signOut({ payload }, { put }) {
+      deleteStore(apiConfig.ANTHILL_KEY);
+
       yield put({
         type: 'updateState',
         payload: {
@@ -85,7 +87,6 @@ export default dvaModelExtend(commonModel, {
         }
 
         if (error) {
-          deleteStore(apiConfig.ANTHILL_KEY);
           yield put({ type: 'updateState', payload: { error } });
           yield put({ type: 'signOut' });
         }
