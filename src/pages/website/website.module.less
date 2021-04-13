@@ -1,0 +1,40 @@
+.websites {
+}
+
+.websiteWidgetCard {
+  width: 100px;
+  margin-bottom: 20px !important;
+  margin-right: 20px !important;
+  float: left;
+
+  img {
+    height: 100px;
+    width: 98px;
+    margin-left: 1px;
+  }
+
+  :global {
+    .ant-card-body {
+      display: none;
+    }
+  }
+}
+
+.websiteWidgetCardEmpty {
+  span[role='img'] {
+    svg {
+      width: 80px;
+      height: 79px;
+      opacity: 0.2;
+      margin: 35px 0;
+    }
+  }
+}
+
+.websiteMenu {
+  :global {
+    .ant-dropdown-menu-submenu-arrow {
+      margin-top: 4px;
+    }
+  }
+}

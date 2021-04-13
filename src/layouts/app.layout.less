@@ -1,0 +1,99 @@
+* {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+}
+
+.site-layout-background {
+  background-color: #fff;
+  box-shadow: 1px 1px 4px -2px lightslategray;
+}
+
+.ant-modal-confirm-body > .anticon {
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.site-layout {
+  .site-actions {
+    button {
+      padding: 0 10px;
+    }
+  }
+
+  .site-breadcrumbs {
+    padding: 10px 20px;
+    background: cornsilk;
+    box-shadow: 1px 1px 4px -2px lightslategray;
+    border-top: 1px solid #ededed;
+  }
+
+  .site-layout-content {
+    position: relative;
+    padding: 20px;
+    min-height: 360px;
+  }
+}
+
+.ant-modal-confirm-content {
+  margin-left: 30px !important;
+}
+
+.site-card,
+.widget-card {
+  width: 150px;
+  margin-bottom: 20px !important;
+  margin-right: 20px !important;
+  float: left;
+
+  img {
+    height: 150px;
+    width: 148px;
+    margin-left: 1px;
+  }
+
+  .ant-card-body {
+    padding: 10px;
+
+    .site-card-title {
+      font-size: 12px;
+
+      .ant-card-meta-description,
+      .ant-card-meta-title {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        margin-bottom: 5px;
+      }
+    }
+  }
+}
+
+.site-card-empty {
+  span[role='img'] {
+    svg {
+      width: 100px;
+      height: 100px;
+      opacity: 0.2;
+      margin: 20px 0;
+    }
+  }
+
+  .ant-card-body {
+    .site-card-title {
+      .ant-card-meta-description,
+      .ant-card-meta-title {
+        text-overflow: unset;
+        white-space: normal;
+        overflow: hidden;
+      }
+    }
+  }
+}
+
+.page404,
+.page403,
+.page500 {
+  width: 100%;
+}
