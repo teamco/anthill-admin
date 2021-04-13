@@ -22,6 +22,7 @@ import {
   updateWebsite
 } from '@/services/website.service';
 import { getWidgets } from '@/services/widget.service';
+import { getStoredToken } from '@/services/auth.service';
 
 /**
  * @export
@@ -34,11 +35,14 @@ export default dvaModelExtend(commonModel, {
     assignedWidgets: []
   },
   effects: {
-    * websitesQuery({ payload }, { put, call, take }) {
-      const websites = yield call(getWebsites);
-      const { data = [] } = websites || {};
+    * websitesQuery({ payload }, { put, call, select }) {
+      let { token } = yield select(state => state.authModel);
+      token = yield call(getStoredToken, { token });
 
-      if (payload.global) {
+      const { data } = yield call(getWebsites, { token });
+      const { websites, error } = data;
+
+      if (payload?.global) {
         yield put({
           type: 'appModel/storeForm',
           payload: {
@@ -52,18 +56,16 @@ export default dvaModelExtend(commonModel, {
           payload: {
             isEdit: false,
             model: 'websiteModel',
-            count: data.length,
+            count: websites.length,
             title: i18n.t('model:list', { instance: '$t(menu:websites)' })
           }
         });
-
-        yield take('appModel/activeModel/@@end');
       }
 
       yield put({
         type: 'updateState',
         payload: {
-          websites: data
+          websites
         }
       });
     },
@@ -72,7 +74,7 @@ export default dvaModelExtend(commonModel, {
       let { websites = [] } = yield select((state) => state.websiteModel);
       if (!websites.length) {
         yield put({
-          type: 'query',
+          type: 'websitesQuery',
           payload: { global: false }
         });
       }
@@ -110,7 +112,7 @@ export default dvaModelExtend(commonModel, {
       let { websites = [] } = yield select((state) => state.websiteModel);
       if (!websites.length) {
         yield put({
-          type: 'query',
+          type: 'websitesQuery',
           payload: { global: false }
         });
       }

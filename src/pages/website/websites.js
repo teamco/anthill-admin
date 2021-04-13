@@ -12,7 +12,7 @@ import {
   ProfileOutlined,
   SettingOutlined,
   StopOutlined,
-  UserSwitchOutlined,
+  UserSwitchOutlined
 } from '@ant-design/icons';
 
 import { showConfirm } from '@/utils/modals';
@@ -35,13 +35,14 @@ const websites = (props) => {
     t,
     authModel,
     websiteModel,
+    onQuery,
     onEdit,
     onAssignWidgets,
     onDelete,
     onButtonsMetadata,
     onNew,
     onMode,
-    loading,
+    loading
   } = props;
 
   const { websites } = websiteModel;
@@ -50,10 +51,12 @@ const websites = (props) => {
     onButtonsMetadata({
       newBtn: {
         onClick: onNew,
-        loading: loading.effects['websiteModel/handleNew'],
-      },
+        loading: loading.effects['websiteModel/handleNew']
+      }
     });
-  }, [websiteModel]);
+
+    onQuery();
+  }, []);
 
   /**
    * @constant
@@ -77,35 +80,31 @@ const websites = (props) => {
    */
   const menu = (siteKey) => {
     return (
-      <Menu
-        className={styles.websiteMenu}
-        onClick={(key) =>
-          onMenuClick({
-            key,
-            siteKey,
-          })
-        }
-      >
-        <SubMenu
-          title={
-            <Button icon={<ProfileOutlined />} type="link">
-              {t('website:mode')}
-            </Button>
-          }
-        >
+      <Menu className={styles.websiteMenu}
+            onClick={(key) =>
+              onMenuClick({
+                key,
+                siteKey
+              })
+            }>
+        <SubMenu title={
+          <Button icon={<ProfileOutlined />} type='link'>
+            {t('website:mode')}
+          </Button>
+        }>
           <Menu.Item key={'development'}>
-            <Button icon={<AppstoreAddOutlined />} type="link">
+            <Button icon={<AppstoreAddOutlined />} type='link'>
               {t('mode:development')}
             </Button>
           </Menu.Item>
         </SubMenu>
         <Menu.Item key={'assignWidgets'}>
-          <Button icon={<ApiOutlined />} type="link">
+          <Button icon={<ApiOutlined />} type='link'>
             {t('website:assignWidgets')}
           </Button>
         </Menu.Item>
         <Menu.Item key={'delete'}>
-          <Button danger icon={<DeleteOutlined />} type="link">
+          <Button danger icon={<DeleteOutlined />} type='link'>
             {t('actions:delete')}
           </Button>
         </Menu.Item>
@@ -125,54 +124,46 @@ const websites = (props) => {
   // const disabled = !ability.can('update', component);
 
   return (
-    <Page
-      className={styles.websites}
-      component={component}
-      spinEffects={['authModel/defineAbilities']}
-    >
-      <PageHeader ghost={false} subTitle={subTitle} />
-      {websites.length ? (
-        websites.map((site, idx) => (
-          <Card
-            key={idx}
-            hoverable
-            className={'site-card'}
-            actions={[
-              <SettingOutlined key="setting" />,
-              <EditOutlined onClick={() => onEdit(site.key)} key="edit" />,
-              <Dropdown
-                overlay={menu(site.key)}
-                placement={'topLeft'}
-                trigger={['click']}
-              >
-                <EllipsisOutlined key="ellipsis" />
-              </Dropdown>,
-            ]}
-            cover={<img alt={site.name} src={site.picture.url} />}
-          >
-            <Meta
-              className={'site-card-title'}
-              title={site.name}
-              description={site.description}
-            />
+    <Page className={styles.websites}
+          component={component}
+          spinEffects={['authModel/defineAbilities']}>
+      <PageHeader ghost={false}
+                  subTitle={subTitle} />
+      <div className={styles.container}>
+        {websites.length ? (
+          websites.map((site, idx) => (
+            <Card
+              key={idx}
+              hoverable
+              className={'site-card'}
+              actions={[
+                <SettingOutlined key='setting' />,
+                <EditOutlined onClick={() => onEdit(site.key)} key='edit' />,
+                <Dropdown overlay={menu(site.key)}
+                          placement={'topLeft'}
+                          trigger={['click']}>
+                  <EllipsisOutlined key='ellipsis' />
+                </Dropdown>
+              ]}
+              cover={<img alt={site.name} src={site.picture.url} />}>
+              <Meta className={'site-card-title'}
+                    title={site.name}
+                    description={site.description} />
+            </Card>
+          ))
+        ) : (
+          <Card key={0}
+                hoverable
+                className={'site-card site-card-empty'}
+                cover={<StopOutlined />}>
+            <Meta className={'site-card-title'}
+                  title={t('empty:title')}
+                  description={t('empty:description', {
+                    instance: '$t(instance:website)'
+                  })} />
           </Card>
-        ))
-      ) : (
-        <Card
-          key={0}
-          hoverable
-          className={'site-card site-card-empty'}
-          cover={<StopOutlined />}
-        >
-          <Meta
-            className={'site-card-title'}
-            title={t('empty:title')}
-            description={t('empty:description', {
-              instance: '$t(instance:website)',
-            })}
-          />
-        </Card>
-      )}
+        )}
+      </div>
     </Page>
   );
 };
@@ -182,7 +173,7 @@ export default connect(
     return {
       websiteModel,
       authModel,
-      loading,
+      loading
     };
   },
   (dispatch) => ({
@@ -190,20 +181,23 @@ export default connect(
     onButtonsMetadata(payload) {
       dispatch({
         type: 'appModel/activeButtons',
-        payload,
+        payload
       });
     },
     onEdit(key) {
       dispatch({
         type: 'websiteModel/prepareToEdit',
-        payload: { key },
+        payload: { key }
       });
     },
     onDelete(entityKey) {
       dispatch({
         type: 'websiteModel/handleDelete',
-        payload: { entityKey },
+        payload: { entityKey }
       });
+    },
+    onQuery(entityKey) {
+      dispatch({ type: 'websiteModel/websitesQuery' });
     },
     onNew() {
       history.push(`/pages/websites/new`);
@@ -213,6 +207,6 @@ export default connect(
     },
     onAssignWidgets(entityKey) {
       history.push(`/pages/websites/${entityKey}/widgets`);
-    },
-  }),
+    }
+  })
 )(withTranslation()(websites));

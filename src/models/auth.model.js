@@ -5,7 +5,7 @@ import dvaModelExtend from 'dva-model-extend';
 
 import { commonModel } from '@/models/common.model';
 import { defineAbilityFor } from '@/utils/auth/ability';
-import { getToken } from '@/services/auth.service';
+import { getStoredToken, getToken } from '@/services/auth.service';
 import { addStore, deleteStore, getStore } from '@/utils/storage';
 import { API_CONFIG } from '@/services/config';
 import { getCurrentUser } from '@/services/user.service';
@@ -71,8 +71,9 @@ export default dvaModelExtend(commonModel, {
       });
     },
 
-    * defineAbilities({ payload }, { put, call }) {
-      const token = getStore(apiConfig.ANTHILL_KEY);
+    * defineAbilities({ payload }, { put, call, select }) {
+      let { token } = yield select(state => state.authModel);
+      token = yield call(getStoredToken, { token });
 
       if (token) {
         const { data } = yield call(getCurrentUser, { token });
@@ -90,6 +91,9 @@ export default dvaModelExtend(commonModel, {
           yield put({ type: 'updateState', payload: { error } });
           yield put({ type: 'signOut' });
         }
+
+      } else {
+        yield put({ type: 'signOut' });
       }
     }
   },
