@@ -24,7 +24,7 @@ function Page({
   const { ability } = authModel;
 
   useEffect(() => {
-    onDefineAbilities(null);
+    onDefineAbilities();
   }, []);
 
   const spinning = Object.keys(loading.effects).filter(
@@ -69,11 +69,8 @@ export default connect(
   },
   (dispatch) => ({
     dispatch,
-    onDefineAbilities(user) {
-      dispatch({
-        type: 'authModel/defineAbilities',
-        payload: { user }
-      });
+    onDefineAbilities() {
+      dispatch({ type: 'authModel/defineAbilities' });
     }
   })
 )(withTranslation()(Page));

@@ -1,9 +1,12 @@
+import { API_CONFIG } from '@/services/config';
+
 const axios = require('axios');
 
 /**
- * @type {{SERVER_URL, SERVER_PORT}}
+ * @constant
+ * @type {{SERVER_PORT: number, API: string, SERVER_URL: string, ANTHILL_KEY: string}}
  */
-const { SERVER_URL = 'http://localhost', SERVER_PORT = 5000 } = process.env;
+const apiConfig = API_CONFIG();
 
 /**
  * @function
@@ -31,6 +34,10 @@ const DEFAULT_HEADERS = {
   accept: 'application/json',
 };
 
+/**
+ * @constant
+ * @return {{'Access-Control-Allow-Origin': string, 'Content-Type': string, accept: string}}
+ */
 const mergeHeaders = () => {
   // DEFAULT_HEADERS['X-CSRF-Token'] = _csrfToken();
   return DEFAULT_HEADERS;
@@ -52,7 +59,7 @@ function adaptUrlToParams(url, key) {
  * @return {string}
  */
 function adoptUrlToServer(url) {
-  return `${SERVER_URL}:${SERVER_PORT}/${url}`;
+  return `${apiConfig.SERVER_URL}:${apiConfig.SERVER_PORT}/${apiConfig.API}/${url}`;
 }
 
 /**
@@ -81,6 +88,20 @@ function config({ url, method = 'get', headers = {}, ...args }) {
 
 /**
  * @function
+ * @param file
+ * @return {Promise<unknown>}
+ */
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+/**
+ * @function
  * @param opts
  * @param [errorMsg]
  * @param [fallbackUrl]
@@ -90,6 +111,7 @@ function xhr(opts, errorMsg, fallbackUrl) {
   return axios(opts).catch(() => {
     errorMsg && errorMsg();
     setTimeout(() => {
+      debugger
       // fallbackUrl && (window.location.href = fallbackUrl);
     }, 2000);
   });
@@ -107,6 +129,7 @@ function isSuccess(status) {
 export default {
   xhr,
   config,
+  toBase64,
   isSuccess,
   adoptUrlToServer,
 };

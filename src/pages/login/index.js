@@ -131,7 +131,7 @@ export default connect(
       dispatch({ type: 'authModel/query', payload: { user } });
     },
     onSignIn(email, password) {
-      dispatch({ type: 'authModel/onSignIn', payload: { email, password } });
+      dispatch({ type: 'authModel/signIn', payload: { email, password } });
     }
   })
 )(withTranslation()(login));

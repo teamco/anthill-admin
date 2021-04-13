@@ -10,14 +10,19 @@ import i18n from '@/utils/i18n';
  * @param {string} password
  * @return {*}
  */
-export function getToken({email, password}) {
+export function getToken({ email, password }) {
   const opts = request.config({
     url: API.auth.getToken,
-    email,
-    password
+    method: 'post'
   });
-  return request.xhr(
-    opts,
+  return request.xhr({
+      ...opts, ...{
+        data: {
+          email,
+          password
+        }
+      }
+    },
     () => errorGetMsg(i18n.t('menu:websites')),
     '/home'
   );
