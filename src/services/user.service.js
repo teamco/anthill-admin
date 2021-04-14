@@ -15,7 +15,7 @@ export const isAdmin = (user) => {
  */
 export function getCurrentUser({ token }) {
   const opts = request.config({
-    url: API.auth.user,
+    url: API.auth.currentUser,
     headers: { 'Authorization': getXHRToken({ token }) }
   });
   return request.xhr(opts,

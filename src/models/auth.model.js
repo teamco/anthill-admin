@@ -33,27 +33,30 @@ export default dvaModelExtend(commonModel, {
 
     * signIn({ payload }, { put, call }) {
       const { email, password } = payload;
-      const { data } = yield call(getToken, { email, password });
-      const { token, error } = data;
+      const res = yield call(getToken, { email, password });
 
-      if (token) {
-        addStore(apiConfig.ANTHILL_KEY, token);
+      if (res?.data) {
+        const { token, error } = res.data;
 
-        yield put({
-          type: 'updateState',
-          payload: {
-            token,
-            error: null,
-            isSignedOut: false
-          }
-        });
+        if (token) {
+          addStore(apiConfig.ANTHILL_KEY, token);
 
-        yield put({ type: 'defineAbilities' });
-      }
+          yield put({
+            type: 'updateState',
+            payload: {
+              token,
+              error: null,
+              isSignedOut: false
+            }
+          });
 
-      if (error) {
-        yield put({ type: 'updateState', payload: { error } });
-        yield put({ type: 'signOut' });
+          yield put({ type: 'defineAbilities' });
+        }
+
+        if (error) {
+          yield put({ type: 'updateState', payload: { error } });
+          yield put({ type: 'signOut' });
+        }
       }
     },
 

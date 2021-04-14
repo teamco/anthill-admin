@@ -27,7 +27,7 @@ export const API_CONFIG = () => {
 export const API = {
   auth: {
     getToken: 'auth',
-    user: 'user'
+    currentUser: 'user'
   },
   websites: {
     getAllWebsites: 'websites',

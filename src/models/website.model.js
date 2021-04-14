@@ -55,7 +55,7 @@ export default dvaModelExtend(commonModel, {
           payload: {
             isEdit: false,
             model: 'websiteModel',
-            count: websites.length,
+            count: websites?.length,
             title: i18n.t('model:list', { instance: '$t(menu:websites)' })
           }
         });

@@ -59,7 +59,7 @@ function adaptUrlToParams(url, key) {
  * @return {string}
  */
 function adoptUrlToServer(url) {
-  return `${apiConfig.SERVER_URL}:${apiConfig.SERVER_PORT}/${apiConfig.API}/${url}`;
+  return `/${apiConfig.API}/${url}`;
 }
 
 /**
