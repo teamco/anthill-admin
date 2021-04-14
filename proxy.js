@@ -34,7 +34,7 @@ const proxyOpts = api => ({
     //   proxyReq.setHeader('origin', api);
     // }
 
-    console.log(api, proxyReq, req, res);
+    // console.log(api, proxyReq, req, res);
   }
 });
 
@@ -49,6 +49,6 @@ Object.keys(routes).forEach((server) => {
   proxy[`/${server}`] = proxyOpts(routes[server]);
 });
 
-console.log(proxy);
+// console.log(proxy);
 
 export default proxy;
