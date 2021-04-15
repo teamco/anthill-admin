@@ -4,6 +4,7 @@ import { Button, message, Upload } from 'antd';
 import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';
 import classnames from 'classnames';
+import { cachedUrl } from '@/utils/file';
 
 import './upload.less';
 
@@ -121,7 +122,7 @@ class UploadFile extends React.Component {
         {previewUrl && (
           <div className={'site-upload-preview'}>
             <div className={'file-info'}>
-              <img src={previewUrl}
+              <img src={cachedUrl(previewUrl)}
                    alt={previewUrl} />
             </div>
           </div>

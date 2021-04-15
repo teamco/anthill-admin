@@ -8,15 +8,12 @@ import { Loader } from 'resource-loader';
  */
 export const srcToBlob = async ({ src, cb }) => {
   const loader = new Loader();
-  loader
-    .add(src)
-    .use((resource, next) => {
-      next();
-    })
-    .load((loader, resources) => {
-      const blob = new Blob([resources[src].data], { type: 'image/png' });
-      cb(URL.createObjectURL(blob));
-    });
+  loader.add(src).use((resource, next) => {
+    next();
+  }).load((loader, resources) => {
+    const blob = new Blob([resources[src].data], { type: 'image/png' });
+    cb(URL.createObjectURL(blob));
+  });
 };
 
 /**
@@ -39,7 +36,7 @@ export async function getFileFromUrl(url) {
 export function getImageFromUrl(url, callback) {
   const img = new Image();
   img.setAttribute('crossOrigin', 'Anonymous');
-  img.onload = function (a) {
+  img.onload = function(a) {
     const canvas = document.createElement('canvas');
     canvas.width = this.width;
     canvas.height = this.height;
@@ -126,4 +123,13 @@ export const download = (url, fileName) => {
     link.download = fileName;
     link.click();
   });
+};
+
+/**
+ * @export
+ * @param url
+ * @return {string}
+ */
+export const cachedUrl = url => {
+  return `${url}?${+(new Date)}`;
 };

@@ -15,11 +15,12 @@ import {
   UserSwitchOutlined
 } from '@ant-design/icons';
 
-import { showConfirm } from '@/utils/modals';
 import i18n from '@/utils/i18n';
+import Page from '@/components/Page';
+import { showConfirm } from '@/utils/modals';
+import { cachedUrl } from '@/utils/file';
 
 import styles from '@/pages/websites/website.module.less';
-import Page from '@/components/Page';
 
 const { Meta } = Card;
 const { SubMenu } = Menu;
@@ -145,7 +146,7 @@ const websites = (props) => {
                   ]}
                   cover={
                     site.picture.url ?
-                      (<img alt={site.name} src={site.picture.url} />) :
+                      (<img alt={site.name} src={cachedUrl(site.picture.url)} />) :
                       (<StopOutlined />)
                   }>
               <Meta className={'site-card-title'}

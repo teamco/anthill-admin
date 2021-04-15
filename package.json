@@ -49,6 +49,7 @@
     "react-i18next": "^11.8.13",
     "react-resizable": "^1.11.1",
     "redux-logger": "^3.0.6",
+    "resource-loader": "^4.0.0-rc4",
     "short-uuid": "^4.1.0",
     "umi": "^3.4.8",
     "yorkie": "^2.0.0",
