@@ -18,7 +18,7 @@ import {
 import { showConfirm } from '@/utils/modals';
 import i18n from '@/utils/i18n';
 
-import styles from '@/pages/website/website.module.less';
+import styles from '@/pages/websites/website.module.less';
 import Page from '@/components/Page';
 
 const { Meta } = Card;
@@ -88,23 +88,22 @@ const websites = (props) => {
               })
             }>
         <SubMenu title={
-          <Button icon={<ProfileOutlined />} type='link'>
+          <Button icon={<ProfileOutlined />} type={'link'}>
             {t('website:mode')}
-          </Button>
-        }>
+          </Button>}>
           <Menu.Item key={'development'}>
-            <Button icon={<AppstoreAddOutlined />} type='link'>
+            <Button icon={<AppstoreAddOutlined />} type={'link'}>
               {t('mode:development')}
             </Button>
           </Menu.Item>
         </SubMenu>
         <Menu.Item key={'assignWidgets'}>
-          <Button icon={<ApiOutlined />} type='link'>
+          <Button icon={<ApiOutlined />} type={'link'}>
             {t('website:assignWidgets')}
           </Button>
         </Menu.Item>
         <Menu.Item key={'delete'}>
-          <Button danger icon={<DeleteOutlined />} type='link'>
+          <Button danger icon={<DeleteOutlined />} type={'link'}>
             {t('actions:delete')}
           </Button>
         </Menu.Item>
@@ -132,20 +131,19 @@ const websites = (props) => {
       <div className={styles.container}>
         {websites.length ? (
           websites.map((site, idx) => (
-            <Card
-              key={idx}
-              hoverable
-              className={'site-card'}
-              actions={[
-                <SettingOutlined key='setting' />,
-                <EditOutlined onClick={() => onEdit(site.key)} key='edit' />,
-                <Dropdown overlay={menu(site.key)}
-                          placement={'topLeft'}
-                          trigger={['click']}>
-                  <EllipsisOutlined key='ellipsis' />
-                </Dropdown>
-              ]}
-              cover={<img alt={site.name} src={site.picture.url} />}>
+            <Card key={idx}
+                  hoverable
+                  className={'site-card'}
+                  actions={[
+                    <SettingOutlined key={'setting'} />,
+                    <EditOutlined onClick={() => onEdit(site.key)} key={'edit'} />,
+                    <Dropdown overlay={menu(site.key)}
+                              placement={'topLeft'}
+                              trigger={['click']}>
+                      <EllipsisOutlined key={'ellipsis'} />
+                    </Dropdown>
+                  ]}
+                  cover={<img alt={site.name} src={site.picture.url} />}>
               <Meta className={'site-card-title'}
                     title={site.name}
                     description={site.description} />

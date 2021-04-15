@@ -4,7 +4,7 @@ import {withTranslation} from 'react-i18next';
 import {useDrop} from 'react-dnd';
 import classnames from 'classnames';
 
-import {itemTypes} from '@/pages/website/mode/development/itemTypes';
+import {itemTypes} from '@/pages/websites/mode/development/itemTypes';
 import styles from './mode.module.less';
 import {isDevelopment} from '@/services/common.service';
 import {fromForm} from '@/utils/state';

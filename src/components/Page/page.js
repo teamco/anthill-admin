@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
-import { Layout, Row, Spin } from 'antd';
+import { Layout, Spin } from 'antd';
 import classnames from 'classnames';
 import { withTranslation } from 'react-i18next';
 

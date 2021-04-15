@@ -13,7 +13,7 @@ const {TextArea} = Input;
 class MainGeneralPanel extends Component {
 
   render() {
-    const {t, isEdit, upload, timestamp, header, form} = this.props;
+    const {t, isEdit, upload, header, form} = this.props;
 
     return (
         <GenericPanel header={header}
@@ -50,14 +50,6 @@ class MainGeneralPanel extends Component {
                             onFileChange={upload.onBeforeUpload}/>
             ) : null}
           </div>
-          {isEdit && timestamp ? (
-              <div>
-                <div label={t('form:createdAt')}
-                     name={'createdAt'}>
-                  {localeDateTimeString(timestamp.created_at)}
-                </div>
-              </div>
-          ) : null}
         </GenericPanel>
     );
   }

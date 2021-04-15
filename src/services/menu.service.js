@@ -14,12 +14,12 @@ import {
 export const menus = [
   {
     key: 'menu:websites',
-    url: '/pages/websites',
+    url: '/websites',
     icon: <GlobalOutlined/>
   },
   {
     key: 'menu:widgets',
-    url: '/pages/widgets',
+    url: '/widgets',
     icon: <ShopOutlined/>
   },
   {
@@ -28,12 +28,12 @@ export const menus = [
     items: [
       {
         key: 'menu:userLogs',
-        url: '/pages/logs',
+        url: '/logs',
         icon: <TeamOutlined/>
       },
       {
         key: 'menu:errorLogs',
-        url: '/pages/errors',
+        url: '/errors',
         icon: <BugOutlined/>
       }
     ]

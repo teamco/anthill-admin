@@ -9,8 +9,8 @@ import {
 } from '@ant-design/icons';
 
 import request from '@/utils/request';
-import styles from '@/pages/website/mode/mode.module.less';
-import PagePropertiesModal from '@/pages/website/mode/page/page.properties.modal';
+import styles from '@/pages/websites/mode/mode.module.less';
+import PagePropertiesModal from '@/pages/websites/mode/page/page.properties.modal';
 
 const {Sider} = Layout;
 const {SubMenu} = Menu;

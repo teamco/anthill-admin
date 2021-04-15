@@ -5,7 +5,7 @@ import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import classnames from 'classnames';
 
-import styles from '@/pages/website/mode/mode.module.less';
+import styles from '@/pages/websites/mode/mode.module.less';
 
 import Widget from '@/components/Widget';
 import Page from './Page';

@@ -38,37 +38,41 @@ export default dvaModelExtend(commonModel, {
     * websitesQuery({ payload }, { put, call, select }) {
       let { token } = yield select(state => state.authModel);
 
-      const { data } = yield call(getWebsites, { token });
-      const { websites, error } = data;
+      const res = yield call(getWebsites, { token });
 
-      if (payload?.global) {
-        yield put({
-          type: 'appModel/storeForm',
-          payload: {
-            form: null,
-            model: 'websiteModel'
-          }
-        });
+      if (res?.data) {
+        const { websites, error } = res?.data;
+
+        if (payload?.global) {
+          yield put({
+            type: 'appModel/storeForm',
+            payload: {
+              form: null,
+              model: 'websiteModel'
+            }
+          });
+
+          yield put({
+            type: 'appModel/activeModel',
+            payload: {
+              isEdit: false,
+              model: 'websiteModel',
+              count: websites?.length,
+              title: i18n.t('model:list', { instance: '$t(menu:websites)' })
+            }
+          });
+        }
 
         yield put({
-          type: 'appModel/activeModel',
-          payload: {
-            isEdit: false,
-            model: 'websiteModel',
-            count: websites?.length,
-            title: i18n.t('model:list', { instance: '$t(menu:websites)' })
-          }
+          type: 'updateState',
+          payload: { websites }
         });
       }
-
-      yield put({
-        type: 'updateState',
-        payload: { websites }
-      });
     },
 
-    * websitesHandleNew({ payload }, { put, select, take }) {
+    * websitesHandleNew({ payload }, { put, select }) {
       let { websites = [] } = yield select((state) => state.websiteModel);
+
       if (!websites.length) {
         yield put({
           type: 'websitesQuery',
@@ -94,19 +98,70 @@ export default dvaModelExtend(commonModel, {
           title: i18n.t('model:create', { instance: '$t(instance:website)' })
         }
       });
-
-      yield take('appModel/activeModel/@@end');
     },
 
-    * prepareToEdit({ payload }, { put, call }) {
-      const website = yield call(getWebsite, { key: payload.key });
-      if ((website || {}).data) {
-        yield put(history.replace(`/pages/websites/${website.data.key}`));
+    * prepareToEdit({ payload }, { put, call, select }) {
+      let { token } = yield select(state => state.authModel);
+      const res = yield call(getWebsite, { key: payload.key, token });
+
+      if (res?.data) {
+        const { website, error } = res.data;
+        if (website) {
+          history.replace(`/websites/${website?.key}`);
+        }
       }
     },
 
-    * websitesHandleEdit({ payload }, { put, call, select, take }) {
+    * validateWebsite({ payload }, { call, put, select }) {
+      const { ability, token } = yield select(state => state.authModel);
+      const { websiteKey } = payload;
+
+      if (websiteKey === 'new') {
+        // Do nothing.
+      } else if (ability.can('read', 'websites')) {
+
+        const res = yield call(getWebsite, { key: websiteKey, token });
+
+        if (res?.data) {
+          const { website, error } = res.data;
+          if (website) {
+
+            yield put({
+              type: 'updateState',
+              payload: {
+                fileList: [],
+                tags: JSON.parse(website?.tags || '[]'),
+                previewUrl: website?.picture.url,
+                isEdit: websiteKey !== 'new'
+              }
+            });
+
+            return yield put({
+              type: 'toForm',
+              payload: {
+                model: 'websiteModel',
+                form: {
+                  ...website,
+                  ...{ entityKey: websiteKey }
+                }
+              }
+            });
+          }
+        }
+
+        yield put({
+          type: 'raiseCondition',
+          payload: {
+            message: i18n.t('error:notFound', { entity: 'Website' }),
+            key: 'website'
+          }
+        });
+      }
+    },
+
+    * websitesHandleEdit({ payload }, { put, select }) {
       let { websites = [] } = yield select((state) => state.websiteModel);
+
       if (!websites.length) {
         yield put({
           type: 'websitesQuery',
@@ -114,57 +169,68 @@ export default dvaModelExtend(commonModel, {
         });
       }
 
-      const website = yield call(getWebsite, { key: payload.key });
+      const { params } = payload;
+      const { website } = params;
 
-      const {
-        key,
-        name,
-        description,
-        picture = {},
-        tags,
-        created_at,
-        updated_at
-      } = website.data;
+      yield put({ type: 'cleanForm' });
 
       yield put({
-        type: 'updateState',
-        payload: {
-          fileList: [],
-          tags: JSON.parse(tags || '[]'),
-          isEdit: payload.isEdit,
-          previewUrl: picture.url,
-          timestamp: {
-            created_at,
-            updated_at
-          }
-        }
+        type: 'validateWebsite',
+        payload: { websiteKey: website }
       });
 
-      yield put({
-        type: 'toForm',
-        payload: {
-          model: 'websiteModel',
-          entityKey: key,
-          name,
-          description
-        }
-      });
 
-      yield put({
-        type: 'appModel/activeModel',
-        payload: {
-          model: 'websiteModel',
-          isEdit: payload.isEdit,
-          timestamp: {
-            created_at,
-            updated_at
-          },
-          instance: i18n.t('instance:website'),
-          title: i18n.t('model:edit', { instance: '$t(instance:website)' })
-        }
-      });
+      // const website = yield call(getWebsite, { key: payload.key });
 
-      yield take('appModel/activeModel/@@end');
+      // const {
+      //   key,
+      //   name,
+      //   description,
+      //   picture = {},
+      //   tags,
+      //   created_at,
+      //   updated_at
+      // } = website.data;
+
+      // yield put({
+      //   type: 'updateState',
+      //   payload: {
+      //     fileList: [],
+      //     tags: JSON.parse(tags || '[]'),
+      //     isEdit: payload.isEdit,
+      //     previewUrl: picture.url,
+      //     timestamp: {
+      //       created_at,
+      //       updated_at
+      //     }
+      //   }
+      // });
+      //
+      // yield put({
+      //   type: 'toForm',
+      //   payload: {
+      //     model: 'websiteModel',
+      //     entityKey: key,
+      //     name,
+      //     description
+      //   }
+      // });
+      //
+      // yield put({
+      //   type: 'appModel/activeModel',
+      //   payload: {
+      //     model: 'websiteModel',
+      //     isEdit: payload.isEdit,
+      //     timestamp: {
+      //       created_at,
+      //       updated_at
+      //     },
+      //     instance: i18n.t('instance:website'),
+      //     title: i18n.t('model:edit', { instance: '$t(instance:website)' })
+      //   }
+      // });
+      //
+      // yield take('appModel/activeModel/@@end');
     },
 
     * prepareToSave({ payload }, { put, select, call }) {
@@ -220,7 +286,7 @@ export default dvaModelExtend(commonModel, {
 
       if (request.isSuccess((destroy || {}).status)) {
         successDeleteMsg(i18n.t('instance:website'));
-        isEdit && (yield put(history.replace(`/pages/websites`)));
+        isEdit && (yield put(history.replace(`/websites`)));
       }
     },
 

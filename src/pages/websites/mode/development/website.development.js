@@ -4,11 +4,11 @@ import {withTranslation} from 'react-i18next';
 import classnames from 'classnames';
 import {Layout} from 'antd';
 
-import styles from '@/pages/website/mode/mode.module.less';
+import styles from '@/pages/websites/mode/mode.module.less';
 import '@/components/Form/form.less';
 
-import Workspace from '@/pages/website/mode/Workspace';
-import MenuDevelopment from '@/pages/website/mode/development/menu.development';
+import Workspace from '@/pages/websites/mode/Workspace';
+import MenuDevelopment from '@/pages/websites/mode/development/menu.development';
 
 import FormProperties from '@/components/Widget/properties/form.properties';
 

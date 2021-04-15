@@ -14,16 +14,16 @@ export const buttonsMetadata = ({ model, props }) => {
   onButtonsMetadata({
     saveBtn: {
       onClick: onSave,
-      loading: loading.effects[`${model}/prepareToSave`],
+      loading: loading.effects[`${model}/prepareToSave`]
     },
     closeBtn: {
       onClick: onClose,
-      loading: false,
+      loading: false
     },
     deleteBtn: {
       onClick: onDelete,
-      loading: loading.effects[`${model}/handleDelete`],
-    },
+      loading: loading.effects[`${model}/handleDelete`]
+    }
   });
 };
 
@@ -35,14 +35,12 @@ export const buttonsMetadata = ({ model, props }) => {
  * @return {JSX.Element}
  */
 export const saveBtn = (isEdit, onClick, loading) => (
-  <Button
-    size={'small'}
-    type={'primary'}
-    onClick={onClick}
-    htmlType={'submit'}
-    loading={loading}
-    key={'save'}
-  >
+  <Button size={'small'}
+          type={'primary'}
+          onClick={onClick}
+          htmlType={'submit'}
+          loading={loading}
+          key={'save'}>
     {isEdit ? i18n.t('actions:update') : i18n.t('actions:save')}
   </Button>
 );
@@ -54,13 +52,11 @@ export const saveBtn = (isEdit, onClick, loading) => (
  * @return {JSX.Element}
  */
 export const closeBtn = (onClick, loading) => (
-  <Button
-    size={'small'}
-    onClick={onClick}
-    htmlType={'submit'}
-    loading={loading}
-    key={'close'}
-  >
+  <Button size={'small'}
+          onClick={onClick}
+          htmlType={'submit'}
+          loading={loading}
+          key={'close'}>
     {i18n.t('actions:close')}
   </Button>
 );
@@ -73,21 +69,17 @@ export const closeBtn = (onClick, loading) => (
  * @return {JSX.Element}
  */
 export const deleteBtn = (onClick, loading, instance) => (
-  <Popconfirm
-    title={i18n.t('msg:deleteConfirm', { instance })}
-    key={'delete-confirm'}
-    placement={'bottomRight'}
-    onConfirm={onClick}
-    icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-  >
-    <Button
-      danger
-      size={'small'}
-      type={'primary'}
-      htmlType={'submit'}
-      loading={loading}
-      key={'delete'}
-    >
+  <Popconfirm title={i18n.t('msg:deleteConfirm', { instance })}
+              key={'delete-confirm'}
+              placement={'bottomRight'}
+              onConfirm={onClick}
+              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}>
+    <Button danger
+            size={'small'}
+            type={'primary'}
+            htmlType={'submit'}
+            loading={loading}
+            key={'delete'}>
       {i18n.t('actions:delete')}
     </Button>
   </Popconfirm>
@@ -100,14 +92,12 @@ export const deleteBtn = (onClick, loading, instance) => (
  * @return {JSX.Element}
  */
 export const newBtn = (onClick, loading) => (
-  <Button
-    size={'small'}
-    type={'primary'}
-    onClick={onClick}
-    htmlType={'submit'}
-    loading={loading}
-    key={'new'}
-  >
+  <Button size={'small'}
+          type={'primary'}
+          onClick={onClick}
+          htmlType={'submit'}
+          loading={loading}
+          key={'new'}>
     {i18n.t('actions:new')}
   </Button>
 );

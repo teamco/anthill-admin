@@ -8,7 +8,7 @@ import {SettingOutlined} from '@ant-design/icons';
 import {useDrag} from 'react-dnd';
 import classnames from 'classnames';
 
-import {itemTypes} from '@/pages/website/mode/development/itemTypes';
+import {itemTypes} from '@/pages/websites/mode/development/itemTypes';
 import widgets from '@/components/Widget/widget.list';
 import styles from '@/components/Widget/widget.module.less';
 import '@/components/Widget/resizable.less';

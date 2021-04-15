@@ -25,11 +25,13 @@ export function getWebsites({ token }) {
 /**
  * @export
  * @param key
+ * @param {string} token
  * @return {*}
  */
-export function getWebsite({ key }) {
+export function getWebsite({ key, token }) {
   const opts = request.config({
     url: API.websites.getWebsite,
+    headers: { 'Authorization': getXHRToken({ token })},
     key
   });
   return request.xhr(

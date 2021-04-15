@@ -87,7 +87,8 @@ class UploadFile extends React.Component {
     );
 
     const _upload = (
-        <Upload {...uploadProps} className={classnames(className, 'site-upload')}>
+        <Upload {...uploadProps}
+                className={classnames(className, 'site-upload')}>
           {fileList.length < limit && listType === 'picture-card' ? _card : _button}
         </Upload>
     );
