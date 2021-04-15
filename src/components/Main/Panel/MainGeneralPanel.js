@@ -3,7 +3,6 @@ import {withTranslation} from 'react-i18next';
 
 import {Input} from 'antd';
 
-import {localeDateTimeString} from '@/utils/state';
 import UploadFile from '@/components/Upload';
 import FormComponents from '@/components/Form';
 
@@ -44,6 +43,7 @@ class MainGeneralPanel extends Component {
             {upload ? (
                 <UploadFile label={t('form:upload')}
                             name={'upload'}
+                            disabled={upload.disabled}
                             fileList={upload.fileList}
                             previewUrl={upload.previewUrl}
                             onFileRemove={upload.onFileRemove}

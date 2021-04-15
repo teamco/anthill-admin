@@ -94,13 +94,16 @@ export async function saveWebsite({ entityForm, fileList = [], tags = [] }) {
 /**
  * @export
  * @param entityForm
+ * @param token
+ * @param removeFile
  * @param [fileList]
  * @param [tags]
  * @return {Promise<*>}
  */
-export async function updateWebsite({ entityForm, fileList = [], tags = [] }) {
+export async function updateWebsite({ entityForm, fileList = [], tags = [], removeFile, token }) {
   const opts = request.config({
     url: API.websites.updateWebsite,
+    headers: { 'Authorization': getXHRToken({ token })},
     key: entityForm.entityKey,
     method: 'put'
   });
@@ -114,7 +117,8 @@ export async function updateWebsite({ entityForm, fileList = [], tags = [] }) {
             name: entityForm.name,
             description: entityForm.description,
             tags: JSON.stringify(tags),
-            picture
+            picture,
+            remove_picture: removeFile
           }
         }
       }

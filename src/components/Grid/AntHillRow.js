@@ -1,32 +1,41 @@
-import React, {Component} from 'react';
-import {Col, Row} from 'antd';
+import React from 'react';
+import { Col, Row } from 'antd';
 
-import {antLayout} from '@/utils/ant.layout';
+import { calculateColProps, calculatePadding, layout } from '@/utils/layout';
 
-export default class AntHillRow extends Component {
-  render() {
-    const {
-      gutter = [16, 16],
-      children,
-      ...rest
-    } = this.props;
+const AntHillRow = (props) => {
+  const {
+    gutter = { xs: 8, sm: 16, md: 24, lg: 32 },
+    children,
+    ...rest
+  } = props;
 
-    let items = 1;
-    let _children;
+  let items = 1;
+  let _children;
 
-    if (Array.isArray(children)) {
-      items = children.length;
-      _children = [...children];
-    } else {
-      _children = [children];
-    }
-
-    return (
-        <Row gutter={gutter} {...rest}>
-          {_children.filter(item => item).map((child, key) => (
-              <Col span={antLayout[items]} key={key}>{child}</Col>
-          ))}
-        </Row>
-    );
+  if (Array.isArray(children)) {
+    items = children.length;
+    _children = [...children];
+  } else {
+    _children = [children];
   }
-}
+
+  // const [width] = useWindowSize(useState, useLayoutEffect);
+
+  return (
+    <Row gutter={layout.rowProps[items] || gutter} {...rest}>
+      {_children.filter(item => item).map((child, key) => {
+        return (
+          <Col span={child.props.span || layout.colsSpan[items]}
+               key={key}
+               {...calculateColProps(layout.colProps[items], child.props.span)}
+               style={calculatePadding(items)}>
+            {child}
+          </Col>
+        );
+      })}
+    </Row>
+  );
+};
+
+export default AntHillRow;

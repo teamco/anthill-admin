@@ -9,6 +9,7 @@ import i18n from '@/utils/i18n';
 import { fromForm } from '@/utils/object';
 import request from '@/utils/request';
 import { generateKey } from '@/services/common.service';
+import { getWidgets } from '@/services/widget.service';
 
 import { successDeleteMsg, successSaveMsg } from '@/utils/message';
 
@@ -21,11 +22,11 @@ import {
   saveWebsiteWidgets,
   updateWebsite
 } from '@/services/website.service';
-import { getWidgets } from '@/services/widget.service';
-import { getStoredToken } from '@/services/auth.service';
+
 
 /**
  * @export
+ * @default
  */
 export default dvaModelExtend(commonModel, {
   namespace: 'websiteModel',
@@ -35,6 +36,7 @@ export default dvaModelExtend(commonModel, {
     assignedWidgets: []
   },
   effects: {
+
     * websitesQuery({ payload }, { put, call, select }) {
       let { token } = yield select(state => state.authModel);
 
@@ -42,26 +44,6 @@ export default dvaModelExtend(commonModel, {
 
       if (res?.data) {
         const { websites, error } = res?.data;
-
-        if (payload?.global) {
-          yield put({
-            type: 'appModel/storeForm',
-            payload: {
-              form: null,
-              model: 'websiteModel'
-            }
-          });
-
-          yield put({
-            type: 'appModel/activeModel',
-            payload: {
-              isEdit: false,
-              model: 'websiteModel',
-              count: websites?.length,
-              title: i18n.t('model:list', { instance: '$t(menu:websites)' })
-            }
-          });
-        }
 
         yield put({
           type: 'updateState',
@@ -74,15 +56,13 @@ export default dvaModelExtend(commonModel, {
       let { websites = [] } = yield select((state) => state.websiteModel);
 
       if (!websites.length) {
-        yield put({
-          type: 'websitesQuery',
-          payload: { global: false }
-        });
+        yield put({ type: 'websitesQuery' });
       }
 
       yield put({
         type: 'updateState',
         payload: {
+          touched: false,
           entityForm: [],
           fileList: [],
           previewUrl: null,
@@ -129,6 +109,7 @@ export default dvaModelExtend(commonModel, {
             yield put({
               type: 'updateState',
               payload: {
+                touched: false,
                 fileList: [],
                 tags: JSON.parse(website?.tags || '[]'),
                 previewUrl: website?.picture.url,
@@ -163,10 +144,7 @@ export default dvaModelExtend(commonModel, {
       let { websites = [] } = yield select((state) => state.websiteModel);
 
       if (!websites.length) {
-        yield put({
-          type: 'websitesQuery',
-          payload: { global: false }
-        });
+        yield put({ type: 'websitesQuery' });
       }
 
       const { params } = payload;
@@ -178,59 +156,6 @@ export default dvaModelExtend(commonModel, {
         type: 'validateWebsite',
         payload: { websiteKey: website }
       });
-
-
-      // const website = yield call(getWebsite, { key: payload.key });
-
-      // const {
-      //   key,
-      //   name,
-      //   description,
-      //   picture = {},
-      //   tags,
-      //   created_at,
-      //   updated_at
-      // } = website.data;
-
-      // yield put({
-      //   type: 'updateState',
-      //   payload: {
-      //     fileList: [],
-      //     tags: JSON.parse(tags || '[]'),
-      //     isEdit: payload.isEdit,
-      //     previewUrl: picture.url,
-      //     timestamp: {
-      //       created_at,
-      //       updated_at
-      //     }
-      //   }
-      // });
-      //
-      // yield put({
-      //   type: 'toForm',
-      //   payload: {
-      //     model: 'websiteModel',
-      //     entityKey: key,
-      //     name,
-      //     description
-      //   }
-      // });
-      //
-      // yield put({
-      //   type: 'appModel/activeModel',
-      //   payload: {
-      //     model: 'websiteModel',
-      //     isEdit: payload.isEdit,
-      //     timestamp: {
-      //       created_at,
-      //       updated_at
-      //     },
-      //     instance: i18n.t('instance:website'),
-      //     title: i18n.t('model:edit', { instance: '$t(instance:website)' })
-      //   }
-      // });
-      //
-      // yield take('appModel/activeModel/@@end');
     },
 
     * prepareToSave({ payload }, { put, select, call }) {
@@ -252,25 +177,31 @@ export default dvaModelExtend(commonModel, {
     },
 
     * save({ payload }, { put, call, select }) {
-      const { fileList, isEdit, tags } = yield select(
-        (state) => state.websiteModel
-      );
+      const { fileList, isEdit, tags, removeFile } = yield select(state => state.websiteModel);
+      const { ability, token } = yield select(state => state.authModel);
 
-      const save = yield call(isEdit ? updateWebsite : saveWebsite, {
-        entityForm: payload,
-        fileList,
-        tags
-      });
-
-      if (request.isSuccess((save || {}).status)) {
-        successSaveMsg(isEdit, i18n.t('instance:website'));
-
-        yield put({
-          type: 'prepareToEdit',
-          payload: {
-            key: save.data.key
-          }
+      if (ability.can(isEdit ? 'update' : 'create', 'websites')) {
+        const save = yield call(isEdit ? updateWebsite : saveWebsite, {
+          entityForm: payload,
+          removeFile,
+          fileList,
+          tags,
+          token
         });
+
+        if (request.isSuccess((save || {}).status)) {
+          successSaveMsg(isEdit, i18n.t('instance:website'));
+
+          yield put({
+            type: 'validateWebsite',
+            payload: { websiteKey: save?.data?.location?.key }
+          });
+
+          yield put({
+            type: 'updateState',
+            payload: { touched: false }
+          });
+        }
       }
     },
 

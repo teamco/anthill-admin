@@ -6,12 +6,12 @@ import { merge } from 'lodash';
 const DEFAULT_FORM = [
   {
     name: 'entityType',
-    value: 'form',
+    value: 'form'
   },
   {
     name: 'entityKey',
-    value: '',
-  },
+    value: ''
+  }
 ];
 
 /**
@@ -25,35 +25,37 @@ const commonModel = {
     entityForm: DEFAULT_FORM,
     language: 'en-US',
     isEdit: false,
+    touched: false,
+    removeFile: false,
     previewUrl: null,
     tags: [],
     fileList: [],
-    fileName: null,
+    fileName: null
   },
   subscriptions: {
     setupHistory(setup) {
       const { dispatch, history } = setup;
-
-      return history.listen((data) => {});
-    },
+      return history.listen((data) => {
+      });
+    }
   },
 
   effects: {
-    *updateTags({ payload }, { put }) {
+    * updateTags({ payload }, { put }) {
       yield put({
         type: 'updateState',
-        payload: { tags: payload.tags },
+        payload: { tags: payload.tags }
       });
     },
 
-    *cleanForm({ payload }, { put }) {
+    * cleanForm({ payload }, { put }) {
       yield put({
         type: 'updateState',
-        payload: { entityForm: DEFAULT_FORM },
+        payload: { entityForm: DEFAULT_FORM }
       });
     },
 
-    *toForm({ payload }, { call, put, select }) {
+    * toForm({ payload }, { call, put, select }) {
       const { entityForm } = yield select((state) => state[payload.model]);
       const _entityForm = [...entityForm];
       const toDelete = [];
@@ -65,7 +67,7 @@ const commonModel = {
 
         const formItem = {
           name: key,
-          value: payload.form[key],
+          value: payload.form[key]
         };
 
         // Overwrite existing values
@@ -80,95 +82,88 @@ const commonModel = {
         type: 'updateState',
         payload: {
           entityForm: [
-            ..._entityForm.filter((form, idx) => toDelete.indexOf(idx) === -1),
-          ],
-        },
+            ..._entityForm.filter((form, idx) => toDelete.indexOf(idx) === -1)
+          ]
+        }
       });
     },
 
-    *updateFields({ payload }, { put, select }) {
+    * updateFields({ payload }, { put, select }) {
       const { entityForm } = yield select((state) => state[payload.model]);
       const _entityForm = [...entityForm];
 
       yield put({
         type: 'updateState',
         payload: {
-          entityForm: [..._entityForm],
-        },
+          touched: true,
+          entityForm: [..._entityForm]
+        }
       });
     },
 
-    *handleAddFile({ payload }, { put, select }) {
+    * handleAddFile({ payload }, { put, select }) {
       const { fileList } = yield select((state) => state[payload.model]);
 
-      const previewUrl = URL.createObjectURL(payload.file);
+      const previewUrl = URL.createObjectURL(payload?.file);
 
       yield put({
         type: 'updateState',
         payload: {
+          touched: true,
+          removeFile: false,
           previewUrl,
-          fileList: [...fileList, payload.file],
-          fileName: payload.file.name,
-        },
-      });
-
-      yield put({
-        type: 'toForm',
-        payload: {
-          form: { license: previewUrl },
-          model: payload.model,
-        },
+          fileList: [...fileList, payload?.file],
+          fileName: payload?.file?.name
+        }
       });
     },
 
-    *handleRemoveFile({ payload }, { put, select }) {
+    * handleRemoveFile({ payload }, { put, select }) {
       const { fileList } = yield select((state) => state[payload.model]);
 
-      const index = fileList.indexOf(payload.file);
-      const newFileList = fileList.slice();
-      newFileList.splice(index, 1);
+      let newFileList = [];
+
+      if (payload?.file) {
+        const index = fileList.indexOf(payload.file);
+        newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+      }
 
       yield put({
         type: 'updateState',
         payload: {
+          touched: true,
+          removeFile: !payload?.file,
           previewUrl: null,
           fileList: newFileList,
-          fileName: null,
-        },
-      });
-
-      yield put({
-        type: 'toForm',
-        payload: {
-          form: { license: null },
-          model: payload.model,
-        },
+          fileName: null
+        }
       });
     },
 
-    *raiseCondition({ payload }, { put }) {
+    * raiseCondition({ payload }, { put }) {
       message.warning(payload.message).then();
 
       yield put({
         type: 'updateState',
-        payload: { [payload.key]: null },
+        payload: { [payload.key]: null }
       });
 
       history.push(`/errors/404`);
-    },
+    }
   },
   reducers: {
     updateState(state, { payload }) {
       return {
         ...state,
-        ...payload,
+        ...payload
       };
     },
 
     mergeState(state, { payload }) {
       return merge({}, state, payload);
-    },
-  },
+    }
+  }
 };
 
 export { commonModel };

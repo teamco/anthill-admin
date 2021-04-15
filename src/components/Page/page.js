@@ -8,12 +8,14 @@ import Page403 from '@/pages/403';
 import { Can } from '@/utils/auth/can';
 
 import styles from '@/components/Page/page.module.less';
+import { Prompt } from 'umi';
 
 const { Content } = Layout;
 
 function Page({
   t,
   loading,
+  touched,
   spinEffects = [],
   children,
   className,
@@ -38,6 +40,7 @@ function Page({
           <div style={{ height: '100%' }}>
             <Spin spinning={spinning.length > 0}>
               <Can I={'read'} a={component} ability={ability}>
+                {touched && (<Prompt message={t('msg:unsaved')} />)}
                 {children}
               </Can>
               <Page403 component={component} ability={ability} />

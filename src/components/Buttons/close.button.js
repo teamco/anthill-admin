@@ -10,27 +10,27 @@ import { Button } from 'antd';
  * @param props
  * @return {JSX.Element}
  */
-const saveButton = props => {
+const closeButton = props => {
   const {
     t,
-    formRef,
     loading,
-    isEdit,
-    disabled,
+    icon,
+    disabled = false,
     size = 'small',
-    type = 'primary'
+    type = 'default',
+    onClick
   } = props;
 
   return (
     <Button size={size}
             disabled={disabled}
             loading={loading}
-            icon={<SaveOutlined />}
-            onClick={() => formRef.submit()}
+            icon={icon}
+            onClick={onClick}
             type={type}>
-      {isEdit ? t('actions:update') : t('actions:save')}
+      {t('actions:close')}
     </Button>
   );
 };
 
-export default withTranslation()(saveButton);
+export default withTranslation()(closeButton);

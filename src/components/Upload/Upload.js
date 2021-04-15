@@ -1,7 +1,7 @@
 import React from 'react';
-import {withTranslation} from 'react-i18next';
-import {Button, message, Upload} from 'antd';
-import {UploadOutlined} from '@ant-design/icons';
+import { withTranslation } from 'react-i18next';
+import { Button, message, Upload } from 'antd';
+import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import ImgCrop from 'antd-img-crop';
 import classnames from 'classnames';
 
@@ -12,6 +12,7 @@ class UploadFile extends React.Component {
 
     const {
       t,
+      disabled = false,
       fileList = [],
       limit = 1,
       type = 'image',
@@ -54,14 +55,15 @@ class UploadFile extends React.Component {
     };
 
     let uploadProps = {
+      disabled,
       fileList,
       listType,
       beforeUpload(file) {
         if (allowed.indexOf(file.type) < 0) {
-          return message.error(t('form:uploadTypeError', {name: file.name}));
+          return message.error(t('form:uploadTypeError', { name: file.name }));
         }
         onFileRemove(file);
-        onFileChange({file});
+        onFileChange(file);
         return false;
       },
       onRemove(file) {
@@ -77,43 +79,61 @@ class UploadFile extends React.Component {
       }
     };
 
-    type === 'image' && preview && (uploadProps = {...uploadProps, ...{onPreview}});
+    type === 'image' && preview && (uploadProps = { ...uploadProps, ...{ onPreview } });
 
-    const _card = (<div><UploadOutlined/> {t('form:selectFile')}</div>);
+    const _card = (<div><UploadOutlined /> {t('form:selectFile')}</div>);
     const _button = (
-        <Button type={'primary'}>
-          {_card}
-        </Button>
+      <Button type={'primary'}
+              size={'small'}
+              disabled={disabled}>
+        {_card}
+      </Button>
     );
 
     const _upload = (
-        <Upload {...uploadProps}
-                className={classnames(className, 'site-upload')}>
-          {fileList.length < limit && listType === 'picture-card' ? _card : _button}
-        </Upload>
+      <Upload {...uploadProps}
+              className={classnames(className, 'site-upload')}>
+        {fileList.length < limit && listType === 'picture-card' ? _card : _button}
+      </Upload>
     );
 
     let _render = _upload;
 
     if (type === 'image') {
       _render = crop ? (
-          <ImgCrop rotate>
-            {_upload}
-          </ImgCrop>
+        <ImgCrop rotate>
+          {_upload}
+        </ImgCrop>
       ) : _upload;
     }
 
+    /**
+     * @constant
+     * @param e
+     */
+    const handleRemove = e => {
+      e.preventDefault();
+      onFileRemove();
+    }
+
     return (
-        <div className={'site-upload-wrapper'}>
-          {previewUrl && (
-              <div className={'site-upload-preview'}>
-                <div className={'file-info'}>
-                  <img src={previewUrl} alt={previewUrl}/>
-                </div>
-              </div>
-          )}
-          {_render}
-        </div>
+      <div className={'site-upload-wrapper'}>
+        {previewUrl && (
+          <div className={'site-upload-preview'}>
+            <div className={'file-info'}>
+              <img src={previewUrl}
+                   alt={previewUrl} />
+            </div>
+          </div>
+        )}
+        {_render}
+        {previewUrl && (<Button type={'primary'}
+                                danger
+                                onClick={handleRemove}
+                                icon={<DeleteOutlined />}
+                                style={{marginLeft: 10, top: '0 !important'}}
+                                size={'small'} />)}
+      </div>
     );
   }
 }

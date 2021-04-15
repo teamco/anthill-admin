@@ -133,7 +133,7 @@ const websites = (props) => {
           websites.map((site, idx) => (
             <Card key={idx}
                   hoverable
-                  className={'site-card'}
+                  className={`site-card`}
                   actions={[
                     <SettingOutlined key={'setting'} />,
                     <EditOutlined onClick={() => onEdit(site.key)} key={'edit'} />,
@@ -143,7 +143,11 @@ const websites = (props) => {
                       <EllipsisOutlined key={'ellipsis'} />
                     </Dropdown>
                   ]}
-                  cover={<img alt={site.name} src={site.picture.url} />}>
+                  cover={
+                    site.picture.url ?
+                      (<img alt={site.name} src={site.picture.url} />) :
+                      (<StopOutlined />)
+                  }>
               <Meta className={'site-card-title'}
                     title={site.name}
                     description={site.description} />

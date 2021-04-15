@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
-import { useParams, history } from 'umi';
+import { useParams, history, Prompt } from 'umi';
 import { withTranslation } from 'react-i18next';
 import { Form, PageHeader, Menu, Button, Dropdown } from 'antd';
 
@@ -9,6 +9,7 @@ import { fromForm } from '@/utils/object';
 import FormComponents from '@/components/Form';
 import Main from '@/components/Main';
 import SaveButton from '@/components/Buttons/save.button';
+import CloseButton from '@/components/Buttons/close.button';
 
 import styles from '@/pages/websites/website.module.less';
 
@@ -73,7 +74,8 @@ const websiteEdit = (props) => {
     fileList,
     previewUrl,
     entityForm,
-    tags
+    tags,
+    touched
   } = websiteModel;
 
   const {
@@ -115,26 +117,31 @@ const websiteEdit = (props) => {
   const menu = (
     <Menu>
       <Menu.Item key={'hold'}
-                 loading={loading.effects['websiteModel/holdBusiness']}
                  disabled={!isEdit}
                  icon={<PauseCircleOutlined />}
-                 onClick={() => onHoldWebsite(params.business)}>
+                 onClick={() => onHoldWebsite(params.website)}>
         {t('actions:hold')}
       </Menu.Item>
       <Menu.Item key={'delete'}
                  danger
-                 loading={loading.effects['websiteModel/prepareToSave']}
                  disabled={!isEdit}
                  icon={<DeleteOutlined />}
-                 onClick={() => onDeleteWebsite(params.business)}>
+                 onClick={() => onDeleteWebsite(params.website)}>
         {t('actions:delete')}
       </Menu.Item>
     </Menu>
   );
 
+  /**
+   * Handle save button disable status
+   * @type {boolean|RuleBuilder<AnyAbility>|boolean}
+   */
+  const saveDisabled = disabled ? disabled : !touched;
+
   return (
     <Page className={styles.website}
           component={component}
+          touched={touched}
           spinEffects={[
             'websiteModel/websitesHandleEdit',
             'websiteModel/prepareToSave'
@@ -143,15 +150,15 @@ const websiteEdit = (props) => {
         <PageHeader ghost={false}
                     subTitle={subTitle}
                     extra={[
-                      <Button key={'close'}
-                              size={'small'}
-                              loading={loading.effects['websiteModel/prepareToSave']}
-                              onClick={() => onClose(params.user)}>
-                        {t('actions:close')}
-                      </Button>,
+                      <CloseButton key={'close'}
+                                   isEdit={isEdit}
+                                   onClick={() => onClose(params.user)}
+                                   loading={
+                                     loading.effects['websiteModel/prepareToSave']
+                                   } />,
                       <SaveButton key={'save'}
                                   isEdit={isEdit}
-                                  disabled={disabled}
+                                  disabled={saveDisabled}
                                   formRef={formRef}
                                   loading={
                                     loading.effects['websiteModel/prepareToSave']
@@ -176,6 +183,7 @@ const websiteEdit = (props) => {
                         form={formRef}
                         header={t('panel:general')}
                         upload={{
+                          disabled,
                           fileList,
                           previewUrl,
                           onFileRemove,
@@ -228,15 +236,21 @@ export default connect(
       });
     },
     onEditWebsite(params) {
-      dispatch({ type: 'websiteModel/websitesHandleEdit', payload: { params } });
+      dispatch({
+        type: 'websiteModel/websitesHandleEdit',
+        payload: { params }
+      });
     },
-    onBeforeUpload(payload) {
-      dispatch({ type: 'websiteModel/handleAddFile', payload });
+    onBeforeUpload(file) {
+      dispatch({
+        type: 'websiteModel/handleAddFile',
+        payload: { file, model: 'websiteModel' }
+      });
     },
-    onFileRemove(payload) {
+    onFileRemove(file) {
       dispatch({
         type: 'websiteModel/handleRemoveFile',
-        payload
+        payload: { file, model: 'websiteModel' }
       });
     },
     onButtonsMetadata(payload) {
@@ -246,10 +260,7 @@ export default connect(
       });
     },
     onSave(payload) {
-      dispatch({
-        type: 'websiteModel/prepareToSave',
-        payload
-      });
+      dispatch({ type: 'websiteModel/prepareToSave', payload });
     },
     onDelete() {
       dispatch({ type: 'websiteModel/handleDelete' });
