@@ -68,6 +68,11 @@ export const routes = [
         ]
       },
       {
+        exact: true,
+        path: '/errors/403',
+        component: '@/pages/403'
+      },
+      {
         component: '@/pages/404',
         breadcrumb: 'route:page404'
       }

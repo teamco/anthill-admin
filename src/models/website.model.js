@@ -127,14 +127,23 @@ export default dvaModelExtend(commonModel, {
                 }
               }
             });
+          } else {
+
+            return yield put({
+              type: 'raiseCondition',
+              payload: {
+                message: i18n.t('error:notFound', { instance: i18n.t('instance:website') }),
+                type: 404
+              }
+            });
           }
         }
 
         yield put({
           type: 'raiseCondition',
           payload: {
-            message: i18n.t('error:notFound', { entity: 'Website' }),
-            key: 'website'
+            message: i18n.t('error:notFound', { instance: i18n.t('instance:website') }),
+            type: 403
           }
         });
       }

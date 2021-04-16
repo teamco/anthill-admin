@@ -20,13 +20,11 @@ function Page({
   children,
   className,
   component,
-  authModel,
-  onDefineAbilities
+  authModel
 }) {
   const { ability } = authModel;
 
   useEffect(() => {
-    onDefineAbilities();
   }, []);
 
   const spinning = Object.keys(loading.effects).filter(
@@ -43,7 +41,8 @@ function Page({
                 {touched && (<Prompt message={t('msg:unsaved')} />)}
                 {children}
               </Can>
-              <Page403 component={component} ability={ability} />
+              <Page403 component={component}
+                       ability={ability} />
             </Spin>
           </div>
         </Content>
@@ -71,9 +70,6 @@ export default connect(
     };
   },
   (dispatch) => ({
-    dispatch,
-    onDefineAbilities() {
-      dispatch({ type: 'authModel/defineAbilities' });
-    }
+    dispatch
   })
 )(withTranslation()(Page));

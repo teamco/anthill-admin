@@ -17,9 +17,10 @@ const { Content } = Layout;
 
 class AppLayout extends Component {
   componentDidMount() {
-    const { onActiveTab, onQuery } = this.props;
+    const { onActiveTab, onQuery, onDefineAbilities } = this.props;
     // handleActiveTab(onActiveTab);
     onQuery();
+    onDefineAbilities();
   }
 
   render() {
@@ -128,6 +129,9 @@ export default withRouter(
           type: 'appModel/checkActiveTab',
           payload
         });
+      },
+      onDefineAbilities() {
+        dispatch({ type: 'authModel/defineAbilities' });
       },
       onQuery() {
         dispatch({ type: 'appModel/appQuery' });

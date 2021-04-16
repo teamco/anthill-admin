@@ -29,7 +29,7 @@ const profile = (props) => {
           component={component}
           spinEffects={['userModel/getUser']}>
       <Users selectedUser={selectedUser} />
-
+test
     </Page>
   );
 };
@@ -44,10 +44,10 @@ export default connect(
   },
   (dispatch) => ({
     dispatch,
-    onGetUser(selectedUser, userId) {
+    onGetUser(selectedUser, user) {
       dispatch({
         type: `userModel/getUser`,
-        payload: { selectedUser, userId }
+        payload: { selectedUser, user }
       });
     }
   })

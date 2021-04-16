@@ -19,7 +19,41 @@ export function getCurrentUser({ token }) {
     headers: { 'Authorization': getXHRToken({ token }) }
   });
   return request.xhr(opts,
-    () => errorGetMsg(i18n.t('menu:websites')),
+    () => errorGetMsg(i18n.t('instance:user')),
+    '/home'
+  );
+}
+
+/**
+ * @export
+ * @param token
+ * @return {Q.Promise<*>|undefined}
+ */
+export function getUsers({ token }) {
+  const opts = request.config({
+    url: API.users.getAllUsers,
+    headers: { 'Authorization': getXHRToken({ token }) }
+  });
+  return request.xhr(opts,
+    () => errorGetMsg(i18n.t('menu:users')),
+    '/home'
+  );
+}
+
+/**
+ * @export
+ * @param id
+ * @param token
+ * @return {Q.Promise<*>|undefined}
+ */
+export function getUser({ user, token }) {
+  const opts = request.config({
+    url: API.users.getUser,
+    headers: { 'Authorization': getXHRToken({ token }) },
+    user
+  });
+  return request.xhr(opts,
+    () => errorGetMsg(i18n.t('instance:user')),
     '/home'
   );
 }

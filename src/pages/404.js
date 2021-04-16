@@ -15,12 +15,10 @@ import styles from '@/layouts/app.layout.less';
 function page404({ t, errorModel }) {
   return (
     <Page component={'page404'}>
-      <Result
-        status={'404'}
-        title={'404'}
-        className={styles.page404}
-        subTitle={t('error:page404')}
-      />
+      <Result status={'404'}
+              title={'404'}
+              className={styles.page404}
+              subTitle={t('error:page404')} />
     </Page>
   );
 }
@@ -28,7 +26,7 @@ function page404({ t, errorModel }) {
 export default connect(
   ({ errorModel, loading }) => ({
     errorModel,
-    loading,
+    loading
   }),
-  (dispatch) => ({}),
+  (dispatch) => ({})
 )(withTranslation()(page404));

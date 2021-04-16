@@ -49,7 +49,7 @@ const users = (props) => {
 
   useEffect(() => {
     onQuery();
-  }, [authModel.user]);
+  }, []);
 
   const tableProps = selectedUser
     ? {

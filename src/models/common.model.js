@@ -141,15 +141,10 @@ const commonModel = {
       });
     },
 
-    * raiseCondition({ payload }, { put }) {
-      message.warning(payload.message).then();
-
-      yield put({
-        type: 'updateState',
-        payload: { [payload.key]: null }
+    * raiseCondition({ payload }) {
+      message.warning(payload.message).then(() => {
+        history.push(`/errors/${payload.type}`);
       });
-
-      history.push(`/errors/404`);
     }
   },
   reducers: {

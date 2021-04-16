@@ -8,7 +8,7 @@
   },
   "error": {
     "errorNum": "Error: {{number}}",
-    "notFound": "{{entity}} not found",
+    "notFound": "{{instance}} not found",
     "page403": "Sorry, you are not authorized to access this page",
     "page404": "Sorry, the page you visited does not exist",
     "noPermissions": "Has no relevant permissions",

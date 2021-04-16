@@ -16,24 +16,28 @@ import { Can } from '@/utils/auth/can';
  * @return {JSX.Element}
  */
 function page403({ t, component, ability, errorModel }) {
-  return (
+
+  return ability ? (
     <Can not I={'read'} a={component} ability={ability}>
-      <Page component={'page403'}>
-        <Result
-          status={'403'}
-          title={'403'}
-          className={styles.page403}
-          subTitle={t('error:page403')}
-        />
-      </Page>
+      <Result status={'403'}
+              title={'403'}
+              className={styles.page403}
+              subTitle={t('error:page403')} />
     </Can>
+  ) : (
+    <Page component={'page403'}>
+      <Result status={'403'}
+              title={'403'}
+              className={styles.page403}
+              subTitle={t('error:page403')} />
+    </Page>
   );
 }
 
 export default connect(
   ({ errorModel, loading }) => ({
     errorModel,
-    loading,
+    loading
   }),
-  (dispatch) => ({}),
+  (dispatch) => ({})
 )(withTranslation()(page403));

@@ -3,7 +3,7 @@ import dvaModelExtend from 'dva-model-extend';
 import { message } from 'antd';
 import { commonModel } from '@/models/common.model';
 import i18n from '@/utils/i18n';
-import { getProfileImage } from '@/services/user.service';
+import { getUser, getUsers } from '@/services/user.service';
 
 /**
  * @export
@@ -21,13 +21,39 @@ export default dvaModelExtend(commonModel, {
   effects: {
 
     * query({ payload }, { call, put, select }) {
-      const { user } = yield select(state => state.authModel);
+      const { ability, token } = yield select(state => state.authModel);
 
-      // const { users = [] } = yield call(getUsers, { user });
+      if (ability.can('read', 'users')) {
+        const res = yield call(getUsers, { token });
+
+        if (res?.data) {
+          const { users, error } = res.data;
+          if (users) {
+
+            return yield put({
+              type: 'updateState',
+              payload: { users }
+            });
+
+          } else {
+
+            return yield put({
+              type: 'raiseCondition',
+              payload: {
+                message: i18n.t('error:notFound', { instance: i18n.t('instance:user') }),
+                type: 404
+              }
+            });
+          }
+        }
+      }
 
       yield put({
-        type: 'updateState',
-        payload: { users: [user] }
+        type: 'raiseCondition',
+        payload: {
+          message: i18n.t('error:notFound', { instance: i18n.t('instance:user') }),
+          type: 403
+        }
       });
     },
 
@@ -85,41 +111,62 @@ export default dvaModelExtend(commonModel, {
     },
 
     * getUser({ payload }, { put, call, select }) {
-      // const { user } = yield select(state => state.authModel);
-      // const { userId } = payload;
-      //
-      // if (user?.uid) {
-      //   const ability = yield call(defineAbilityFor, { user, userId });
-      //
-      //   yield put({
-      //     type: 'authModel/updateState',
-      //     payload: { ability }
-      //   });
-      //
-      //   if (ability.can('read', 'profile')) {
-      //     const _user = yield call(fbFindById, {
-      //       collection: 'users',
-      //       doc: userId
-      //     });
-      //
-      //     if (_user.exists) {
-      //       const selectedUser = { ..._user.data(), ...{ id: _user.id } };
-      //
-      //       return yield put({
-      //         type: 'updateState',
-      //         payload: { selectedUser }
-      //       });
-      //     }
-      //
-      //     yield put({
-      //       type: 'raiseCondition',
-      //       payload: {
-      //         message: i18n.t('error:notFound', { entity: 'User' }),
-      //         key: 'selectedUser'
-      //       }
-      //     });
-      //   }
-      // }
+      const { ability, token } = yield select(state => state.authModel);
+
+      if (ability.can('read', 'users')) {
+        debugger
+        const res = yield call(getUser, { user: payload.user, token });
+
+        if (res?.data) {
+          const { users, error } = res.data;
+          if (users) {
+
+            debugger
+          }
+        }
+        // const { userId } = payload;
+        //
+        // if (user?.uid) {
+        //   const ability = yield call(defineAbilityFor, { user, userId });
+        //
+        //   yield put({
+        //     type: 'authModel/updateState',
+        //     payload: { ability }
+        //   });
+        //
+        //   if (ability.can('read', 'profile')) {
+        //     const _user = yield call(fbFindById, {
+        //       collection: 'users',
+        //       doc: userId
+        //     });
+        //
+        //     if (_user.exists) {
+        //       const selectedUser = { ..._user.data(), ...{ id: _user.id } };
+        //
+        //       return yield put({
+        //         type: 'updateState',
+        //         payload: { selectedUser }
+        //       });
+        //     }
+        //
+        //     yield put({
+        //       type: 'raiseCondition',
+        //       payload: {
+        //         message: i18n.t('error:notFound', { entity: 'User' }),
+        //         key: 'selectedUser'
+        //       }
+        //     });
+        //   }
+        // }
+      }
+
+      yield put({
+        type: 'raiseCondition',
+        payload: {
+          message: i18n.t('error:notFound', { instance: i18n.t('instance:user') }),
+          type: 403
+        }
+      });
     }
   },
   reducers: {}

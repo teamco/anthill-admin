@@ -151,12 +151,12 @@ export const metadata = ({
           </Tag>
         )
       },
-      {
-        title: t('auth:lastSignInTime'),
-        dataIndex: 'metadata',
-        key: 'lastSignInTime',
-        render: (metadata) => tsToLocaleDateTime(+new Date(metadata?.trackable?.last_sign_in_at))
-      },
+      // {
+      //   title: t('auth:lastSignInTime'),
+      //   dataIndex: 'metadata',
+      //   key: 'lastSignInTime',
+      //   render: (metadata) => tsToLocaleDateTime(+new Date(metadata?.trackable?.last_sign_in_at))
+      // },
       {
         title: t('table:action'),
         width: 100,
