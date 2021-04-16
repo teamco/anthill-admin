@@ -5,6 +5,7 @@ import MainSiderMenu from '@/components/Main/SiderMenu/MainSiderMenu';
 import MainFooter from '@/components/Main/Footer/MainFooter';
 import MainGeneralPanel from '@/components/Main/Panel/MainGeneralPanel';
 import MainInfo from '@/components/Main/Info/MainInfo';
+import MainTable from '@/components/Main/Table/table';
 
 export default {
   Header: MainHeader,
@@ -13,5 +14,6 @@ export default {
   Breadcrumbs: MainBreadcrumbs,
   Menu: MainSiderMenu,
   GeneralPanel: MainGeneralPanel,
-  Info: MainInfo
+  Info: MainInfo,
+  Table: MainTable
 };

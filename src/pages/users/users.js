@@ -10,20 +10,18 @@ import {
   WarningTwoTone,
   MailTwoTone,
   CalendarTwoTone,
-  ControlTwoTone,
+  ControlTwoTone
 } from '@ant-design/icons';
 import { withTranslation } from 'react-i18next';
 
-import Page from 'components/Page';
-import Main from 'components/Main';
-import EmailVerified from 'components/Profile/email.verified';
+import Page from '@/components/Page';
+import Main from '@/components/Main';
 
-import { metadata } from 'pages/users/users.metadata';
-import styles from 'pages/users/users.module.less';
-import { isAdmin, isBusiness } from 'services/user.service';
-import { Can } from 'utils/auth/can';
-import i18n from 'utils/i18n';
-import { tsToLocaleDateTime } from 'utils/timestamp';
+import { metadata } from '@/pages/users/users.metadata';
+import styles from '@/pages/users/users.module.less';
+import { isAdmin } from '@/services/user.service';
+import i18n from '@/utils/i18n';
+import { tsToLocaleDateTime } from '@/utils/timestamp';
 
 const { Table } = Main;
 
@@ -44,12 +42,10 @@ const users = (props) => {
     onDeleteUser,
     onSignOutUser,
     onUnlockUser,
-    onLockUser,
+    onLockUser
   } = props;
 
-  let { data = [], verificationSent } = userModel;
-
-  data = selectedUser ? [selectedUser] : data;
+  let { verificationSent } = userModel;
 
   useEffect(() => {
     onQuery();
@@ -57,75 +53,55 @@ const users = (props) => {
 
   const tableProps = selectedUser
     ? {
-        pagination: false,
-        expandable: {
-          expandedRowRender(record) {
-            const businessRole = isBusiness(record);
+      pagination: false,
+      expandable: {
+        expandedRowRender(record) {
+          return (
+            <div className={styles.profileExpand}>
+              <Row gutter={[16, 16]}>
+                <Col span={8}>
+                  <div>
+                    <MailTwoTone />
+                    <strong>{t('auth:email')}</strong>
+                  </div>
+                  <div>{record.email || t('error:na')}</div>
+                </Col>
+                <Col span={8}>
+                  <div>
+                    <CalendarTwoTone />
+                    <strong>{t('form:createdAt')}</strong>
+                  </div>
+                  <div>
+                    {tsToLocaleDateTime(
+                      +new Date(record.metadata.creationTime)
+                    )}
+                  </div>
+                </Col>
+                <Col span={8} />
+              </Row>
+              <Row gutter={[16, 16]} style={{ marginTop: 10 }}>
+                <Col span={8}>
 
-            return (
-              <div className={styles.profileExpand}>
-                <Row gutter={[16, 16]}>
-                  <Col span={8}>
-                    <div>
-                      <MailTwoTone />
-                      <strong>{t('auth:email')}</strong>
-                    </div>
-                    <div>{record.email || t('error:na')}</div>
-                  </Col>
-                  <Col span={8}>
-                    <div>
-                      <CalendarTwoTone />
-                      <strong>{t('form:createdAt')}</strong>
-                    </div>
-                    <div>
-                      {tsToLocaleDateTime(
-                        +new Date(record.metadata.creationTime),
-                      )}
-                    </div>
-                  </Col>
-                  <Col span={8} />
-                </Row>
-                <Row gutter={[16, 16]} style={{ marginTop: 10 }}>
-                  <Col span={8}>
-                    <EmailVerified
-                      data={record}
-                      verification={{
-                        component,
-                        verificationSent,
-                        onSendVerification,
-                      }}
-                    />
-                  </Col>
-                  <Col span={8}>
-                    <div>
-                      <ControlTwoTone />
-                      <strong>{t('auth:roles')}</strong>
-                    </div>
-                    <div>
-                      <Tag
-                        className={styles.rules}
-                        icon={
-                          isAdmin(record.roles) ? (
-                            <TeamOutlined />
-                          ) : businessRole ? (
-                            <BoldOutlined />
-                          ) : (
-                            <UserOutlined />
-                          )
-                        }
-                      >
-                        {businessRole || (record.roles || [])[0] || 'consumer'}
-                      </Tag>
-                    </div>
-                  </Col>
-                  <Col span={8} />
-                </Row>
-              </div>
-            );
-          },
-          rowExpandable: (record) => true,
+                </Col>
+                <Col span={8}>
+                  <div>
+                    <ControlTwoTone />
+                    <strong>{t('auth:roles')}</strong>
+                  </div>
+                  <div>
+                    <Tag className={styles.rules}>
+                      consumer
+                    </Tag>
+                  </div>
+                </Col>
+                <Col span={8} />
+              </Row>
+            </div>
+          );
         },
+        rowExpandable: (record) => true
       }
+    }
     : {};
 
   const subTitle = (
@@ -140,27 +116,25 @@ const users = (props) => {
   // const disabled = !ability.can('update', component);
 
   return (
-    <Page
-      className={styles.users}
-      component={component}
-      spinEffects={['authModel/defineAbilities']}
-    >
+    <Page className={styles.users}
+          component={component}
+          spinEffects={['authModel/defineAbilities']}>
       <PageHeader ghost={false} subTitle={subTitle} />
-      <Table
-        data={data}
-        {...tableProps}
-        {...metadata({
-          t,
-          data,
-          many: !selectedUser,
-          loading,
-          currentUser: authModel.user,
-          onDeleteUser,
-          onSignOutUser,
-          onUnlockUser,
-          onLockUser,
-        })}
-      />
+      <div className={styles.grid}>
+        <Table data={userModel.users}
+               {...tableProps}
+               {...metadata({
+                 t,
+                 data: userModel.users,
+                 list: !selectedUser,
+                 loading,
+                 currentUser: authModel.user,
+                 onDeleteUser,
+                 onSignOutUser,
+                 onUnlockUser,
+                 onLockUser
+               })} />
+      </div>
     </Page>
   );
 };
@@ -170,7 +144,7 @@ export default connect(
     return {
       authModel,
       userModel,
-      loading,
+      loading
     };
   },
   (dispatch) => ({
@@ -197,6 +171,6 @@ export default connect(
         message.warning(i18n.t('msg:errorSentEmail')).then();
         message.warning(i18n.t('error:noEmail')).then();
       }
-    },
-  }),
+    }
+  })
 )(withTranslation()(users));

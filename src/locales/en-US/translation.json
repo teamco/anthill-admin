@@ -151,7 +151,9 @@
   },
   "menu": {
     "websites": "Websites",
+    "userWebsites": "User Websites",
     "pages": "Pages",
+    "userProfile": "User Profile",
     "widgets": "Widgets",
     "pageWidgets": "Page Widgets",
     "systemLogs": "System Logs",
@@ -181,6 +183,7 @@
     "website": "Website",
     "widget": "Widget",
     "content": "Content",
+    "user": "User",
     "behavior": "Behavior"
   },
   "model": {

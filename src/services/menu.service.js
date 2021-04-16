@@ -4,7 +4,8 @@ import {
   GlobalOutlined,
   InfoCircleOutlined,
   ShopOutlined,
-  TeamOutlined
+  TeamOutlined,
+  OrderedListOutlined
 } from '@ant-design/icons';
 
 /**
@@ -13,28 +14,33 @@ import {
  */
 export const menus = [
   {
+    key: 'menu:users',
+    url: '/users',
+    icon: <TeamOutlined />
+  },
+  {
     key: 'menu:websites',
     url: '/websites',
-    icon: <GlobalOutlined/>
+    icon: <GlobalOutlined />
   },
   {
     key: 'menu:widgets',
     url: '/widgets',
-    icon: <ShopOutlined/>
+    icon: <ShopOutlined />
   },
   {
     key: 'menu:systemLogs',
-    icon: <InfoCircleOutlined/>,
+    icon: <InfoCircleOutlined />,
     items: [
       {
         key: 'menu:userLogs',
         url: '/logs',
-        icon: <TeamOutlined/>
+        icon: <OrderedListOutlined />
       },
       {
         key: 'menu:errorLogs',
         url: '/errors',
-        icon: <BugOutlined/>
+        icon: <BugOutlined />
       }
     ]
   }

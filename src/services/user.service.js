@@ -23,3 +23,16 @@ export function getCurrentUser({ token }) {
     '/home'
   );
 }
+
+/**
+ * @export
+ * @async
+ * @param {string} email
+ * @param {string} protocol
+ * @param {string} format
+ * @return {Promise<*>}
+ */
+export async function getProfileImage({ email, protocol = 'http', format = 'json' }) {
+  const gravatar = require('gravatar');
+  return await gravatar.url(email, { protocol, format });
+}

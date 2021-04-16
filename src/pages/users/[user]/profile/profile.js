@@ -3,12 +3,11 @@ import { connect } from 'dva';
 import { useParams } from 'umi';
 import { withTranslation } from 'react-i18next';
 
-import Page from 'components/Page';
-import Users from 'pages/users';
-import Businesses from 'pages/users/[user]/businesses';
+import Page from '@/components/Page';
+import Users from '@/pages/users';
 
-import styles from 'pages/users/[user]/profile/profile.module.less';
-import userStyles from 'pages/users/users.module.less';
+import styles from '@/pages/users/[user]/profile/profile.module.less';
+import userStyles from '@/pages/users/users.module.less';
 
 const profile = (props) => {
   const { t, authModel, userModel, loading, onGetUser } = props;
@@ -26,13 +25,11 @@ const profile = (props) => {
   // const disabled = !ability.can('update', component);
 
   return (
-    <Page
-      className={userStyles.users}
-      component={component}
-      spinEffects={['userModel/getUser', 'businessModel/query']}
-    >
+    <Page className={userStyles.users}
+          component={component}
+          spinEffects={['userModel/getUser']}>
       <Users selectedUser={selectedUser} />
-      <Businesses selectedUser={selectedUser} style={{ marginTop: 20 }} />
+
     </Page>
   );
 };
@@ -42,7 +39,7 @@ export default connect(
     return {
       authModel,
       userModel,
-      loading,
+      loading
     };
   },
   (dispatch) => ({
@@ -50,8 +47,8 @@ export default connect(
     onGetUser(selectedUser, userId) {
       dispatch({
         type: `userModel/getUser`,
-        payload: { selectedUser, userId },
+        payload: { selectedUser, userId }
       });
-    },
-  }),
+    }
+  })
 )(withTranslation()(profile));
