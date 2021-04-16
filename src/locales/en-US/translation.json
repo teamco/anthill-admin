@@ -101,7 +101,7 @@
     "currentSignInIP": "Current SignIn IP",
     "lastSignInAt": "Last SignIn at",
     "lastSignInIP": "Last SignIn IP",
-    "signInCount": "Sign in count"
+    "signInCount": "SignIn count"
   },
   "msg": {
     "deleteConfirm": "Are you sure to delete this {{instance}}?",

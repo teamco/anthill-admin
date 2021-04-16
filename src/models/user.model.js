@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { commonModel } from '@/models/common.model';
 import i18n from '@/utils/i18n';
 import { getUser, getUsers } from '@/services/user.service';
+import { generateKey } from '@/services/common.service';
 
 /**
  * @export
@@ -119,6 +120,18 @@ export default dvaModelExtend(commonModel, {
         if (res?.data) {
           const { user, error } = res.data;
           if (user) {
+
+            yield put({
+              type: 'toForm',
+              payload: {
+                model: 'websiteModel',
+                form: {
+                  ...{ name: user.metadata.profile.name },
+                  ...{ entityKey: user?.key || (yield call(generateKey)) }
+                }
+              }
+            });
+
             return yield put({
               type: 'updateState',
               payload: { user }

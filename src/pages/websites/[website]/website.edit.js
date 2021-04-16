@@ -181,9 +181,9 @@ const websiteEdit = (props) => {
               onFinish={onFinish}>
           <GeneralPanel isEdit={isEdit}
                         form={formRef}
+                        disabled={disabled}
                         header={t('panel:general')}
                         upload={{
-                          disabled,
                           fileList,
                           previewUrl,
                           onFileRemove,

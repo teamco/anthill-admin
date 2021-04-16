@@ -61,6 +61,12 @@
 .profileExpand {
   margin-left: 10px;
 
+  form {
+    span[role="img"] {
+      top: 3px !important;
+    }
+  }
+
   span[role='img'],
   svg[role='img'] {
     margin-right: 10px;
@@ -72,6 +78,18 @@
 
     &:hover {
       text-decoration: underline;
+    }
+  }
+
+  .profileActions {
+    display: flex;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    flex-direction: row-reverse;
+
+    span[role='img'],
+    svg[role='img'] {
+      margin-right: 0;
     }
   }
 }
@@ -93,6 +111,19 @@
       position: relative;
       top: 2px;
     }
+  }
+}
+
+.gravatar {
+  padding: 5px;
+  width: 100px;
+  height: 100px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+
+  img {
+    height: 100%;
+    width: 100%;
   }
 }
 

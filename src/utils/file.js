@@ -131,5 +131,5 @@ export const download = (url, fileName) => {
  * @return {string}
  */
 export const cachedUrl = url => {
-  return `${url}?${+(new Date)}`;
+  return url.match(/blob/) ? url : `${url}?${+(new Date)}`;
 };

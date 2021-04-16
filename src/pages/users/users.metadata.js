@@ -171,7 +171,7 @@ export const metadata = ({
                   </NavLink>
                 </Tooltip>
               )}
-              <Popconfirm title={t('msg:deleteConfirm', { instance: record.email })}
+              <Popconfirm title={t('msg:deleteConfirm', { instance: record?.metadata?.profile?.email })}
                           placement={'topRight'}
                           onConfirm={() => onDeleteUser(record)}>
                 <Tooltip title={t('actions:delete')}>

@@ -115,7 +115,7 @@ class UploadFile extends React.Component {
     const handleRemove = e => {
       e.preventDefault();
       onFileRemove();
-    }
+    };
 
     return (
       <div className={'site-upload-wrapper'}>
@@ -128,12 +128,14 @@ class UploadFile extends React.Component {
           </div>
         )}
         {_render}
-        {previewUrl && (<Button type={'primary'}
-                                danger
-                                onClick={handleRemove}
-                                icon={<DeleteOutlined />}
-                                style={{marginLeft: 10, top: '0 !important'}}
-                                size={'small'} />)}
+        {previewUrl && (
+          <Button type={'primary'}
+                  danger
+                  className={'file-delete'}
+                  onClick={handleRemove}
+                  icon={<DeleteOutlined />}
+                  size={'small'} />
+        )}
       </div>
     );
   }

@@ -92,7 +92,7 @@ class GenericPanel extends Component {
 
         const _isRequired = rules.find(rule => rule.required);
         if (_isRequired && !_isRequired.message) {
-          _isRequired.message = t('form:required', {field: label});
+          _isRequired.message = t('form:required', {field: label.toUpperCase()});
         }
         const _placeholder = label ?
             _handleProps(placeholder, t('form:placeholder', {field: label})) :
@@ -115,7 +115,7 @@ class GenericPanel extends Component {
                   React.cloneElement(_child, {
                     placeholder: _placeholder,
                     suffix: _handleProps(suffix, (
-                        <Tooltip title={t('form:required', {field: label})}>
+                        <Tooltip title={t('form:required', {field: label.toUpperCase()})}>
                           <WarningTwoTone twoToneColor="#ff4d4f"/>
                         </Tooltip>
                     )),
