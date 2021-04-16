@@ -96,7 +96,12 @@
     "createdBy": "Created by",
     "updatedBy": "Updated by",
     "createdAt": "Created at",
-    "updatedAt": "Updated at"
+    "updatedAt": "Updated at",
+    "currentSignInAt": "Current SignIn at",
+    "currentSignInIP": "Current SignIn IP",
+    "lastSignInAt": "Last SignIn at",
+    "lastSignInIP": "Last SignIn IP",
+    "signInCount": "Sign in count"
   },
   "msg": {
     "deleteConfirm": "Are you sure to delete this {{instance}}?",
@@ -273,5 +278,12 @@
     "alignmentLeft": "Left",
     "alignmentCenter": "Center",
     "alignmentRight": "Right"
+  },
+  "users": {
+    "monitoring": "Monitoring",
+    "roles": "Roles",
+    "admin": "Administrator",
+    "moderator": "Moderator",
+    "consumer": "Consumer"
   }
 }

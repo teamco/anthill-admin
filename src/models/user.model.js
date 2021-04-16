@@ -11,11 +11,8 @@ import { getUser, getUsers } from '@/services/user.service';
 export default dvaModelExtend(commonModel, {
   namespace: 'userModel',
   state: {
-    profiles: [1],
-    selectedProfile: null,
-    selectedUser: null,
     users: [],
-    verificationSent: false
+    user: null
   },
 
   effects: {
@@ -32,7 +29,10 @@ export default dvaModelExtend(commonModel, {
 
             return yield put({
               type: 'updateState',
-              payload: { users }
+              payload: {
+                users,
+                user: null
+              }
             });
 
           } else {
@@ -114,50 +114,27 @@ export default dvaModelExtend(commonModel, {
       const { ability, token } = yield select(state => state.authModel);
 
       if (ability.can('read', 'users')) {
-        debugger
-        const res = yield call(getUser, { user: payload.user, token });
+        const res = yield call(getUser, { key: payload.user, token });
 
         if (res?.data) {
-          const { users, error } = res.data;
-          if (users) {
+          const { user, error } = res.data;
+          if (user) {
+            return yield put({
+              type: 'updateState',
+              payload: { user }
+            });
+          } else {
 
-            debugger
+            return yield put({
+              type: 'raiseCondition',
+              payload: {
+                message: i18n.t('error:notFound', { instance: i18n.t('instance:user') }),
+                type: 404
+              }
+            });
+
           }
         }
-        // const { userId } = payload;
-        //
-        // if (user?.uid) {
-        //   const ability = yield call(defineAbilityFor, { user, userId });
-        //
-        //   yield put({
-        //     type: 'authModel/updateState',
-        //     payload: { ability }
-        //   });
-        //
-        //   if (ability.can('read', 'profile')) {
-        //     const _user = yield call(fbFindById, {
-        //       collection: 'users',
-        //       doc: userId
-        //     });
-        //
-        //     if (_user.exists) {
-        //       const selectedUser = { ..._user.data(), ...{ id: _user.id } };
-        //
-        //       return yield put({
-        //         type: 'updateState',
-        //         payload: { selectedUser }
-        //       });
-        //     }
-        //
-        //     yield put({
-        //       type: 'raiseCondition',
-        //       payload: {
-        //         message: i18n.t('error:notFound', { entity: 'User' }),
-        //         key: 'selectedUser'
-        //       }
-        //     });
-        //   }
-        // }
       }
 
       yield put({

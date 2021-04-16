@@ -4,8 +4,22 @@ import { API } from '@/services/config';
 import { errorGetMsg } from '@/utils/message';
 import { getXHRToken } from '@/services/auth.service';
 
-export const isAdmin = (user) => {
-  return true;
+/**
+ * @export
+ * @param {{superadmin_role}} roles
+ * @return {*}
+ */
+export const isAdmin = (roles) => {
+  return roles.superadmin_role;
+};
+
+/**
+ * @export
+ * @param {{supervisor_role}} roles
+ * @return {*}
+ */
+export const isModerator = (roles) => {
+  return roles.supervisor_role;
 };
 
 /**
@@ -46,11 +60,11 @@ export function getUsers({ token }) {
  * @param token
  * @return {Q.Promise<*>|undefined}
  */
-export function getUser({ user, token }) {
+export function getUser({ key, token }) {
   const opts = request.config({
     url: API.users.getUser,
     headers: { 'Authorization': getXHRToken({ token }) },
-    user
+    key
   });
   return request.xhr(opts,
     () => errorGetMsg(i18n.t('instance:user')),

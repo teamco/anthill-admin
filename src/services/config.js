@@ -31,7 +31,7 @@ export const API = {
   },
   users: {
     getAllUsers: 'users',
-    getUser: 'user/:user'
+    getUser: 'user/:id'
   },
   websites: {
     getAllWebsites: 'websites',

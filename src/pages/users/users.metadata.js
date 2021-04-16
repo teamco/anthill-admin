@@ -116,7 +116,7 @@ export const metadata = ({
         title: t('table:name'),
         dataIndex: 'metadata',
         key: 'metadata',
-        render(metadata, record) {
+        render(metadata) {
           const { gravatar_url, profile_image, name } = metadata?.profile;
           const color = '#52c41a';
           const signed = {

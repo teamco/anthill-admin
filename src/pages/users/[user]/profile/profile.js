@@ -14,11 +14,11 @@ const profile = (props) => {
 
   const params = useParams();
 
-  const { selectedUser } = userModel;
+  const { user } = userModel;
 
   useEffect(() => {
-    onGetUser(selectedUser, params.user);
-  }, [authModel.user]);
+    onGetUser(params.user);
+  }, []);
 
   const { ability } = authModel;
   const component = 'profile';
@@ -28,8 +28,8 @@ const profile = (props) => {
     <Page className={userStyles.users}
           component={component}
           spinEffects={['userModel/getUser']}>
-      <Users selectedUser={selectedUser} />
-test
+      <Users />
+      test
     </Page>
   );
 };
@@ -44,11 +44,8 @@ export default connect(
   },
   (dispatch) => ({
     dispatch,
-    onGetUser(selectedUser, user) {
-      dispatch({
-        type: `userModel/getUser`,
-        payload: { selectedUser, user }
-      });
+    onGetUser(user) {
+      dispatch({ type: 'userModel/getUser', payload: { user } });
     }
   })
 )(withTranslation()(profile));

@@ -1,16 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
-import { Row, Col, PageHeader, Tag, message } from 'antd';
+import { PageHeader, message } from 'antd';
 import {
-  BoldOutlined,
-  CheckCircleTwoTone,
-  TeamOutlined,
-  UserOutlined,
   UserSwitchOutlined,
-  WarningTwoTone,
-  MailTwoTone,
-  CalendarTwoTone,
-  ControlTwoTone
 } from '@ant-design/icons';
 import { withTranslation } from 'react-i18next';
 
@@ -18,10 +10,10 @@ import Page from '@/components/Page';
 import Main from '@/components/Main';
 
 import { metadata } from '@/pages/users/users.metadata';
-import styles from '@/pages/users/users.module.less';
-import { isAdmin } from '@/services/user.service';
 import i18n from '@/utils/i18n';
-import { tsToLocaleDateTime } from '@/utils/timestamp';
+import { profileMetadata } from '@/pages/users/[user]/profile/profile.metadata';
+
+import styles from '@/pages/users/users.module.less';
 
 const { Table } = Main;
 
@@ -36,73 +28,20 @@ const users = (props) => {
     authModel,
     userModel,
     loading,
-    selectedUser,
     onQuery,
-    onSendVerification,
     onDeleteUser,
     onSignOutUser,
     onUnlockUser,
     onLockUser
   } = props;
 
-  let { verificationSent } = userModel;
+  let { user } = userModel;
 
   useEffect(() => {
     onQuery();
   }, []);
 
-  const tableProps = selectedUser
-    ? {
-      pagination: false,
-      expandable: {
-        expandedRowRender(record) {
-          return (
-            <div className={styles.profileExpand}>
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <div>
-                    <MailTwoTone />
-                    <strong>{t('auth:email')}</strong>
-                  </div>
-                  <div>{record.email || t('error:na')}</div>
-                </Col>
-                <Col span={8}>
-                  <div>
-                    <CalendarTwoTone />
-                    <strong>{t('form:createdAt')}</strong>
-                  </div>
-                  <div>
-                    {tsToLocaleDateTime(
-                      +new Date(record.metadata.creationTime)
-                    )}
-                  </div>
-                </Col>
-                <Col span={8} />
-              </Row>
-              <Row gutter={[16, 16]} style={{ marginTop: 10 }}>
-                <Col span={8}>
-
-                </Col>
-                <Col span={8}>
-                  <div>
-                    <ControlTwoTone />
-                    <strong>{t('auth:roles')}</strong>
-                  </div>
-                  <div>
-                    <Tag className={styles.rules}>
-                      consumer
-                    </Tag>
-                  </div>
-                </Col>
-                <Col span={8} />
-              </Row>
-            </div>
-          );
-        },
-        rowExpandable: (record) => true
-      }
-    }
-    : {};
+  const tableProps = user ? profileMetadata(t) : {};
 
   const subTitle = (
     <>
@@ -126,7 +65,7 @@ const users = (props) => {
                {...metadata({
                  t,
                  data: userModel.users,
-                 list: !selectedUser,
+                 list: !user,
                  loading,
                  currentUser: authModel.user,
                  onDeleteUser,
@@ -163,14 +102,6 @@ export default connect(
     },
     onUnlockUser(user) {
       dispatch({ type: `userModel/unlock`, payload: { user } });
-    },
-    onSendVerification(user) {
-      if (user.email) {
-        dispatch({ type: `userModel/sendVerification`, payload: { user } });
-      } else {
-        message.warning(i18n.t('msg:errorSentEmail')).then();
-        message.warning(i18n.t('error:noEmail')).then();
-      }
     }
   })
 )(withTranslation()(users));
