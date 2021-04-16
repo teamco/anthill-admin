@@ -121,12 +121,14 @@ export default dvaModelExtend(commonModel, {
           const { user, error } = res.data;
           if (user) {
 
+            const { name, profile_image } = user.metadata?.profile;
+
             yield put({
               type: 'toForm',
               payload: {
-                model: 'websiteModel',
+                model: 'userModel',
                 form: {
-                  ...{ name: user.metadata.profile.name },
+                  ...{ name },
                   ...{ entityKey: user?.key || (yield call(generateKey)) }
                 }
               }
@@ -134,7 +136,12 @@ export default dvaModelExtend(commonModel, {
 
             return yield put({
               type: 'updateState',
-              payload: { user }
+              payload: {
+                user,
+                touched: false,
+                fileList: [],
+                previewUrl: profile_image?.url || null
+              }
             });
           } else {
 

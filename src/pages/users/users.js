@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import { Form, PageHeader } from 'antd';
 import {
-  UserSwitchOutlined,
+  UserSwitchOutlined
 } from '@ant-design/icons';
 import { withTranslation } from 'react-i18next';
 
@@ -27,6 +27,7 @@ const users = (props) => {
     authModel,
     userModel,
     loading,
+    profiled = false,
     onQuery,
     onDeleteUser,
     onSignOutUser,
@@ -47,7 +48,7 @@ const users = (props) => {
   const disabled = ability.cannot('update', component);
 
   useEffect(() => {
-    !user && onQuery();
+    !profiled && onQuery();
   }, []);
 
   const tableProps = user ? profileMetadata({

@@ -28,7 +28,7 @@ const profile = (props) => {
     <Page className={userStyles.users}
           component={component}
           spinEffects={['userModel/getUser']}>
-      <Users />
+      <Users profiled={true} />
       test
     </Page>
   );
