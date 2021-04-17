@@ -168,6 +168,7 @@
   "panel": {
     "configuration": "Configuration",
     "general": "General",
+    "profileDetails": "Profile Details",
     "widgetProps": "Main Properties",
     "widgetPropsAdvanced": "Advanced Properties",
     "contentProperties": "Content Properties",

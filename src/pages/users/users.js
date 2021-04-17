@@ -48,7 +48,7 @@ const users = (props) => {
   const disabled = ability.cannot('update', component);
 
   useEffect(() => {
-    !profiled && onQuery();
+    onQuery(profiled);
   }, []);
 
   const tableProps = user ? profileMetadata({
@@ -132,8 +132,8 @@ export default connect(
         payload: { file, model: 'userModel' }
       });
     },
-    onQuery() {
-      dispatch({ type: `userModel/query` });
+    onQuery(profiled) {
+      dispatch({ type: `userModel/query`, payload: { profiled } });
     },
     onDeleteUser(user) {
       dispatch({ type: `userModel/delete`, payload: { user } });

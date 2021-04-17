@@ -87,7 +87,8 @@ export const profileMetadata = ({
                             form={formRef}
                             disabled={disabled}
                             description={false}
-                            header={t('panel:general')}
+                            collapsed={true}
+                            header={t('panel:profileDetails')}
                             extraField={(
                               <div label={'Gravatar API'}
                                    className={styles.gravatar}>
@@ -127,7 +128,7 @@ export const profileMetadata = ({
             </Row>
             <Divider orientation={'left'}
                      plain
-                     style={{paddingRight: 10}}>
+                     style={{ paddingRight: 10 }}>
               {t('users:monitoring')}
             </Divider>
             <Row gutter={[16, 16]} style={{ marginTop: 10 }}>
@@ -172,7 +173,7 @@ export const profileMetadata = ({
             </Row>
             <Divider orientation={'left'}
                      plain
-                     style={{paddingRight: 10}}>
+                     style={{ paddingRight: 10 }}>
               {t('users:roles')}
             </Divider>
             <Row gutter={[16, 16]} style={{ marginTop: 10 }}>
@@ -195,7 +196,7 @@ export const profileMetadata = ({
           </div>
         );
       },
-rowExpandable: (record) => true
-}
-};
+      rowExpandable: (record) => true
+    }
+  };
 };

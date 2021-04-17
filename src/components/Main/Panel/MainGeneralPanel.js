@@ -20,13 +20,15 @@ class MainGeneralPanel extends Component {
       form,
       disabled = false,
       description = true,
+      collapsed = false,
+      panelName = 'general',
       extraField
     } = this.props;
 
     return (
       <GenericPanel header={header}
-                    name={'general'}
-                    defaultActiveKey={['general']}>
+                    name={panelName}
+                    defaultActiveKey={collapsed ? null : [panelName]}>
         <div>
           <Input type={'text'}
                  label={t('form:name')}

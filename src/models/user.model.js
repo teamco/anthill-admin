@@ -3,8 +3,16 @@ import dvaModelExtend from 'dva-model-extend';
 import { message } from 'antd';
 import { commonModel } from '@/models/common.model';
 import i18n from '@/utils/i18n';
-import { getUser, getUsers } from '@/services/user.service';
+import { getUser, getUsers, updateUserProfile } from '@/services/user.service';
 import { generateKey } from '@/services/common.service';
+import request from '@/utils/request';
+import { successSaveMsg } from '@/utils/message';
+
+/**
+ * @constant
+ * @type {string}
+ */
+const raiseConditionMsg = i18n.t('error:notFound', { instance: i18n.t('instance:user') });
 
 /**
  * @export
@@ -20,8 +28,14 @@ export default dvaModelExtend(commonModel, {
 
     * query({ payload }, { call, put, select }) {
       const { ability, token } = yield select(state => state.authModel);
+      const { user } = yield select(state => state.userModel);
 
       if (ability.can('read', 'users')) {
+
+        if (payload.profiled) {
+          return false;
+        }
+
         const res = yield call(getUsers, { token });
 
         if (res?.data) {
@@ -115,13 +129,14 @@ export default dvaModelExtend(commonModel, {
       const { ability, token } = yield select(state => state.authModel);
 
       if (ability.can('read', 'users')) {
-        const res = yield call(getUser, { key: payload.user, token });
+        const res = yield call(getUser, { key: payload.userKey, token });
 
         if (res?.data) {
           const { user, error } = res.data;
           if (user) {
 
-            const { name, profile_image } = user.metadata?.profile;
+            const { profile, key } = user.metadata;
+            const { name, profile_image } = profile;
 
             yield put({
               type: 'toForm',
@@ -129,7 +144,7 @@ export default dvaModelExtend(commonModel, {
                 model: 'userModel',
                 form: {
                   ...{ name },
-                  ...{ entityKey: user?.key || (yield call(generateKey)) }
+                  ...{ entityKey: key || (yield call(generateKey)) }
                 }
               }
             });
@@ -138,6 +153,7 @@ export default dvaModelExtend(commonModel, {
               type: 'updateState',
               payload: {
                 user,
+                users: [user],
                 touched: false,
                 fileList: [],
                 previewUrl: profile_image?.url || null
@@ -148,7 +164,7 @@ export default dvaModelExtend(commonModel, {
             return yield put({
               type: 'raiseCondition',
               payload: {
-                message: i18n.t('error:notFound', { instance: i18n.t('instance:user') }),
+                message: raiseConditionMsg,
                 type: 404
               }
             });
@@ -160,10 +176,39 @@ export default dvaModelExtend(commonModel, {
       yield put({
         type: 'raiseCondition',
         payload: {
-          message: i18n.t('error:notFound', { instance: i18n.t('instance:user') }),
+          message: raiseConditionMsg,
           type: 403
         }
       });
+    },
+
+    * updateProfile({ payload }, { put, call, select }) {
+      const { fileList, isEdit, tags, removeFile } = yield select(state => state.userModel);
+      const { ability, token } = yield select(state => state.authModel);
+
+      if (ability.can('update', 'userProfile')) {
+        const save = yield call(updateUserProfile, {
+          entityForm: payload,
+          removeFile,
+          fileList,
+          tags,
+          token
+        });
+
+        if (request.isSuccess((save || {}).status)) {
+          successSaveMsg(isEdit, i18n.t('instance:user'));
+
+          yield put({
+            type: 'getUser',
+            payload: { userKey: save?.data?.location?.key }
+          });
+
+          yield put({
+            type: 'updateState',
+            payload: { touched: false }
+          });
+        }
+      }
     }
   },
   reducers: {}

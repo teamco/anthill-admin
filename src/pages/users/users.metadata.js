@@ -160,18 +160,19 @@ export const metadata = ({
       {
         title: t('table:action'),
         width: 100,
-        render: (record) =>
-          data.length ? (
+        render(record) {
+          const { key, profile } = record?.metadata;
+          return data.length ? (
             <div className={styles.nowrap}>
               {list && (
                 <Tooltip title={t('menu:userProfile')}>
-                  <NavLink to={`/users/${record.id}`}>
+                  <NavLink to={`/users/${key}`}>
                     <ProfileTwoTone className={tableStyles.action}
                                     twoToneColor={'#52c41a'} />
                   </NavLink>
                 </Tooltip>
               )}
-              <Popconfirm title={t('msg:deleteConfirm', { instance: record?.metadata?.profile?.email })}
+              <Popconfirm title={t('msg:deleteConfirm', { instance: profile?.name || profile?.email })}
                           placement={'topRight'}
                           onConfirm={() => onDeleteUser(record)}>
                 <Tooltip title={t('actions:delete')}>
@@ -191,7 +192,8 @@ export const metadata = ({
                 </Button>
               </Dropdown>
             </div>
-          ) : null
+          ) : null;
+        }
       }
     ],
     loading: loading.effects['userModel/query']

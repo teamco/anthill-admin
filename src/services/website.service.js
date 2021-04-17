@@ -111,14 +111,15 @@ export async function updateWebsite({ entityForm, fileList = [], tags = [], remo
   const picture = fileList[0] ? await request.toBase64(fileList[0]) : undefined;
 
   return request.xhr({
-      ...opts, ...{
+      ...opts,
+      ...{
         data: {
           website: {
             name: entityForm.name,
             description: entityForm.description,
             tags: JSON.stringify(tags),
-            picture,
-            remove_picture: removeFile
+            remove_picture: removeFile,
+            picture
           }
         }
       }

@@ -1,7 +1,7 @@
 import i18n from '@/utils/i18n';
 import request from '@/utils/request';
 import { API } from '@/services/config';
-import { errorGetMsg } from '@/utils/message';
+import { errorGetMsg, errorSaveMsg } from '@/utils/message';
 import { getXHRToken } from '@/services/auth.service';
 
 /**
@@ -84,3 +84,40 @@ export async function getProfileImage({ email, protocol = 'http', format = 'json
   const gravatar = require('gravatar');
   return await gravatar.url(email, { protocol, format });
 }
+
+/**
+ * @export
+ * @async
+ * @param entityForm
+ * @param fileList
+ * @param tags
+ * @param removeFile
+ * @param token
+ * @return {Promise<*|undefined>}
+ */
+export const updateUserProfile = async ({ entityForm, fileList = [], tags = [], removeFile, token }) => {
+  const opts = request.config({
+    url: API.users.updateUser,
+    headers: { 'Authorization': getXHRToken({ token })},
+    key: entityForm.entityKey,
+    method: 'put'
+  });
+
+  const profile_image = fileList[0] ? await request.toBase64(fileList[0]) : undefined;
+
+  return request.xhr({
+      ...opts,
+      ...{
+        data: {
+          user: {
+            name: entityForm.name,
+            key: entityForm.entityKey,
+            remove_profile_image: removeFile,
+            profile_image
+          }
+        }
+      }
+    },
+    () => errorSaveMsg(true, i18n.t('instance:user'))
+  );
+};

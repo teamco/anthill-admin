@@ -45,7 +45,7 @@ export default connect(
   (dispatch) => ({
     dispatch,
     onGetUser(user) {
-      dispatch({ type: 'userModel/getUser', payload: { user } });
+      dispatch({ type: 'userModel/getUser', payload: { userKey: user } });
     }
   })
 )(withTranslation()(profile));
