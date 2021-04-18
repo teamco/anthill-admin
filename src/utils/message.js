@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import i18n from './i18n';
+import i18n from '@/utils/i18n';
 
 /**
  * @export
@@ -7,38 +7,43 @@ import i18n from './i18n';
  * @param instance
  */
 export const successSaveMsg = (isEdit, instance) => {
-  message
-    .success(
-      i18n.t(isEdit ? 'msg:successUpdate' : 'msg:successSave', { instance }),
-    )
-    .then();
+  message.success(
+    i18n.t(isEdit ? 'msg:successUpdate' : 'msg:successSave', { instance })
+  ).then();
 };
 
 /**
  * @export
  * @param isEdit
  * @param instance
+ * @param error
  */
-export const errorSaveMsg = (isEdit, instance) => {
-  message
-    .error(i18n.t(isEdit ? 'msg:errorUpdate' : 'msg:errorSave', { instance }))
-    .then();
+export const errorSaveMsg = (isEdit, instance, error) => {
+  message.error(error ? error :
+    i18n.t(isEdit ?
+      'msg:errorUpdate' :
+      'msg:errorSave', { instance }
+    )).then();
 };
 
 /**
  * @export
  * @param instance
+ * @param error
  */
-export const errorGetMsg = (instance) => {
-  message.error(i18n.t('msg:errorGet', { instance })).then();
+export const errorGetMsg = (instance, error) => {
+  message.error(error ? error :
+    i18n.t('msg:errorGet', { instance })).then();
 };
 
 /**
  * @export
  * @param instance
+ * @param error
  */
-export const errorDownloadMsg = (instance) => {
-  message.error(i18n.t('msg:errorDownload', { instance })).then();
+export const errorDownloadMsg = (instance, error) => {
+  message.error(error ? error :
+    i18n.t('msg:errorDownload', { instance })).then();
 };
 
 /**
@@ -52,7 +57,9 @@ export const successDeleteMsg = (instance) => {
 /**
  * @export
  * @param instance
+ * @param error
  */
-export const errorDeleteMsg = (instance) => {
-  message.error(i18n.t('msg:errorDelete', { instance })).then();
+export const errorDeleteMsg = (instance, error) => {
+  message.error(error ? error :
+    i18n.t('msg:errorDelete', { instance })).then();
 };

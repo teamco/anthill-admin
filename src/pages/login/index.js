@@ -16,7 +16,7 @@ import Page from '@/components/Page';
 const login = (props) => {
   const { t, authModel, signInVisible, onQuery, onSignIn, loading } = props;
 
-  const { user, error } = authModel;
+  const { user, errors } = authModel;
 
   const [isSignInVisible, setIsSignInVisible] = useState(true);
   const [isRegisterVisible, setIsRegisterVisible] = useState(false);
@@ -28,10 +28,10 @@ const login = (props) => {
 
   let errorProps = {};
 
-  if (error) {
+  if (errors) {
     errorProps = {
       title: t('error:errorNum', { number: 400 }),
-      error
+      errors
     };
 
     if (isErrorVisible) {
@@ -116,8 +116,8 @@ const login = (props) => {
 };
 
 export default connect(
-  ({ authModel }) => {
-    return { authModel };
+  ({ authModel, loading }) => {
+    return { authModel, loading };
   },
   (dispatch) => ({
     dispatch,

@@ -8,7 +8,8 @@ import { defineAbilityFor } from '@/utils/auth/ability';
 import { getToken } from '@/services/auth.service';
 import { addStore, deleteStore } from '@/utils/storage';
 import { API_CONFIG } from '@/services/config';
-import { getCurrentUser } from '@/services/user.service';
+import { getCurrentUser, registerUser } from '@/services/user.service';
+import { generateKey } from '@/services/common.service';
 
 /**
  * @constant
@@ -27,7 +28,8 @@ export default dvaModelExtend(commonModel, {
     isSignedOut: true,
     ability: null,
     token: null,
-    error: null
+    errors: null,
+    registered: false
   },
   effects: {
 
@@ -36,7 +38,7 @@ export default dvaModelExtend(commonModel, {
       const res = yield call(getToken, { email, password });
 
       if (res?.data) {
-        const { token, error } = res.data;
+        const { token, errors } = res.data;
 
         if (token) {
           addStore(apiConfig.ANTHILL_KEY, token);
@@ -45,7 +47,8 @@ export default dvaModelExtend(commonModel, {
             type: 'updateState',
             payload: {
               token,
-              error: null,
+              errors: null,
+              registered: false,
               isSignedOut: false
             }
           });
@@ -53,20 +56,22 @@ export default dvaModelExtend(commonModel, {
           yield put({ type: 'defineAbilities', payload: { login: true } });
         }
 
-        if (error) {
-          yield put({ type: 'updateState', payload: { error } });
+        if (errors) {
+          yield put({ type: 'updateState', payload: { errors } });
           yield put({ type: 'signOut' });
         }
       }
     },
 
-    * signOut({ payload }, { put }) {
+    * signOut({ payload }, { put, call }) {
       deleteStore(apiConfig.ANTHILL_KEY);
 
       yield put({
         type: 'updateState',
         payload: {
+          ability: (yield call(defineAbilityFor, { user: null })),
           token: null,
+          user: null,
           isSignedOut: true
         }
       });
@@ -74,40 +79,52 @@ export default dvaModelExtend(commonModel, {
       yield put({ type: 'defineAbilities', payload: { login: false } });
     },
 
+    * signUp({ payload }, { put, call, select }) {
+      const key = yield call(generateKey);
+      const res = yield call(registerUser, { ...payload, key });
+
+      if (res?.data) {
+        const { user, errors } = res.data;
+
+        if (user) {
+          yield put({
+            type: 'updateState',
+            payload: { registered: user }
+          });
+        }
+      }
+    },
+
     * defineAbilities({ payload = {} }, { put, call, select }) {
-      let { token, ability } = yield select(state => state.authModel);
+      const { token } = yield select(state => state.authModel);
       const { login } = payload;
+
+      let ability = yield call(defineAbilityFor, { user: null });
+      yield put({ type: 'updateState', payload: { ability } });
 
       if (login) {
         const res = yield call(getCurrentUser, { token });
 
         if (res?.data) {
-          const { user, error } = res?.data;
+          const { user, errors } = res.data;
 
           if (user) {
             ability = yield call(defineAbilityFor, { user });
             return yield put({
               type: 'updateState',
-              payload: { ability, user }
+              payload: {
+                ability,
+                user,
+                registered: false
+              }
             });
           }
 
-          if (error) {
-            yield put({ type: 'updateState', payload: { error } });
+          if (errors) {
+            yield put({ type: 'updateState', payload: { errors } });
             yield put({ type: 'signOut' });
           }
         }
-
-      } else {
-
-        ability = yield call(defineAbilityFor, { user: null });
-        yield put({
-          type: 'updateState',
-          payload: {
-            ability,
-            user: null
-          }
-        });
       }
     }
   },

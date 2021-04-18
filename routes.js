@@ -6,7 +6,7 @@ export const routes = [
     routes: [
       {
         exact: true,
-        path: '/users',
+        path: '/accounts',
         component: '@/pages/users',
         breadcrumb: 'route:users',
         wrappers: [
@@ -15,7 +15,7 @@ export const routes = [
       },
       {
         exact: true,
-        path: '/users/:user',
+        path: '/accounts/:user',
         component: '@/pages/users/[user]/profile',
         breadcrumb: 'route:userProfile',
         wrappers: [

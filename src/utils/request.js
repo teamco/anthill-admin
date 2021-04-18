@@ -31,7 +31,7 @@ function _csrfToken() {
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json;charset=UTF-8',
   'Access-Control-Allow-Origin': '*',
-  accept: 'application/json',
+  accept: 'application/json'
 };
 
 /**
@@ -56,10 +56,11 @@ function adaptUrlToParams(url, key) {
 /**
  * @function
  * @param url
+ * @param direct
  * @return {string}
  */
-function adoptUrlToServer(url) {
-  return `/${apiConfig.API}/${url}`;
+function adoptUrlToAPI(url, direct) {
+  return direct ? `/${url}` : `/${apiConfig.API}/${url}`;
 }
 
 /**
@@ -67,22 +68,23 @@ function adoptUrlToServer(url) {
  * @param {string} url
  * @param {string} [method]
  * @param [headers]
+ * @param {boolean} [direct]
  * @param [args]
  * @return {{headers, method: string, url: *}}
  */
-function config({ url, method = 'get', headers = {}, ...args }) {
+function config({ url, method = 'get', headers = {}, direct = false, ...args }) {
   if (url.match(/:id/)) {
     url = adaptUrlToParams(url, args.key);
   }
 
   return {
     ...{
-      url: adoptUrlToServer(url),
+      url: adoptUrlToAPI(url, direct),
       method,
       responseType: 'json',
-      headers: { ...mergeHeaders(), ...headers },
+      headers: { ...mergeHeaders(), ...headers }
     },
-    ...args,
+    ...args
   };
 }
 
@@ -108,11 +110,12 @@ function toBase64(file) {
  * @return {Q.Promise<any> | undefined}
  */
 function xhr(opts, errorMsg, fallbackUrl) {
-  return axios(opts).catch(() => {
-    errorMsg && errorMsg();
+  return axios(opts).catch(error => {
+    errorMsg && errorMsg(error.message);
     setTimeout(() => {
       // fallbackUrl && (window.location.href = fallbackUrl);
     }, 2000);
+    return error.response;
   });
 }
 
@@ -130,5 +133,5 @@ export default {
   config,
   toBase64,
   isSuccess,
-  adoptUrlToServer,
+  adoptUrlToAPI
 };

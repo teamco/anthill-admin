@@ -27,10 +27,11 @@ export const API_CONFIG = () => {
 export const API = {
   auth: {
     getToken: 'auth',
-    currentUser: 'current_user'
+    currentUser: 'current_user',
+    registerUser: 'users'
   },
   users: {
-    getAllUsers: 'users',
+    getAllUsers: 'all_users',
     getUser: 'user/:id',
     updateUser: 'user/:id'
   },

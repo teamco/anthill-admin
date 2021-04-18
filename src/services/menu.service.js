@@ -15,7 +15,7 @@ import {
 export const menus = [
   {
     key: 'menu:users',
-    url: '/users',
+    url: '/accounts',
     icon: <TeamOutlined />
   },
   {

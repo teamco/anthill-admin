@@ -28,7 +28,6 @@ export default dvaModelExtend(commonModel, {
 
     * query({ payload }, { call, put, select }) {
       const { ability, token } = yield select(state => state.authModel);
-      const { user } = yield select(state => state.userModel);
 
       if (ability.can('read', 'users')) {
 
@@ -39,7 +38,7 @@ export default dvaModelExtend(commonModel, {
         const res = yield call(getUsers, { token });
 
         if (res?.data) {
-          const { users, error } = res.data;
+          const { users, errors } = res.data;
           if (users) {
 
             return yield put({
@@ -132,7 +131,7 @@ export default dvaModelExtend(commonModel, {
         const res = yield call(getUser, { key: payload.userKey, token });
 
         if (res?.data) {
-          const { user, error } = res.data;
+          const { user, errors } = res.data;
           if (user) {
 
             const { profile, key } = user.metadata;

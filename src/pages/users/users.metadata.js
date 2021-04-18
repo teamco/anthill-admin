@@ -33,7 +33,7 @@ const menu = (t, record, onDeleteUser, onSignOutUser, onUnlockUser, onLockUser, 
     <Menu.Item key={'websites'}
                disabled={false}
                icon={<GlobalOutlined />}>
-      <NavLink to={`/users/${record.id}/websites`}>
+      <NavLink to={`/accounts/${record.id}/websites`}>
         {t('menu:userWebsites')}
       </NavLink>
     </Menu.Item>
@@ -166,7 +166,7 @@ export const metadata = ({
             <div className={styles.nowrap}>
               {list && (
                 <Tooltip title={t('menu:userProfile')}>
-                  <NavLink to={`/users/${key}`}>
+                  <NavLink to={`/accounts/${key}`}>
                     <ProfileTwoTone className={tableStyles.action}
                                     twoToneColor={'#52c41a'} />
                   </NavLink>

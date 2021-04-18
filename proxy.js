@@ -34,13 +34,14 @@ const proxyOpts = api => ({
     //   proxyReq.setHeader('origin', api);
     // }
 
-    // console.log(api, proxyReq, req, res);
+    console.log(req.method);
   }
 });
 
 const routes = {
   api: railsServer,
-  uploads: railsServer
+  uploads: railsServer,
+  users: railsServer
 };
 
 const proxy = {};

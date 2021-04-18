@@ -32,8 +32,36 @@ export function getCurrentUser({ token }) {
     url: API.auth.currentUser,
     headers: { 'Authorization': getXHRToken({ token }) }
   });
+
   return request.xhr(opts,
-    () => errorGetMsg(i18n.t('instance:user')),
+    (error) => errorGetMsg(i18n.t('instance:user'), error),
+    '/home'
+  );
+}
+
+/**
+ * @export
+ * @param email
+ * @param password
+ * @param name
+ * @param key
+ * @return {Q.Promise<*>|undefined}
+ */
+export function registerUser({ email, password, name, key }) {
+  const opts = request.config({
+    url: API.auth.registerUser,
+    method: 'post',
+    direct: true,
+    data: {
+      email,
+      password,
+      name,
+      key
+    }
+  });
+
+  return request.xhr(opts,
+    (error) => errorSaveMsg(false, i18n.t('instance:user'), error),
     '/home'
   );
 }
@@ -48,8 +76,9 @@ export function getUsers({ token }) {
     url: API.users.getAllUsers,
     headers: { 'Authorization': getXHRToken({ token }) }
   });
+
   return request.xhr(opts,
-    () => errorGetMsg(i18n.t('menu:users')),
+    (error) => errorGetMsg(i18n.t('menu:users'), error),
     '/home'
   );
 }
@@ -66,8 +95,9 @@ export function getUser({ key, token }) {
     headers: { 'Authorization': getXHRToken({ token }) },
     key
   });
+
   return request.xhr(opts,
-    () => errorGetMsg(i18n.t('instance:user')),
+    (error) => errorGetMsg(i18n.t('instance:user'), error),
     '/home'
   );
 }
@@ -98,7 +128,7 @@ export async function getProfileImage({ email, protocol = 'http', format = 'json
 export const updateUserProfile = async ({ entityForm, fileList = [], tags = [], removeFile, token }) => {
   const opts = request.config({
     url: API.users.updateUser,
-    headers: { 'Authorization': getXHRToken({ token })},
+    headers: { 'Authorization': getXHRToken({ token }) },
     key: entityForm.entityKey,
     method: 'put'
   });
@@ -118,6 +148,6 @@ export const updateUserProfile = async ({ entityForm, fileList = [], tags = [], 
         }
       }
     },
-    () => errorSaveMsg(true, i18n.t('instance:user'))
+    (error) => errorSaveMsg(true, i18n.t('instance:user'), error)
   );
 };

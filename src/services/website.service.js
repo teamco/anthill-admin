@@ -13,12 +13,12 @@ import { getXHRToken } from '@/services/auth.service';
 export function getWebsites({ token }) {
   const opts = request.config({
     url: API.websites.getAllWebsites,
-    headers: { 'Authorization': getXHRToken({ token })}
+    headers: { 'Authorization': getXHRToken({ token }) }
   });
   return request.xhr(
     opts,
-    () => errorGetMsg(i18n.t('menu:websites')),
-    '/pages'
+    (error) => errorGetMsg(i18n.t('menu:websites'), error),
+    '/home'
   );
 }
 
@@ -31,13 +31,13 @@ export function getWebsites({ token }) {
 export function getWebsite({ key, token }) {
   const opts = request.config({
     url: API.websites.getWebsite,
-    headers: { 'Authorization': getXHRToken({ token })},
+    headers: { 'Authorization': getXHRToken({ token }) },
     key
   });
   return request.xhr(
     opts,
-    () => errorGetMsg(i18n.t('instance:website')),
-    '/pages/websites'
+    (error) => errorGetMsg(i18n.t('instance:website'), error),
+    '/websites'
   );
 }
 
@@ -53,8 +53,8 @@ export function getAssignedWidgets({ key }) {
   });
   return request.xhr(
     opts,
-    () => errorGetMsg(i18n.t('instance:website')),
-    '/pages/websites'
+    (error) => errorGetMsg(i18n.t('instance:website'), error),
+    '/websites'
   );
 }
 
@@ -87,7 +87,7 @@ export async function saveWebsite({ entityForm, fileList = [], tags = [] }) {
         }
       }
     },
-    () => errorSaveMsg(false, i18n.t('instance:website'))
+    (error) => errorSaveMsg(false, i18n.t('instance:website'), error)
   );
 }
 
@@ -103,7 +103,7 @@ export async function saveWebsite({ entityForm, fileList = [], tags = [] }) {
 export async function updateWebsite({ entityForm, fileList = [], tags = [], removeFile, token }) {
   const opts = request.config({
     url: API.websites.updateWebsite,
-    headers: { 'Authorization': getXHRToken({ token })},
+    headers: { 'Authorization': getXHRToken({ token }) },
     key: entityForm.entityKey,
     method: 'put'
   });
@@ -124,7 +124,7 @@ export async function updateWebsite({ entityForm, fileList = [], tags = [], remo
         }
       }
     },
-    () => errorSaveMsg(true, i18n.t('instance:website'))
+    (error) => errorSaveMsg(true, i18n.t('instance:website'), error)
   );
 }
 
@@ -140,9 +140,8 @@ export async function destroyWebsite({ entityKey }) {
     method: 'delete'
   });
 
-  return request.xhr(
-    opts,
-    () => errorDeleteMsg(i18n.t('instance:website'))
+  return request.xhr(opts,
+    (error) => errorDeleteMsg(i18n.t('instance:website'), error)
   );
 }
 
@@ -169,6 +168,6 @@ export async function saveWebsiteWidgets({ entityForm, widget_ids = [] }) {
         }
       }
     },
-    () => errorSaveMsg(false, i18n.t('website:assignWidgets'))
+    (error) => errorSaveMsg(false, i18n.t('website:assignWidgets'), error)
   );
 }

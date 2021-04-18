@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Modal, Row, Tooltip } from 'antd';
 import { FormOutlined, LockTwoTone, LoginOutlined } from '@ant-design/icons';
 
@@ -30,6 +30,15 @@ const SignInModal = (props) => {
     setIsRegisterVisible
   } = props;
 
+  const { registered } = authModel;
+
+  const [didMount, setDidMount] = useState(false);
+
+  useEffect(() => {
+    setDidMount(true);
+    return () => setDidMount(false);
+  }, []);
+
   const modalHeader = (
     <div className={styles.modalHeader}>
       <h2>
@@ -39,7 +48,7 @@ const SignInModal = (props) => {
     </div>
   );
 
-  return (
+  return didMount && (
     <Modal title={modalHeader}
            destroyOnClose={true}
            visible={isSignInVisible}
@@ -77,11 +86,12 @@ const SignInModal = (props) => {
                 <Button type={'default'}
                         size={'default'}
                         block
+                        disabled={!!registered}
                         onClick={() => handleCancel(() => {
                           setIsSignInVisible(false);
                           setIsRegisterVisible(true);
                         })}
-                        loading={loading}
+                        loading={loading.effects['authModel/signIn']}
                         icon={<FormOutlined />}>
                   {t('auth:register')}
                 </Button>
@@ -94,7 +104,7 @@ const SignInModal = (props) => {
                         icon={<LoginOutlined />}
                         size={'default'}
                         block
-                        loading={loading}>
+                        loading={loading.effects['authModel/signIn']}>
                   {t('auth:signIn')}
                 </Button>
               </Tooltip>

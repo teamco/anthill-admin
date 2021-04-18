@@ -128,7 +128,7 @@ export default withRouter(
         dispatch({ type: 'appModel/checkActiveTab', payload });
       },
       onDefineAbilities() {
-        dispatch({ type: 'authModel/defineAbilities' });
+        dispatch({ type: 'authModel/defineAbilities', payload: { login: true } });
       },
       onQuery() {
         dispatch({ type: 'appModel/appQuery' });

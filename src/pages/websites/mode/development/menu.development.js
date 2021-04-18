@@ -100,7 +100,7 @@ const MenuDevelopment = props => {
    */
   const _widget = widget => (
     <div onClick={() => onAddWidget(widget)}>
-      <img src={request.adoptUrlToServer(widget.picture.thumb.url)}
+      <img src={request.adoptUrlToAPI(widget.picture.thumb.url)}
            alt={widget.name}/>
       <Tooltip title={widget.description}
                placement={'right'}>

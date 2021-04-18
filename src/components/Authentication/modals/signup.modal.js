@@ -29,26 +29,43 @@ const SignUpModal = props => {
     setIsRegisterVisible,
     onSignUp,
     onRegisterData,
-    loading
+    loading,
+    authModel
   } = props;
 
+  const { registered } = authModel;
+
+  const [didMount, setDidMount] = useState(false);
   const [meterValue, setMeterValue] = useState(null);
   const [meterText, setMeterText] = useState('');
 
+  /**
+   * @constant
+   * @function
+   */
   const handleCancel = () => {
-    !signInVisible && setIsRegisterVisible(false);
-  };
+    setIsSignInVisible(true);
+    setIsRegisterVisible(false);
+  }
+
+  useEffect(() => {
+    setDidMount(true);
+    if (registered) {
+      handleCancel();
+    }
+
+    return () => setDidMount(false);
+  }, [registered]);
 
   /**
    * @constant
    * @param values
    */
   const onFinish = values => {
-    onRegisterData({
+    onSignUp({
       email: values.email,
-      firstName: values.firstName,
-      lastName: values.lastName,
-      isBusinessUser: false
+      name: values.name,
+      password: values.password
     });
   };
 
@@ -62,14 +79,13 @@ const SignUpModal = props => {
     </div>
   );
 
-  return (
+  return didMount && (
     <Modal title={modalHeader}
            visible={isRegisterVisible}
            destroyOnClose={true}
            closable={!signInVisible}
            className={styles.authModal}
            centered
-           onCancel={handleCancel}
            maskStyle={signInVisible ? { backgroundColor: 'rgba(0, 0, 0, 0.45)' } : null}
            footer={null}>
       <Form name={'auth_signup'}
@@ -156,10 +172,7 @@ const SignUpModal = props => {
                         size={'default'}
                         block
                         loading={loading.effects['authModel/signUp']}
-                        onClick={() => {
-                          setIsSignInVisible(true);
-                          setIsRegisterVisible(false);
-                        }}>
+                        onClick={handleCancel}>
                   {t('auth:signIn')}
                 </Button>
               </Tooltip>
@@ -188,7 +201,7 @@ export default connect(
   (dispatch) => ({
     dispatch,
     onSignUp(user) {
-      dispatch({ type: 'authModel/signUp', payload: { user } });
+      dispatch({ type: 'authModel/signUp', payload: { ...user } });
     }
   })
 )(withTranslation()(SignUpModal));
