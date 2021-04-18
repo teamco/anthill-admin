@@ -1,8 +1,12 @@
 import React from 'react';
-import { Button, Col, Divider, Form, Input, Modal, Row, Tooltip } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Tooltip } from 'antd';
 import { FormOutlined, LockTwoTone, LoginOutlined } from '@ant-design/icons';
 
+import { withTranslation } from 'react-i18next';
 import { emailPartial } from '@/components/partials/email.partial';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
 import styles from '@/components/Authentication/authentication.module.less';
 
@@ -28,8 +32,10 @@ const SignInModal = (props) => {
 
   const modalHeader = (
     <div className={styles.modalHeader}>
-      <h4>{t('auth:signInTitle')}</h4>
-      <h6>{t('auth:signInDesc')}</h6>
+      <h2>
+        <FontAwesomeIcon icon={faUserCircle} />
+        {t('auth:signInDesc')}
+      </h2>
     </div>
   );
 
@@ -50,11 +56,9 @@ const SignInModal = (props) => {
             className={styles.loginForm}
             size={'large'}
             onFinish={onFinish}>
-        {emailPartial({ t, name: 'email' })}
+        {emailPartial({ t, name: 'email', helper: false })}
         <Form.Item name={'password'}
-                   extra={t('auth:passwordHelper', {
-                     length: authModel.MIN_PASSWORD_LENGTH
-                   })}
+                   style={{marginTop: 20}}
                    rules={[
                      {
                        required: true,
@@ -80,6 +84,21 @@ const SignInModal = (props) => {
                 </Button>
               </Tooltip>
             </Col>
+            <Col span={10}>
+              <Tooltip title={t('auth:registerTitle')}>
+                <Button type={'default'}
+                        size={'default'}
+                        block
+                        onClick={() => handleCancel(() => {
+                          setIsSignInVisible(false);
+                          setIsRegisterVisible(true);
+                        })}
+                        loading={loading}
+                        icon={<FormOutlined />}>
+                  {t('auth:register')}
+                </Button>
+              </Tooltip>
+            </Col>
           </Row>
         </Form.Item>
       </Form>
@@ -87,4 +106,4 @@ const SignInModal = (props) => {
   );
 };
 
-export default SignInModal;
+export default withTranslation()(SignInModal);

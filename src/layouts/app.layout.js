@@ -32,7 +32,8 @@ class AppLayout extends Component {
       loading,
       onToggleMenu,
       onNotification,
-      onRoute
+      onRoute,
+      onSignOut
     } = this.props;
 
     const {
@@ -71,7 +72,9 @@ class AppLayout extends Component {
                            onCollapse={onToggleMenu} />
               )}
               <Layout className={'site-layout'}>
-                {mainHeader && <Main.Header />}
+                {mainHeader && (
+                  <Main.Header />
+                )}
                 <Content>
                   <Loader fullScreen spinning={spinningLocal(loading)} />
                   <Form.Provider>
@@ -119,16 +122,10 @@ export default withRouter(
         history.push(path);
       },
       onToggleMenu(collapse) {
-        dispatch({
-          type: `appModel/toggleMenu`,
-          payload: { collapse }
-        });
+        dispatch({ type: `appModel/toggleMenu`, payload: { collapse } });
       },
       onActiveTab(payload) {
-        dispatch({
-          type: 'appModel/checkActiveTab',
-          payload
-        });
+        dispatch({ type: 'appModel/checkActiveTab', payload });
       },
       onDefineAbilities() {
         dispatch({ type: 'authModel/defineAbilities' });

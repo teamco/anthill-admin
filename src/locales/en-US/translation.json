@@ -79,6 +79,7 @@
     "invalidLayout": "Not compatible layout",
     "cloneFrom": "Clone from {{instance}}",
     "fullName": "Full Name",
+    "displayName": "Display Name",
     "firstName": "First Name",
     "lastName": "Last Name",
     "entityKey": "Entity Key",

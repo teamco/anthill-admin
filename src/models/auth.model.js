@@ -5,8 +5,8 @@ import dvaModelExtend from 'dva-model-extend';
 
 import { commonModel } from '@/models/common.model';
 import { defineAbilityFor } from '@/utils/auth/ability';
-import { getStoredToken, getToken } from '@/services/auth.service';
-import { addStore, deleteStore, getStore } from '@/utils/storage';
+import { getToken } from '@/services/auth.service';
+import { addStore, deleteStore } from '@/utils/storage';
 import { API_CONFIG } from '@/services/config';
 import { getCurrentUser } from '@/services/user.service';
 
@@ -50,7 +50,7 @@ export default dvaModelExtend(commonModel, {
             }
           });
 
-          yield put({ type: 'defineAbilities' });
+          yield put({ type: 'defineAbilities', payload: { login: true } });
         }
 
         if (error) {
@@ -66,36 +66,40 @@ export default dvaModelExtend(commonModel, {
       yield put({
         type: 'updateState',
         payload: {
-          ability: null,
           token: null,
-          user: null,
           isSignedOut: true
         }
       });
+
+      yield put({ type: 'defineAbilities', payload: { login: false } });
     },
 
-    * defineAbilities({ payload }, { put, call, select }) {
+    * defineAbilities({ payload = {} }, { put, call, select }) {
       let { token, ability } = yield select(state => state.authModel);
+      const { login } = payload;
 
-      const res = yield call(getCurrentUser, { token });
+      if (login) {
+        const res = yield call(getCurrentUser, { token });
 
-      if (res?.data) {
-        const { user, error } = res?.data;
+        if (res?.data) {
+          const { user, error } = res?.data;
 
-        if (user) {
-          ability = yield call(defineAbilityFor, { user });
-          return yield put({
-            type: 'updateState',
-            payload: { ability, user }
-          });
-        }
+          if (user) {
+            ability = yield call(defineAbilityFor, { user });
+            return yield put({
+              type: 'updateState',
+              payload: { ability, user }
+            });
+          }
 
-        if (error) {
-          yield put({ type: 'updateState', payload: { error } });
-          yield put({ type: 'signOut' });
+          if (error) {
+            yield put({ type: 'updateState', payload: { error } });
+            yield put({ type: 'signOut' });
+          }
         }
 
       } else {
+
         ability = yield call(defineAbilityFor, { user: null });
         yield put({
           type: 'updateState',

@@ -5,9 +5,8 @@ import { withTranslation } from 'react-i18next';
 import { Button, Tooltip } from 'antd';
 import ErrorModal from '@/components/Authentication/modals/error.modal';
 import SignInModal from '@/components/Authentication/modals/signin.modal';
+import SignUpModal from '@/components/Authentication/modals/signup.modal';
 import Page from '@/components/Page';
-
-import Logo from '@/components/Logo';
 
 /**
  * @constant
@@ -95,7 +94,6 @@ const login = (props) => {
   };
 
   const signInProps = {
-    t,
     isSignInVisible,
     signInVisible: true,
     handleCancel,
@@ -106,21 +104,17 @@ const login = (props) => {
     setIsRegisterVisible
   };
 
-  const logoProps = {
-    url: '/',
-    title: 'AntHill'
-  };
-
   return (
     <Page component={'login'}>
-      {/*<Logo {...logoProps} />*/}
       <ErrorModal errorProps={errorProps}
                   isErrorVisible={isErrorVisible}
                   handleErrorCancel={handleErrorCancel} />
       <SignInModal {...signInProps} />
+      <SignUpModal {...signUpProps} />
     </Page>
   );
 };
+
 export default connect(
   ({ authModel }) => {
     return { authModel };
