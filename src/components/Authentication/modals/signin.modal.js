@@ -70,20 +70,8 @@ const SignInModal = (props) => {
         </Form.Item>
         <Form.Item>
           <Row gutter={[16, 16]}
-               justify={'center'}
+               justify={'end'}
                className={styles.loginBtns}>
-            <Col span={10}>
-              <Tooltip title={t('auth:signInTitle')}>
-                <Button type={'primary'}
-                        htmlType={'submit'}
-                        icon={<LoginOutlined />}
-                        size={'default'}
-                        block
-                        loading={loading}>
-                  {t('auth:signIn')}
-                </Button>
-              </Tooltip>
-            </Col>
             <Col span={10}>
               <Tooltip title={t('auth:registerTitle')}>
                 <Button type={'default'}
@@ -96,6 +84,18 @@ const SignInModal = (props) => {
                         loading={loading}
                         icon={<FormOutlined />}>
                   {t('auth:register')}
+                </Button>
+              </Tooltip>
+            </Col>
+            <Col span={10}>
+              <Tooltip title={t('auth:signInTitle')}>
+                <Button type={'primary'}
+                        htmlType={'submit'}
+                        icon={<LoginOutlined />}
+                        size={'default'}
+                        block
+                        loading={loading}>
+                  {t('auth:signIn')}
                 </Button>
               </Tooltip>
             </Col>

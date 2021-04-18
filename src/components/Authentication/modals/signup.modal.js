@@ -54,10 +54,10 @@ const SignUpModal = props => {
 
   const modalHeader = (
     <div className={styles.modalHeader}>
-      <div className={styles.icon}>
+      <h2>
         <FontAwesomeIcon icon={faUserCircle} />
-      </div>
-      <h4>{t('auth:signUpTitle')}</h4>
+        {t('auth:signUpTitle')}
+      </h2>
       <h6>{t('auth:signUpDesc')}</h6>
     </div>
   );
@@ -145,33 +145,34 @@ const SignUpModal = props => {
         <Strength className={styles.passwordStrength}
                   meterValue={meterValue}
                   meterText={meterText} />
-        <Form.Item style={{ marginBottom: 0, marginTop: 20 }}>
+        <Form.Item>
           <Row gutter={[16, 16]}
+               justify={'end'}
                className={styles.loginBtns}>
-            <Col span={12}>
-              <Tooltip title={t('auth:registerTitle')}>
-                <Button type={'primary'}
-                        size={'default'}
-                        htmlType={'submit'}
-                        block
-                        loading={loading}
-                        icon={<FormOutlined />}>
-                  {t('auth:register')}
-                </Button>
-              </Tooltip>
-            </Col>
-            <Col span={12}>
+            <Col span={8}>
               <Tooltip title={t('auth:signInTitle')}>
                 <Button type={'default'}
                         icon={<LoginOutlined />}
                         size={'default'}
                         block
-                        loading={loading}
+                        loading={loading.effects['authModel/signUp']}
                         onClick={() => {
                           setIsSignInVisible(true);
                           setIsRegisterVisible(false);
                         }}>
                   {t('auth:signIn')}
+                </Button>
+              </Tooltip>
+            </Col>
+            <Col span={8}>
+              <Tooltip title={t('auth:registerTitle')}>
+                <Button type={'primary'}
+                        size={'default'}
+                        htmlType={'submit'}
+                        block
+                        loading={loading.effects['authModel/signUp']}
+                        icon={<FormOutlined />}>
+                  {t('auth:register')}
                 </Button>
               </Tooltip>
             </Col>
