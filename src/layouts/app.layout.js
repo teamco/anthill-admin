@@ -1,7 +1,7 @@
 import React, { Component, memo, Suspense } from 'react';
 import { connect } from 'dva';
 import { history, withRouter, Helmet } from 'umi';
-import { Form, Layout } from 'antd';
+import { Form, Layout, BackTop } from 'antd';
 import { withTranslation } from 'react-i18next';
 import ReactInterval from 'react-interval';
 
@@ -67,7 +67,7 @@ class AppLayout extends Component {
                        callback={onNotification} />
         <Suspense fallback={
           <Loader fullScreen
-                  spinning={loading.effects['appModel/query']} />
+                  spinning={loading.effects['appModel/appQuery']} />
         }>
           {/* Have to refresh for production environment */}
           <Layout style={{ minHeight: '100vh' }}
@@ -107,6 +107,7 @@ class AppLayout extends Component {
               )}
             </Layout>
           </Layout>
+          <BackTop />
         </Suspense>
       </>
     );

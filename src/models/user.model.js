@@ -95,50 +95,6 @@ export default dvaModelExtend(commonModel, {
       // }
     },
 
-    * lock({ payload }, { put, call }) {
-      // const { user } = payload;
-      //
-      // let _userExist = yield call(findUser, {
-      //   uid: user.uid,
-      //   metadata: {
-      //     isLocked: true,
-      //     updatedAt: +(new Date)
-      //   }
-      // });
-      //
-      // yield put({
-      //   type: 'updateQuery',
-      //   payload: { _userExist }
-      // });
-    },
-
-    * unlock({ payload }, { put, call }) {
-      // const { user } = payload;
-      //
-      // let _userExist = yield call(findUser, {
-      //   uid: user.uid,
-      //   metadata: {
-      //     isLocked: false,
-      //     updatedAt: +(new Date)
-      //   }
-      // });
-      //
-      // yield put({
-      //   type: 'updateQuery',
-      //   payload: { _userExist }
-      // });
-    },
-
-    * validateUser({ payload }, { put }) {
-      // const { selectedUser, userId } = payload;
-      //
-      // if (selectedUser?.id === userId) {
-      //   // TODO (teamco): Do something.
-      // } else {
-      //   yield put({ type: 'getUser', payload: { userId } });
-      // }
-    },
-
     * getUser({ payload }, { put, call, select }) {
       const { ability, token } = yield select(state => state.authModel);
 
@@ -208,7 +164,7 @@ export default dvaModelExtend(commonModel, {
 
           yield put({
             type: 'getUser',
-            payload: { userKey: save?.data?.location?.key }
+            payload: { userKey: save?.data?.user?.metadata?.key }
           });
 
           yield put({
