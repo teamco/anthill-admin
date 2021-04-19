@@ -4,6 +4,8 @@ import { withTranslation } from 'react-i18next';
 import { NavLink } from 'umi';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 
+import styles from '@/components/Main/Breadcrumbs/breadcrumbs.module.less';
+
 /**
  * This component is wrapped in withBreadcrumbs which automatically
  * generates breadcrumbs based on the current route.
@@ -26,7 +28,7 @@ const Breadcrumbs = ({ t, breadcrumbs, meta, onUpdateDocumentMeta }) => {
   }, [title !== meta.title]);
 
   return (
-    <Breadcrumb className={'site-breadcrumbs'}>
+    <Breadcrumb className={styles.breadcrumbs}>
       {breadcrumbs.map(({ match, breadcrumb }) => (
         <Breadcrumb.Item key={match.url}>
           <NavLink to={match.url}>{breadcrumb.props.children}</NavLink>

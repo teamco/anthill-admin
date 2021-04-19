@@ -8,7 +8,6 @@ export const routes = [
         exact: true,
         path: '/accounts',
         component: '@/pages/users',
-        breadcrumb: 'route:users',
         wrappers: [
           '@/wrappers/auth.wrapper'
         ]
@@ -17,7 +16,6 @@ export const routes = [
         exact: true,
         path: '/accounts/:user',
         component: '@/pages/users/[user]/profile',
-        breadcrumb: 'route:userProfile',
         wrappers: [
           '@/wrappers/auth.wrapper'
         ]
@@ -53,7 +51,6 @@ export const routes = [
         exact: true,
         path: '/websites',
         component: '@/pages/websites',
-        breadcrumb: 'route:website',
         wrappers: [
           '@/wrappers/auth.wrapper'
         ]
@@ -62,7 +59,6 @@ export const routes = [
         exact: true,
         path: '/websites/:website',
         component: '@/pages/websites/[website]',
-        breadcrumb: 'route:website',
         wrappers: [
           '@/wrappers/auth.wrapper'
         ]
