@@ -1,9 +1,9 @@
 /** @type {Function} */
 import dvaModelExtend from 'dva-model-extend';
-import { message } from 'antd';
+import { history } from 'umi';
 import { commonModel } from '@/models/common.model';
 import i18n from '@/utils/i18n';
-import { getUser, getUsers, updateUserProfile } from '@/services/user.service';
+import { forceSignOut, getUser, getUsers, updateUserProfile } from '@/services/user.service';
 import { generateKey } from '@/services/common.service';
 import request from '@/utils/request';
 import { successSaveMsg } from '@/utils/message';
@@ -54,7 +54,8 @@ export default dvaModelExtend(commonModel, {
             return yield put({
               type: 'raiseCondition',
               payload: {
-                message: i18n.t('error:notFound', { instance: i18n.t('instance:user') }),
+                message: raiseConditionMsg,
+                redirect: true,
                 type: 404
               }
             });
@@ -65,10 +66,24 @@ export default dvaModelExtend(commonModel, {
       yield put({
         type: 'raiseCondition',
         payload: {
-          message: i18n.t('error:notFound', { instance: i18n.t('instance:user') }),
+          message: raiseConditionMsg,
+          redirect: true,
           type: 403
         }
       });
+    },
+
+    * signOutUser({ payload }, { put, call, select }) {
+      const { ability, token } = yield select(state => state.authModel);
+
+      if (ability.can('logout', 'user')) {
+        const signOut = yield call(forceSignOut, {
+          key: payload?.key,
+          token
+        });
+        
+        debugger
+      }
     },
 
     * delete({ payload }, { put }) {
@@ -148,7 +163,7 @@ export default dvaModelExtend(commonModel, {
               }
             });
 
-            return yield put({
+            yield put({
               type: 'updateState',
               payload: {
                 user,
@@ -158,17 +173,10 @@ export default dvaModelExtend(commonModel, {
                 previewUrl: profile_image?.url || null
               }
             });
-          } else {
-
-            return yield put({
-              type: 'raiseCondition',
-              payload: {
-                message: raiseConditionMsg,
-                type: 404
-              }
-            });
 
           }
+
+          return false;
         }
       }
 
@@ -176,6 +184,7 @@ export default dvaModelExtend(commonModel, {
         type: 'raiseCondition',
         payload: {
           message: raiseConditionMsg,
+          redirect: true,
           type: 403
         }
       });
@@ -207,6 +216,16 @@ export default dvaModelExtend(commonModel, {
             payload: { touched: false }
           });
         }
+      } else {
+
+        yield put({
+          type: 'raiseCondition',
+          payload: {
+            message: raiseConditionMsg,
+            redirect: false,
+            type: 403
+          }
+        });
       }
     }
   },

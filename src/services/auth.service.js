@@ -41,6 +41,7 @@ export function getToken({ email, password }) {
     url: API.auth.getToken,
     method: 'post'
   });
+
   return request.xhr({
       ...opts, ...{
         data: {

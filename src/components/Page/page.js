@@ -3,12 +3,13 @@ import { connect } from 'dva';
 import { Layout, Spin } from 'antd';
 import classnames from 'classnames';
 import { withTranslation } from 'react-i18next';
+import { Prompt } from 'umi';
 
+import Login from '@/pages/login';
 import Page403 from '@/pages/403';
 import { Can } from '@/utils/auth/can';
 
 import styles from '@/components/Page/page.module.less';
-import { Prompt } from 'umi';
 
 const { Content } = Layout;
 
@@ -22,7 +23,7 @@ function Page({
   component,
   authModel
 }) {
-  const { ability } = authModel;
+  const { ability, user } = authModel;
 
   useEffect(() => {
   }, []);

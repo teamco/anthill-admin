@@ -37,7 +37,7 @@ const login = (props) => {
     if (isErrorVisible) {
       // TODO (teamco): Do something.
     } else {
-      setIsErrorVisible(true);
+      // setIsErrorVisible(true);
     }
   }
 

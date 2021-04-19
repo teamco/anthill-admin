@@ -6,11 +6,11 @@ import { getXHRToken } from '@/services/auth.service';
 
 /**
  * @export
- * @param {{superadmin_role}} roles
+ * @param {{metadata:{roles:{superadmin_role}}}} user
  * @return {*}
  */
-export const isAdmin = (roles) => {
-  return roles.superadmin_role;
+export const isAdmin = (user) => {
+  return user?.metadata?.roles?.superadmin_role;
 };
 
 /**
@@ -147,6 +147,21 @@ export const updateUserProfile = async ({ entityForm, fileList = [], tags = [], 
           }
         }
       }
+    },
+    (error) => errorSaveMsg(true, i18n.t('instance:user'), error)
+  );
+};
+
+export const forceSignOut = async ({ key, token }) => {
+  const opts = request.config({
+    url: API.auth.forceLogout,
+    headers: { 'Authorization': getXHRToken({ token }) },
+    method: 'post'
+  });
+
+  return request.xhr({
+      ...opts,
+      ...{ data: { key } }
     },
     (error) => errorSaveMsg(true, i18n.t('instance:user'), error)
   );

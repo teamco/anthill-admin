@@ -53,7 +53,6 @@ const SignInModal = (props) => {
            destroyOnClose={true}
            visible={isSignInVisible}
            closable={closable || !signInVisible}
-           onCancel={handleCancel}
            className={styles.authModal}
            width={350}
            centered

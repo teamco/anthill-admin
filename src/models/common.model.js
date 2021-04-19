@@ -32,15 +32,9 @@ const commonModel = {
     fileList: [],
     fileName: null
   },
-  subscriptions: {
-    setupHistory(setup) {
-      const { dispatch, history } = setup;
-      return history.listen((data) => {
-      });
-    }
-  },
 
   effects: {
+
     * updateTags({ payload }, { put }) {
       yield put({
         type: 'updateState',
@@ -143,7 +137,7 @@ const commonModel = {
 
     * raiseCondition({ payload }) {
       message.warning(payload.message).then(() => {
-        history.push(`/errors/${payload.type}`);
+        payload.redirect && history.push(`/errors/${payload.type}`);
       });
     }
   },

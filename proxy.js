@@ -33,8 +33,6 @@ const proxyOpts = api => ({
     // if (proxyReq.getHeader('origin')) {
     //   proxyReq.setHeader('origin', api);
     // }
-
-    console.log(req.method);
   }
 });
 

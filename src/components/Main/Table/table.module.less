@@ -1,6 +1,20 @@
 .grid {
   width: 100%;
 
+  &.hovered {
+    :global {
+      td.ant-table-cell:last-child > * {
+        visibility: hidden;
+      }
+
+      tr:hover {
+        td.ant-table-cell:last-child > * {
+          visibility: visible;
+        }
+      }
+    }
+  }
+
   .action {
     margin-right: 10px;
   }

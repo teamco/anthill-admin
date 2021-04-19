@@ -10,6 +10,8 @@ import { addStore, deleteStore } from '@/utils/storage';
 import { API_CONFIG } from '@/services/config';
 import { getCurrentUser, registerUser } from '@/services/user.service';
 import { generateKey } from '@/services/common.service';
+import { message } from 'antd';
+import i18n from '@/utils/i18n';
 
 /**
  * @constant
@@ -59,6 +61,8 @@ export default dvaModelExtend(commonModel, {
         if (errors) {
           yield put({ type: 'updateState', payload: { errors } });
           yield put({ type: 'signOut' });
+
+          yield call(message.error, errors);
         }
       }
     },
@@ -100,20 +104,30 @@ export default dvaModelExtend(commonModel, {
       const { login } = payload;
 
       let ability = yield call(defineAbilityFor, { user: null });
-      yield put({ type: 'updateState', payload: { ability } });
 
       if (login) {
+
+        /**
+         * @type {{data:{
+         *  user:{metadata:{auth:{force_sign_out}}},
+         *  errors
+         * }}}
+         */
         const res = yield call(getCurrentUser, { token });
 
         if (res?.data) {
           const { user, errors } = res.data;
 
+          // Handle forced logout user
+          if (user?.metadata?.auth?.force_sign_out) {
+            return yield put({ type: 'signOut' });
+          }
+
           if (user) {
             ability = yield call(defineAbilityFor, { user });
-            return yield put({
+            yield put({
               type: 'updateState',
               payload: {
-                ability,
                 user,
                 registered: false
               }
@@ -123,9 +137,13 @@ export default dvaModelExtend(commonModel, {
           if (errors) {
             yield put({ type: 'updateState', payload: { errors } });
             yield put({ type: 'signOut' });
+
+            yield call(message.error, errors);
           }
         }
       }
+
+      yield put({ type: 'updateState', payload: { ability } });
     }
   },
   reducers: {}

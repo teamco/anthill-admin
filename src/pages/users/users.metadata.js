@@ -28,56 +28,77 @@ import styles from '@/pages/users/users.module.less';
 import tableStyles from '@/components/Main/Table/table.module.less';
 import { tsToLocaleDateTime } from '@/utils/timestamp';
 
-const menu = (t, record, onDeleteUser, onSignOutUser, onUnlockUser, onLockUser, onHoldUser) => (
-  <Menu>
-    <Menu.Item key={'websites'}
-               disabled={false}
-               icon={<GlobalOutlined />}>
-      <NavLink to={`/accounts/${record.id}/websites`}>
-        {t('menu:userWebsites')}
-      </NavLink>
-    </Menu.Item>
-    <Menu.Item key={'signOut'}>
-      {record?.signedIn ? (
-        <Popconfirm title={t('auth:signOutConfirm', { instance: record.email })}
-                    placement={'topRight'}
-                    onConfirm={() => onSignOutUser(record)}>
+/**
+ * @constant
+ * @param t
+ * @param {{
+ *  metadata:{auth:{signed_in}},
+ *  profile:{email},
+ *  key
+ * }} record
+ * @param onDeleteUser
+ * @param onSignOutUser
+ * @param onUnlockUser
+ * @param onLockUser
+ * @param onHoldUser
+ * @return {JSX.Element}
+ */
+const menu = (t, record, onDeleteUser, onSignOutUser, onUnlockUser, onLockUser, onHoldUser) => {
+  const { key, auth, profile } = record.metadata;
+
+  return (
+    <Menu>
+      <Menu.Item key={'signOut'} disabled={!auth?.signed_in}>
+        {auth?.signed_in ? (
+          <Popconfirm title={t('auth:signOutConfirm', { instance: profile?.email })}
+                      placement={'topRight'}
+                      onConfirm={() => onSignOutUser(key)}>
+            <Tooltip title={t('auth:forceSignOut')}>
+              <ApiTwoTone className={tableStyles.action} />
+              {t('auth:forceSignOut')}
+            </Tooltip>
+          </Popconfirm>
+        ) : (
           <Tooltip title={t('auth:forceSignOut')}>
-            <ApiTwoTone className={tableStyles.action} />
+            <ApiTwoTone twoToneColor={'#999999'}
+                        className={tableStyles.action} />
+            {t('auth:forceSignOut')}
           </Tooltip>
-        </Popconfirm>
-      ) : (
-        <Tooltip title={t('auth:forceSignOut')}>
-          <ApiTwoTone twoToneColor={'#999999'}
-                      className={tableStyles.action} />
-        </Tooltip>
-      )}
-    </Menu.Item>
-    <Menu.Item key={'lock'}>
-      {record?.isLocked ? (
-        <Popconfirm title={t('auth:unlockConfirm', { instance: record.email })}
-                    placement={'topRight'}
-                    onConfirm={() => onUnlockUser(record)}>
-          <Tooltip title={t('auth:unlock')}>
-            <LockTwoTone className={tableStyles.action} />
+        )}
+      </Menu.Item>
+      <Menu.Item key={'lock'}>
+        {record?.isLocked ? (
+          <Popconfirm title={t('auth:unlockConfirm', { instance: record.email })}
+                      placement={'topRight'}
+                      onConfirm={() => onUnlockUser(record)}>
+            <Tooltip title={t('auth:unlock')}>
+              <LockTwoTone className={tableStyles.action} />
+            </Tooltip>
+          </Popconfirm>
+        ) : (
+          <Tooltip title={t('auth:lock')}>
+            <UnlockTwoTone twoToneColor={'#eb2f96'}
+                           className={tableStyles.action}
+                           onClick={() => onLockUser(record)} />
           </Tooltip>
-        </Popconfirm>
-      ) : (
-        <Tooltip title={t('auth:lock')}>
-          <UnlockTwoTone twoToneColor={'#eb2f96'}
-                         className={tableStyles.action}
-                         onClick={() => onLockUser(record)} />
-        </Tooltip>
-      )}
-    </Menu.Item>
-    <Menu.Item key={'hold'}
-               disabled={false}
-               icon={<PauseCircleOutlined />}
-               onClick={() => onHoldUser()}>
-      {t('actions:hold')}
-    </Menu.Item>
-  </Menu>
-);
+        )}
+      </Menu.Item>
+      <Menu.Item key={'hold'}
+                 disabled={false}
+                 icon={<PauseCircleOutlined />}
+                 onClick={() => onHoldUser()}>
+        {t('actions:hold')}
+      </Menu.Item>
+      <Menu.Item key={'websites'}
+                 disabled={false}
+                 icon={<GlobalOutlined />}>
+        <NavLink to={`/accounts/${key}/websites`}>
+          {t('menu:userWebsites')}
+        </NavLink>
+      </Menu.Item>
+    </Menu>
+  );
+};
 
 /**
  * @export
@@ -116,6 +137,7 @@ export const metadata = ({
         title: t('table:name'),
         dataIndex: 'metadata',
         key: 'metadata',
+        width: 250,
         render(metadata) {
           const { gravatar_url, profile_image, name } = metadata?.profile;
           const color = '#52c41a';
@@ -159,7 +181,8 @@ export const metadata = ({
       // },
       {
         title: t('table:action'),
-        width: 100,
+        fixed: 'right',
+        width: 170,
         render(record) {
           const { key, profile } = record?.metadata;
           return data.length ? (

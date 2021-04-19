@@ -1,26 +1,26 @@
 import React, { Component, memo, Suspense } from 'react';
 import { connect } from 'dva';
-import { history, withRouter } from 'umi';
+import { history, withRouter, Helmet } from 'umi';
 import { Form, Layout } from 'antd';
 import { withTranslation } from 'react-i18next';
+import ReactInterval from 'react-interval';
 
 import '@/utils/i18n';
-import { spinningGlobal, spinningLocal } from '@/utils/state';
 
 import Loader from '@/components/Loader';
 import Main from '@/components/Main';
 import Login from '@/pages/login';
 
 import './app.layout.less';
+import { isAdmin } from '@/services/user.service';
 
 const { Content } = Layout;
 
 class AppLayout extends Component {
   componentDidMount() {
-    const { onActiveTab, onQuery, onDefineAbilities } = this.props;
+    const { onActiveTab, onQuery } = this.props;
     // handleActiveTab(onActiveTab);
     onQuery();
-    onDefineAbilities();
   }
 
   render() {
@@ -32,8 +32,8 @@ class AppLayout extends Component {
       loading,
       onToggleMenu,
       onNotification,
-      onRoute,
-      onSignOut
+      onUpdateDocumentMeta,
+      onRoute
     } = this.props;
 
     const {
@@ -49,60 +49,66 @@ class AppLayout extends Component {
         mainFooter,
         pageHeader,
         pageBreadcrumbs
-      }
+      },
+      meta,
+      interval: { timeout, enabled }
     } = appModel;
 
     const { user } = authModel;
 
     return (
-      <div>
-        {user ? (
-          <Suspense fallback={
-            <Loader fullScreen
-                    spinning={loading.effects['appModel/query']} />
-          }>
-            {/* Have to refresh for production environment */}
-            <Layout style={{ minHeight: '100vh' }}
-                    key={language ? language : 'en-US'}>
-              {mainMenu && (
-                <Main.Menu data={menus}
-                           onRoute={onRoute}
-                           model={activeModel}
-                           collapsed={collapsedMenu}
-                           onCollapse={onToggleMenu} />
+      <>
+        <Helmet>
+          <meta charSet={meta?.charSet} />
+          <title>{`${meta?.name}${meta?.title ? ` | ${meta?.title}` : ''}`}</title>
+        </Helmet>
+        <ReactInterval timeout={timeout}
+                       enabled={enabled}
+                       callback={onNotification} />
+        <Suspense fallback={
+          <Loader fullScreen
+                  spinning={loading.effects['appModel/query']} />
+        }>
+          {/* Have to refresh for production environment */}
+          <Layout style={{ minHeight: '100vh' }}
+                  key={language ? language : 'en-US'}>
+            {mainMenu && isAdmin(user) && (
+              <Main.Menu data={menus}
+                         onRoute={onRoute}
+                         model={activeModel}
+                         collapsed={collapsedMenu}
+                         onCollapse={onToggleMenu} />
+            )}
+            <Layout className={'site-layout'}>
+              {mainHeader && (<Main.Header />)}
+              <Content>
+                <Form.Provider>
+                  {pageHeader && (
+                    <Main.PageHeader metadata={{
+                      model: activeModel,
+                      buttons: activeButtons,
+                      form: activeForm.form
+                    }} />
+                  )}
+                  {pageBreadcrumbs && (
+                    <Main.Breadcrumbs meta={meta}
+                                      onUpdateDocumentMeta={onUpdateDocumentMeta} />
+                  )}
+                  <div className='site-layout-content'>
+                    {user ? children : <Login />}
+                  </div>
+                </Form.Provider>
+              </Content>
+              {mainFooter && (
+                <Main.Footer author={t('author', {
+                  name: 'Team©',
+                  year: 2020
+                })} />
               )}
-              <Layout className={'site-layout'}>
-                {mainHeader && (
-                  <Main.Header />
-                )}
-                <Content>
-                  <Loader fullScreen spinning={spinningLocal(loading)} />
-                  <Form.Provider>
-                    {pageHeader && (
-                      <Main.PageHeader metadata={{
-                        model: activeModel,
-                        buttons: activeButtons,
-                        form: activeForm.form
-                      }} />
-                    )}
-                    {pageBreadcrumbs && <Main.Breadcrumbs />}
-                    <div className='site-layout-content'>{children}</div>
-                  </Form.Provider>
-                </Content>
-                {mainFooter && (
-                  <Main.Footer author={t('author', {
-                    name: 'Team©',
-                    year: 2020
-                  })} />
-                )}
-              </Layout>
             </Layout>
-            <Loader fullScreen spinning={spinningGlobal(loading)} />
-          </Suspense>
-        ) : (
-          <Login />
-        )}
-      </div>
+          </Layout>
+        </Suspense>
+      </>
     );
   }
 }
@@ -127,11 +133,11 @@ export default withRouter(
       onActiveTab(payload) {
         dispatch({ type: 'appModel/checkActiveTab', payload });
       },
-      onDefineAbilities() {
-        dispatch({ type: 'authModel/defineAbilities', payload: { login: true } });
-      },
       onQuery() {
         dispatch({ type: 'appModel/appQuery' });
+      },
+      onUpdateDocumentMeta(meta) {
+        dispatch({ type: 'appModel/updateDocumentMeta', payload: { meta } });
       },
       onNotification() {
         dispatch({ type: 'appModel/notification' });

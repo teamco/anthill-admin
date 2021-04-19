@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { Form, PageHeader } from 'antd';
 import {
@@ -40,16 +40,17 @@ const users = (props) => {
   } = props;
 
   const [formRef] = Form.useForm();
+  const [disabled, setDisabled] = useState(true);
 
   let { user, previewUrl, fileList, entityForm, touched } = userModel;
 
   const { ability } = authModel;
   const component = 'userProfile';
-  const disabled = ability.cannot('update', component);
 
   useEffect(() => {
     onQuery(profiled);
-  }, []);
+    ability && setDisabled(ability.cannot('update', component));
+  }, [ability]);
 
   const tableProps = user ? profileMetadata({
     t,
@@ -63,8 +64,23 @@ const users = (props) => {
     entityForm,
     disabled,
     touched,
-    loading
-  }) : {};
+    loading,
+    actionsHovered: false
+  }) : { actionsHovered: false };
+
+  const unifiedProps = {};
+
+  const metadataProps = {
+    t,
+    data: userModel.users,
+    list: !user,
+    loading,
+    currentUser: authModel.user,
+    onDeleteUser,
+    onSignOutUser,
+    onUnlockUser,
+    onLockUser
+  };
 
   const subTitle = (
     <>
@@ -80,18 +96,8 @@ const users = (props) => {
       <PageHeader ghost={false} subTitle={subTitle} />
       <div className={styles.grid}>
         <Table data={userModel.users}
-               {...tableProps}
-               {...metadata({
-                 t,
-                 data: userModel.users,
-                 list: !user,
-                 loading,
-                 currentUser: authModel.user,
-                 onDeleteUser,
-                 onSignOutUser,
-                 onUnlockUser,
-                 onLockUser
-               })} />
+               {...Object.assign(tableProps, unifiedProps)}
+               {...metadata({ ...metadataProps })} />
       </div>
     </Page>
   );
@@ -138,8 +144,8 @@ export default connect(
     onDeleteUser(user) {
       dispatch({ type: `userModel/delete`, payload: { user } });
     },
-    onSignOutUser(user) {
-      dispatch({ type: `userModel/signOutUser`, payload: { user } });
+    onSignOutUser(key) {
+      dispatch({ type: `userModel/signOutUser`, payload: { key } });
     },
     onLockUser(user) {
       dispatch({ type: `userModel/lock`, payload: { user } });

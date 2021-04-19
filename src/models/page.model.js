@@ -9,6 +9,16 @@ import { commonModel } from '@/models/common.model';
 export default dvaModelExtend(commonModel, {
   namespace: 'pageModel',
   state: {},
+
+  subscriptions: {
+    setup({ dispatch, history }, onError) {
+      return history.listen((data) => {
+        dispatch({ type: 'authModel/defineAbilities', payload: { login: true } });
+
+      });
+    }
+  },
+
   effects: {
     * query({ payload }, { put, select }) {
     }

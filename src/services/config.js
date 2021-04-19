@@ -28,7 +28,8 @@ export const API = {
   auth: {
     getToken: 'auth',
     currentUser: 'current_user',
-    registerUser: 'users'
+    registerUser: 'users',
+    forceLogout: 'force_logout'
   },
   users: {
     getAllUsers: 'all_users',

@@ -6,12 +6,21 @@ import dvaModelExtend from 'dva-model-extend';
 import { commonModel } from '@/models/common.model';
 import { menus } from '@/services/menu.service';
 
+const appMeta = {
+  name: 'AntHill API',
+  charSet: 'utf-8'
+};
+
 /**
  * @export
  */
 export default dvaModelExtend(commonModel, {
   namespace: 'appModel',
   state: {
+    interval: {
+      timeout: 20000,
+      enabled: true
+    },
     layoutOpts: {
       mainHeader: false,
       pageBreadcrumbs: false,
@@ -22,6 +31,7 @@ export default dvaModelExtend(commonModel, {
     activeTab: true,
     collapsedMenu: true,
     menus: [],
+    meta: { ...appMeta, ...{ title: '' } },
     activeForm: {
       form: null
     },
@@ -30,7 +40,9 @@ export default dvaModelExtend(commonModel, {
       title: ''
     }
   },
+
   effects: {
+
     * appQuery({ payload }, { put, select }) {
       const { mode } = yield select((state) => state.appModel);
 
@@ -64,6 +76,16 @@ export default dvaModelExtend(commonModel, {
             mainFooter: payload.visible,
             mainMenu: payload.visible
           }
+        }
+      });
+    },
+
+    * updateDocumentMeta({ payload }, { put, select }) {
+      const { meta } = yield select(state => state.appModel);
+      yield put({
+        type: 'updateState',
+        payload: {
+          meta: { ...meta, ...payload.meta }
         }
       });
     },
@@ -114,6 +136,7 @@ export default dvaModelExtend(commonModel, {
     },
 
     * notification(_, { put }) {
+      console.log('notification')
     }
   },
   reducers: {}

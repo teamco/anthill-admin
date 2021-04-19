@@ -62,24 +62,32 @@ function MainTable(props) {
 
   /**
    * @constant
-   * @type {{gridClassName, dataSource, data, columns, expandable}}
+   * @type {{actionsHovered, gridClassName, dataSource, data, columns, expandable, scroll}}
    */
   const gridProps = { ...props };
   gridProps.dataSource = dataSource;
 
   const total = gridProps.data.length;
   const gridClassName = gridProps.gridClassName;
+  const scroll = gridProps.scroll;
+  const actionsVisible = gridProps.actionsHovered;
 
-  delete gridProps.t;
   delete gridProps.gridClassName;
   delete gridProps.data;
   delete gridProps.columns;
+  delete gridProps.scroll;
+  delete gridProps.actionsHovered;
 
   return (
-    <Table className={classnames(styles.grid, gridClassName)}
+    <Table className={classnames(
+      styles.grid,
+      gridClassName,
+      actionsVisible ? styles.hovered : ''
+    )}
            expandable={gridProps.expandable}
            footer={() => `${props.t('table:total')}: ${total}`}
            columns={columns}
+           scroll={scroll}
            {...gridProps} />
   );
 }
