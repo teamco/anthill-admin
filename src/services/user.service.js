@@ -1,7 +1,7 @@
 import i18n from '@/utils/i18n';
 import request from '@/utils/request';
 import { API } from '@/services/config';
-import { errorGetMsg, errorSaveMsg } from '@/utils/message';
+import { errorDeleteMsg, errorGetMsg, errorSaveMsg } from '@/utils/message';
 import { getXHRToken } from '@/services/auth.service';
 
 /**
@@ -152,6 +152,12 @@ export const updateUserProfile = async ({ entityForm, fileList = [], tags = [], 
   );
 };
 
+/**
+ * @export
+ * @param key
+ * @param token
+ * @return {Promise<*|undefined>}
+ */
 export const forceSignOut = async ({ key, token }) => {
   const opts = request.config({
     url: API.auth.forceLogout,
@@ -164,5 +170,24 @@ export const forceSignOut = async ({ key, token }) => {
       ...{ data: { key } }
     },
     (error) => errorSaveMsg(true, i18n.t('instance:user'), error)
+  );
+};
+
+/**
+ * @export
+ * @param key
+ * @param token
+ * @return {Promise<*|undefined>}
+ */
+export const deleteUser = async ({ key, token }) => {
+  const opts = request.config({
+    url: API.users.deleteUser,
+    headers: { 'Authorization': getXHRToken({ token }) },
+    method: 'delete',
+    key
+  });
+
+  return request.xhr(opts,
+    (error) => errorDeleteMsg(true, i18n.t('instance:user'), error)
   );
 };

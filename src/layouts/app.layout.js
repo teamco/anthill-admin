@@ -54,7 +54,7 @@ class AppLayout extends Component {
       interval: { timeout, enabled }
     } = appModel;
 
-    const { user } = authModel;
+    const { currentUser } = authModel;
 
     return (
       <>
@@ -72,7 +72,7 @@ class AppLayout extends Component {
           {/* Have to refresh for production environment */}
           <Layout style={{ minHeight: '100vh' }}
                   key={language ? language : 'en-US'}>
-            {mainMenu && isAdmin(user) && (
+            {mainMenu && isAdmin(currentUser) && (
               <Main.Menu data={menus}
                          onRoute={onRoute}
                          model={activeModel}
@@ -95,7 +95,7 @@ class AppLayout extends Component {
                                       onUpdateDocumentMeta={onUpdateDocumentMeta} />
                   )}
                   <div className='site-layout-content'>
-                    {user ? children : <Login />}
+                    {currentUser ? children : <Login />}
                   </div>
                 </Form.Provider>
               </Content>

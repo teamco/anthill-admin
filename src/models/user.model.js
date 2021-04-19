@@ -3,10 +3,11 @@ import dvaModelExtend from 'dva-model-extend';
 import { history } from 'umi';
 import { commonModel } from '@/models/common.model';
 import i18n from '@/utils/i18n';
-import { forceSignOut, getUser, getUsers, updateUserProfile } from '@/services/user.service';
+import { deleteUser, forceSignOut, getUser, getUsers, updateUserProfile } from '@/services/user.service';
 import { generateKey } from '@/services/common.service';
 import request from '@/utils/request';
 import { successSaveMsg } from '@/utils/message';
+import { message } from 'antd';
 
 /**
  * @constant
@@ -21,7 +22,7 @@ export default dvaModelExtend(commonModel, {
   namespace: 'userModel',
   state: {
     users: [],
-    user: null
+    selectedUser: null
   },
 
   effects: {
@@ -31,7 +32,7 @@ export default dvaModelExtend(commonModel, {
 
       if (ability.can('read', 'users')) {
 
-        if (payload.profiled) {
+        if (payload?.profiled) {
           return false;
         }
 
@@ -45,7 +46,7 @@ export default dvaModelExtend(commonModel, {
               type: 'updateState',
               payload: {
                 users,
-                user: null
+                selectedUser: null
               }
             });
 
@@ -75,24 +76,73 @@ export default dvaModelExtend(commonModel, {
 
     * signOutUser({ payload }, { put, call, select }) {
       const { ability, token } = yield select(state => state.authModel);
+      const { selectedUser } = yield select(state => state.userModel);
 
       if (ability.can('logout', 'user')) {
-        const signOut = yield call(forceSignOut, {
+        const res = yield call(forceSignOut, {
           key: payload?.key,
           token
         });
-        
-        debugger
+
+        if (res?.data) {
+          const { errors } = res.data;
+
+          if (res.data?.user) {
+            const { metadata } = res.data?.user?.metadata;
+
+            if (selectedUser) {
+              return yield put({
+                type: 'getUser',
+                payload: { userKey: metadata?.key }
+              });
+            }
+
+            return yield put({ type: 'query' });
+          }
+
+          return yield call(message.error, errors);
+        }
+
+        yield put({
+          type: 'raiseCondition',
+          payload: {
+            message: raiseConditionMsg,
+            redirect: false,
+            type: 404
+          }
+        });
       }
     },
 
-    * delete({ payload }, { put }) {
-      // const { user } = payload;
-      //
-      // if (user.metadata.isLocked) {
-      //   return message.warning(i18n.t('auth:errorLockedDelete', { instance: user.email })).then();
-      // } else {
-      // }
+    * delete({ payload }, { put, select, call }) {
+      const { ability, token, currentUser } = yield select(state => state.authModel);
+      const { selectedUser } = yield select(state => state.userModel);
+
+      if (ability.can('delete', 'user')) {
+        const { metadata } = payload?.user;
+        const res = yield call(deleteUser, {
+          key: metadata?.key,
+          token
+        });
+
+        if (res?.data) {
+          const { errors } = res.data;
+
+          if (errors) {
+            return yield call(message.error, errors);
+          }
+
+          if (metadata?.key === currentUser.metadata.key) {
+            return yield put({ type: 'authModel/signOut' });
+          }
+
+          if (selectedUser) {
+            history.push('/accounts');
+          } else {
+            yield put({ type: 'query' });
+          }
+        }
+      }
     },
 
     * getUser({ payload }, { put, call, select }) {
@@ -122,7 +172,7 @@ export default dvaModelExtend(commonModel, {
             yield put({
               type: 'updateState',
               payload: {
-                user,
+                selectedUser: user,
                 users: [user],
                 touched: false,
                 fileList: [],

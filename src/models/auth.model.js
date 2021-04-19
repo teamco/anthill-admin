@@ -26,7 +26,7 @@ export default dvaModelExtend(commonModel, {
   namespace: 'authModel',
   state: {
     MIN_PASSWORD_LENGTH: 8,
-    user: null,
+    currentUser: null,
     isSignedOut: true,
     ability: null,
     token: null,
@@ -75,7 +75,7 @@ export default dvaModelExtend(commonModel, {
         payload: {
           ability: (yield call(defineAbilityFor, { user: null })),
           token: null,
-          user: null,
+          currentUser: null,
           isSignedOut: true
         }
       });
@@ -128,7 +128,7 @@ export default dvaModelExtend(commonModel, {
             yield put({
               type: 'updateState',
               payload: {
-                user,
+                currentUser: user,
                 registered: false
               }
             });

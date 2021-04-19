@@ -16,15 +16,15 @@ import Page from '@/components/Page';
 const login = (props) => {
   const { t, authModel, signInVisible, onQuery, onSignIn, loading } = props;
 
-  const { user, errors } = authModel;
+  const { currentUser, errors } = authModel;
 
   const [isSignInVisible, setIsSignInVisible] = useState(true);
   const [isRegisterVisible, setIsRegisterVisible] = useState(false);
   const [isErrorVisible, setIsErrorVisible] = useState(false);
 
   useEffect(() => {
-    onQuery(user);
-  }, [user]);
+    onQuery(currentUser);
+  }, [currentUser]);
 
   let errorProps = {};
 

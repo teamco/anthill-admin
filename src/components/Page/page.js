@@ -23,7 +23,7 @@ function Page({
   component,
   authModel
 }) {
-  const { ability, user } = authModel;
+  const { ability, currentUser } = authModel;
 
   useEffect(() => {
   }, []);

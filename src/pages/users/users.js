@@ -42,9 +42,9 @@ const users = (props) => {
   const [formRef] = Form.useForm();
   const [disabled, setDisabled] = useState(true);
 
-  let { user, previewUrl, fileList, entityForm, touched } = userModel;
+  let { selectedUser, previewUrl, fileList, entityForm, touched } = userModel;
 
-  const { ability } = authModel;
+  const { ability, currentUser } = authModel;
   const component = 'userProfile';
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const users = (props) => {
     ability && setDisabled(ability.cannot('update', component));
   }, [ability]);
 
-  const tableProps = user ? profileMetadata({
+  const tableProps = selectedUser ? profileMetadata({
     t,
     formRef,
     onFieldsChange,
@@ -73,9 +73,9 @@ const users = (props) => {
   const metadataProps = {
     t,
     data: userModel.users,
-    list: !user,
+    list: !selectedUser,
     loading,
-    currentUser: authModel.user,
+    currentUser,
     onDeleteUser,
     onSignOutUser
   };

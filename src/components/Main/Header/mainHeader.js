@@ -12,7 +12,7 @@ const { Header } = Layout;
 const mainHeader = props => {
 
   const { t, authModel, loading, onSignOut } = props;
-  const { user } = authModel;
+  const { currentUser } = authModel;
 
   const menu = (
     <Menu>
@@ -28,7 +28,7 @@ const mainHeader = props => {
   return (
     <Header className={styles.header}>
       <div className={styles.actions}>
-        {user && (
+        {currentUser && (
           <Dropdown overlay={menu}
                     disabled={false}
                     placement={'bottomRight'}
@@ -38,7 +38,7 @@ const mainHeader = props => {
                     type={'text'}
                     icon={<UserOutlined />}
                     className={styles.customAction}>
-              {user?.metadata?.profile?.name} <DownOutlined />
+              {currentUser?.metadata?.profile?.name} <DownOutlined />
             </Button>
           </Dropdown>
         )}

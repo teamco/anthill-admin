@@ -14,7 +14,7 @@ const profile = (props) => {
 
   const params = useParams();
 
-  const { user } = userModel;
+  const { selectedUser } = userModel;
 
   useEffect(() => {
     onGetUser(params.user);
@@ -44,8 +44,8 @@ export default connect(
   },
   (dispatch) => ({
     dispatch,
-    onGetUser(user) {
-      dispatch({ type: 'userModel/getUser', payload: { userKey: user } });
+    onGetUser(key) {
+      dispatch({ type: 'userModel/getUser', payload: { userKey: key } });
     }
   })
 )(withTranslation()(profile));
