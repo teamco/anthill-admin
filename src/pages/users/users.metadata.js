@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { isAdmin } from '@/services/user.service';
+import React from 'react';
 import { NavLink } from 'umi';
 import {
   ApiTwoTone,
   DeleteTwoTone,
   PlayCircleTwoTone,
-  LockTwoTone,
-  UnlockTwoTone,
   ProfileTwoTone,
-  PauseCircleOutlined,
   PauseCircleTwoTone,
   SettingOutlined,
   DownOutlined,
@@ -25,9 +21,10 @@ import {
 } from 'antd';
 
 import classnames from 'classnames';
+import { tsToLocaleDateTime } from '@/utils/timestamp';
+
 import styles from '@/pages/users/users.module.less';
 import tableStyles from '@/components/Main/Table/table.module.less';
-import { tsToLocaleDateTime } from '@/utils/timestamp';
 
 /**
  * @constant
@@ -37,17 +34,19 @@ import { tsToLocaleDateTime } from '@/utils/timestamp';
  *  profile:{email},
  *  key
  * }} record
+ * @param currentUser
  * @param onDeleteUser
  * @param onSignOutUser
  * @return {JSX.Element}
  */
-const menu = (t, record, onDeleteUser, onSignOutUser) => {
+const menu = (t, record, onDeleteUser, onSignOutUser, currentUser) => {
   const { key, auth, profile } = record.metadata;
 
   return (
     <Menu>
-      <Menu.Item key={'signOut'} disabled={!auth?.signed_in}>
-        {auth?.signed_in ? (
+      <Menu.Item key={'signOut'}
+                 disabled={!auth?.signed_in || key === currentUser?.metadata?.key}>
+        {auth?.signed_in && key !== currentUser?.metadata?.key ? (
           <Popconfirm title={t('auth:signOutConfirm', { instance: profile?.email })}
                       placement={'topRight'}
                       onConfirm={() => onSignOutUser(key)}>
@@ -84,9 +83,6 @@ const menu = (t, record, onDeleteUser, onSignOutUser) => {
  * @param currentUser
  * @param onDeleteUser
  * @param onSignOutUser
- * @param onUnlockUser
- * @param onLockUser
- * @param onHoldUser
  * @return {*}
  */
 export const metadata = ({
@@ -96,13 +92,8 @@ export const metadata = ({
   list,
   currentUser = {},
   onDeleteUser,
-  onSignOutUser,
-  onHoldUser,
-  onUnlockUser,
-  onLockUser
+  onSignOutUser
 }) => {
-  useEffect(() => {
-  }, []);
 
   return {
     width: '100%',
@@ -173,6 +164,7 @@ export const metadata = ({
         width: 170,
         render(record) {
           const { key, profile } = record?.metadata;
+          const cannotBeDeleted = key === currentUser.metadata.key;
           return data.length ? (
             <div className={styles.nowrap}>
               {list && (
@@ -185,13 +177,17 @@ export const metadata = ({
               )}
               <Popconfirm title={t('msg:deleteConfirm', { instance: profile?.name || profile?.email })}
                           placement={'topRight'}
+                          disabled={cannotBeDeleted}
                           onConfirm={() => onDeleteUser(record)}>
                 <Tooltip title={t('actions:delete')}>
-                  <DeleteTwoTone className={tableStyles.action}
-                                 twoToneColor='#eb2f96' />
+                  <DeleteTwoTone className={classnames(
+                    tableStyles.action,
+                    cannotBeDeleted ? tableStyles.disabled : ''
+                  )}
+                                 twoToneColor={cannotBeDeleted ? '#999999' : '#eb2f96'} />
                 </Tooltip>
               </Popconfirm>
-              <Dropdown overlay={menu(t, record, onDeleteUser, onSignOutUser, onUnlockUser, onLockUser, onHoldUser)}
+              <Dropdown overlay={menu(t, record, onDeleteUser, onSignOutUser, currentUser)}
                         disabled={false}
                         placement={'bottomRight'}
                         overlayClassName={styles.customActionMenu}
