@@ -11,7 +11,6 @@ export async function defineAbilityFor({ user }) {
   const { can, cannot, build, rules } = new AbilityBuilder(Ability);
 
   can(['manage'], 'login');
-  can(['manage'], 'all');
 
   if (user) {
     if (isAdmin(user)) {

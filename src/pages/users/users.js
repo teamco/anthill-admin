@@ -77,9 +77,7 @@ const users = (props) => {
     loading,
     currentUser: authModel.user,
     onDeleteUser,
-    onSignOutUser,
-    onUnlockUser,
-    onLockUser
+    onSignOutUser
   };
 
   const subTitle = (
@@ -146,12 +144,6 @@ export default connect(
     },
     onSignOutUser(key) {
       dispatch({ type: `userModel/signOutUser`, payload: { key } });
-    },
-    onLockUser(user) {
-      dispatch({ type: `userModel/lock`, payload: { user } });
-    },
-    onUnlockUser(user) {
-      dispatch({ type: `userModel/unlock`, payload: { user } });
     }
   })
 )(withTranslation()(users));

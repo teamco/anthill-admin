@@ -56,7 +56,7 @@ export const profileMetadata = ({
     pagination: false,
     expandable: {
       expandedRowRender(record) {
-        const { profile, timestamp, roles, trackable } = record?.metadata;
+        const { profile, timestamp, trackable } = record?.metadata;
         const { created_at, updated_at } = timestamp;
         const { gravatar_url, email } = profile;
         const {
@@ -184,8 +184,8 @@ export const profileMetadata = ({
                 </div>
                 <div>
                   <Tag className={styles.rules}>
-                    {isAdmin(roles) ? t('users:admin') :
-                      isModerator(roles) ? t('users:moderator') :
+                    {isAdmin(record) ? t('users:admin') :
+                      isModerator(record) ? t('users:moderator') :
                         t('users:consumer')}
                   </Tag>
                 </div>

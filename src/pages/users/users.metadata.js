@@ -9,6 +9,7 @@ import {
   UnlockTwoTone,
   ProfileTwoTone,
   PauseCircleOutlined,
+  PauseCircleTwoTone,
   SettingOutlined,
   DownOutlined,
   GlobalOutlined
@@ -38,12 +39,9 @@ import { tsToLocaleDateTime } from '@/utils/timestamp';
  * }} record
  * @param onDeleteUser
  * @param onSignOutUser
- * @param onUnlockUser
- * @param onLockUser
- * @param onHoldUser
  * @return {JSX.Element}
  */
-const menu = (t, record, onDeleteUser, onSignOutUser, onUnlockUser, onLockUser, onHoldUser) => {
+const menu = (t, record, onDeleteUser, onSignOutUser) => {
   const { key, auth, profile } = record.metadata;
 
   return (
@@ -65,29 +63,6 @@ const menu = (t, record, onDeleteUser, onSignOutUser, onUnlockUser, onLockUser, 
             {t('auth:forceSignOut')}
           </Tooltip>
         )}
-      </Menu.Item>
-      <Menu.Item key={'lock'}>
-        {record?.isLocked ? (
-          <Popconfirm title={t('auth:unlockConfirm', { instance: record.email })}
-                      placement={'topRight'}
-                      onConfirm={() => onUnlockUser(record)}>
-            <Tooltip title={t('auth:unlock')}>
-              <LockTwoTone className={tableStyles.action} />
-            </Tooltip>
-          </Popconfirm>
-        ) : (
-          <Tooltip title={t('auth:lock')}>
-            <UnlockTwoTone twoToneColor={'#eb2f96'}
-                           className={tableStyles.action}
-                           onClick={() => onLockUser(record)} />
-          </Tooltip>
-        )}
-      </Menu.Item>
-      <Menu.Item key={'hold'}
-                 disabled={false}
-                 icon={<PauseCircleOutlined />}
-                 onClick={() => onHoldUser()}>
-        {t('actions:hold')}
       </Menu.Item>
       <Menu.Item key={'websites'}
                  disabled={false}
@@ -140,10 +115,15 @@ export const metadata = ({
         width: 250,
         render(metadata) {
           const { gravatar_url, profile_image, name } = metadata?.profile;
-          const color = '#52c41a';
+          const { signed_in, force_sign_out } = metadata?.auth;
+          const isCurrentUser = metadata?.key === currentUser.metadata?.key;
+          let color = signed_in ? '#52c41a' : '#999999';
+          color = force_sign_out ? '#DC143CFF' : color;
           const signed = {
-            title: t('auth:signedIn'),
-            icon: <PlayCircleTwoTone twoToneColor={color} />
+            title: t(signed_in ? 'auth:signedIn' : 'auth:signedOut'),
+            icon: signed_in ?
+              (<PlayCircleTwoTone twoToneColor={color} />) :
+              (<PauseCircleTwoTone twoToneColor={color} />)
           };
 
           return (
@@ -154,7 +134,7 @@ export const metadata = ({
               <img src={profile_image.url ? profile_image.url : gravatar_url}
                    className={styles.gridImg}
                    alt={name} />
-              <span className={currentUser?.uid === data.uid ? styles.currentUser : null}>
+              <span className={isCurrentUser ? styles.currentUser : null}>
                 {name}
               </span>
             </div>
@@ -173,12 +153,20 @@ export const metadata = ({
           </Tag>
         )
       },
-      // {
-      //   title: t('auth:lastSignInTime'),
-      //   dataIndex: 'metadata',
-      //   key: 'lastSignInTime',
-      //   render: (metadata) => tsToLocaleDateTime(+new Date(metadata?.trackable?.last_sign_in_at))
-      // },
+      {
+        title: t('auth:lastSignInTime'),
+        dataIndex: 'metadata',
+        key: 'lastSignInTime',
+
+        /**
+         * @param {{trackable:{last_sign_in_at}}} metadata
+         * @return {string}
+         */
+        render(metadata) {
+          const { trackable } = metadata;
+          return tsToLocaleDateTime(+new Date(trackable?.last_sign_in_at));
+        }
+      },
       {
         title: t('table:action'),
         fixed: 'right',

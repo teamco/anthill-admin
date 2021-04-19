@@ -15,11 +15,11 @@ export const isAdmin = (user) => {
 
 /**
  * @export
- * @param {{supervisor_role}} roles
+ * @param {{metadata:{roles:{supervisor_role}}}} user
  * @return {*}
  */
-export const isModerator = (roles) => {
-  return roles.supervisor_role;
+export const isModerator = (user) => {
+  return user?.metadata?.roles?.supervisor_role;
 };
 
 /**
