@@ -6,6 +6,14 @@ export const routes = [
     routes: [
       {
         exact: true,
+        path: '/',
+        component: '@/pages/home',
+        wrappers: [
+          '@/wrappers/auth.wrapper'
+        ]
+      },
+      {
+        exact: true,
         path: '/accounts',
         component: '@/pages/users',
         wrappers: [
