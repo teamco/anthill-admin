@@ -156,7 +156,7 @@ export const metadata = ({
         render(metadata) {
           const { trackable } = metadata;
           return trackable?.last_sign_in_at ?
-            tsToLocaleDateTime(+new Date(trackable?.last_sign_in_at)):
+            tsToLocaleDateTime(+new Date(trackable?.last_sign_in_at)) :
             t('error:na');
         }
       },
