@@ -143,10 +143,10 @@ const websiteEdit = (props) => {
     buttons: {
       closeBtn: {
         onClick: () => onClose(user),
-        loading: loading.effects['websiteModel/prepareToSave']
+        loading: loading.effects['websiteModel/save']
       },
       saveBtn: {
-        loading: loading.effects['websiteModel/prepareToSave']
+        loading: loading.effects['websiteModel/save']
       },
       extra: (
         <Dropdown overlay={menu}
@@ -163,8 +163,8 @@ const websiteEdit = (props) => {
     },
     spinEffects: [
       'authModel/defineAbilities',
-      'websiteModel/websitesHandleEdit',
-      'websiteModel/prepareToSave'
+      'websiteModel/prepareToEdit',
+      'websiteModel/save'
     ]
   };
 
