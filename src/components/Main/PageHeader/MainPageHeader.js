@@ -24,6 +24,7 @@ class MainPageHeader extends React.Component {
       buttons,
       model,
       metadata,
+      touched,
       ghost = false
     } = this.props;
 
@@ -46,7 +47,9 @@ class MainPageHeader extends React.Component {
      * @return {JSX.Element}
      */
     const saveButton = () => {
-      const disabled = ability.cannot('update', component);
+      let disabled = ability.cannot('update', component);
+      disabled = disabled ? disabled : !touched;
+
       return buttons?.saveBtn ? (
         <SaveButton key={'save'}
                     isEdit={model?.isEdit}
@@ -83,7 +86,7 @@ class MainPageHeader extends React.Component {
       ) : null;
     };
 
-    let _buttons = (formRef?.current ? model?.isEdit ? [
+    let _buttons = (formRef ? model?.isEdit ? [
       closeButton(),
       deleteButton(),
       saveButton()
@@ -94,8 +97,9 @@ class MainPageHeader extends React.Component {
       newButton()
     ]).filter(button => button);
 
+    buttons?.extra && _buttons.push(buttons.extra);
 
-    if (!_buttons.length) {
+    if (!_buttons?.length) {
       _buttons = null;
     }
 

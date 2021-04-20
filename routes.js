@@ -28,6 +28,22 @@ export const routes = [
           '@/wrappers/auth.wrapper'
         ]
       },
+      {
+        exact: true,
+        path: '/accounts/:user/websites',
+        component: '@/pages/users/[user]/websites',
+        wrappers: [
+          '@/wrappers/auth.wrapper'
+        ]
+      },
+      {
+        exact: true,
+        path: '/accounts/:user/websites/:website',
+        component: '@/pages/users/[user]/websites/[website]',
+        wrappers: [
+          '@/wrappers/auth.wrapper'
+        ]
+      },
       // {
       //   exact: true,
       //   path: '/users/:user/websites',
@@ -55,22 +71,6 @@ export const routes = [
       //     '@/wrappers/auth.wrapper'
       //   ]
       // },
-      {
-        exact: true,
-        path: '/websites',
-        component: '@/pages/websites',
-        wrappers: [
-          '@/wrappers/auth.wrapper'
-        ]
-      },
-      {
-        exact: true,
-        path: '/websites/:website',
-        component: '@/pages/websites/[website]',
-        wrappers: [
-          '@/wrappers/auth.wrapper'
-        ]
-      },
       {
         exact: true,
         path: '/errors/403',

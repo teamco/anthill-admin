@@ -1,0 +1,46 @@
+.userCardWrapper {
+  padding: 20px;
+
+  .userCard {
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 5px;
+
+    &.websites {
+      background-color: #8FBC8F;
+    }
+
+    &.widgets {
+      background-color: #7FFFD4;
+    }
+
+    :global {
+      .ant-statistic-title {
+        font-size: 22px;
+        font-weight: bold;
+      }
+
+      .ant-statistic-content-value {
+        font-size: 32px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .ant-statistic-content-prefix {
+        position: absolute;
+        top: -35px;
+        right: -35px;
+        color: rgba(0, 0, 0, 0.05);
+
+        svg {
+          width: 150px;
+          height: 150px;
+        }
+      }
+    }
+  }
+}
+
+.divider {
+  padding: 0 20px;
+}

@@ -24,6 +24,12 @@ import {
 } from '@/services/website.service';
 
 /**
+ * @constant
+ * @type {string}
+ */
+const raiseConditionMsg = i18n.t('error:notFound', { instance: i18n.t('instance:website') });
+
+/**
  * @export
  * @default
  */
@@ -73,25 +79,19 @@ export default dvaModelExtend(commonModel, {
           isEdit: payload.isEdit
         }
       });
-
-      yield put({
-        type: 'appModel/activeModel',
-        payload: {
-          isEdit: payload.isEdit,
-          model: 'websiteModel',
-          title: i18n.t('model:create', { instance: '$t(instance:website)' })
-        }
-      });
     },
 
     * prepareToEdit({ payload }, { put, call, select }) {
       let { token } = yield select(state => state.authModel);
-      const { user, key } = payload;
-      const res = yield call(getWebsite, { user, key, token });
+      const { userKey, websiteKey } = payload;
+      const res = yield call(getWebsite, { userKey, websiteKey, token });
 
       if (res?.data) {
         const { website, error } = res.data;
         if (website) {
+
+          yield put({ type: 'cleanForm' });
+
           yield put({
             type: 'updateState',
             payload: {
@@ -104,72 +104,43 @@ export default dvaModelExtend(commonModel, {
             }
           });
 
-          history.replace(`/accounts/${user}/websites/${website?.key}`);
+          yield put({
+            type: 'toForm',
+            payload: {
+              model: 'websiteModel',
+              form: {
+                ...website,
+                ...{ entityKey: websiteKey }
+              }
+            }
+          });
+
+          history.push(`/accounts/${userKey}/websites/${websiteKey}`);
         }
       }
     },
 
-    * validateWebsite({ payload }, { call, put, select }) {
-      const { ability, token } = yield select(state => state.authModel);
+    * websitesHandleEdit({ payload }, { put, select }) {
+      const { ability } = yield select(state => state.authModel);
+      const { selectedWebsite } = yield select(state => state.websiteModel);
       const { websiteKey } = payload;
 
       if (websiteKey === 'new') {
         // Do nothing.
       } else if (ability.can('read', 'websites')) {
 
-        const res = yield call(getWebsite, { key: websiteKey, token });
-
-        if (res?.data) {
-          const { website, error } = res.data;
-          if (website) {
-
-            return yield put({
-              type: 'toForm',
-              payload: {
-                model: 'websiteModel',
-                form: {
-                  ...website,
-                  ...{ entityKey: websiteKey }
-                }
-              }
-            });
-          } else {
-
-            return yield put({
-              type: 'raiseCondition',
-              payload: {
-                message: i18n.t('error:notFound', { instance: i18n.t('instance:website') }),
-                type: 404
-              }
-            });
-          }
-        }
-
-        yield put({
-          type: 'raiseCondition',
-          payload: {
-            message: i18n.t('error:notFound', { instance: i18n.t('instance:website') }),
-            type: 403
-          }
-        });
+        return selectedWebsite ?
+          false :
+          (yield put({ type: 'prepareToEdit', payload }));
       }
-    },
-
-    * websitesHandleEdit({ payload }, { put, select }) {
-      let { websites = [] } = yield select((state) => state.websiteModel);
-
-      if (!websites.length) {
-        yield put({ type: 'websitesQuery' });
-      }
-
-      const { params } = payload;
-      const { website } = params;
-
-      yield put({ type: 'cleanForm' });
 
       yield put({
-        type: 'validateWebsite',
-        payload: { websiteKey: website }
+        type: 'raiseCondition',
+        payload: {
+          message: raiseConditionMsg,
+          type: 403,
+          redirect: true
+        }
       });
     },
 

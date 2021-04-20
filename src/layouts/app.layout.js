@@ -77,10 +77,10 @@ class AppLayout extends Component {
                          onCollapse={onToggleMenu} />
             )}
             <Layout className={'site-layout'}>
-              {mainHeader && (<Main.Header />)}
+              {mainHeader && currentUser && (<Main.Header />)}
               <Content>
                 <Form.Provider>
-                  {pageBreadcrumbs && (
+                  {pageBreadcrumbs && currentUser && (
                     <Main.Breadcrumbs meta={meta}
                                       onUpdateDocumentMeta={onUpdateDocumentMeta} />
                   )}
@@ -102,37 +102,53 @@ class AppLayout extends Component {
       </>
     );
   }
+
 }
 
 export default withRouter(
   connect(
-    ({ appModel, authModel, loading }) => {
+    ({
+        appModel
+        ,
+        authModel
+        ,
+        loading
+      }
+    ) => {
       return {
         appModel,
         authModel,
         loading
       };
-    },
-    (dispatch) => ({
-      dispatch,
-      onRoute(path) {
-        history.push(path);
-      },
-      onToggleMenu(collapse) {
-        dispatch({ type: `appModel/toggleMenu`, payload: { collapse } });
-      },
-      onActiveTab(payload) {
-        dispatch({ type: 'appModel/checkActiveTab', payload });
-      },
-      onQuery() {
-        dispatch({ type: 'appModel/appQuery' });
-      },
-      onUpdateDocumentMeta(meta) {
-        dispatch({ type: 'appModel/updateDocumentMeta', payload: { meta } });
-      },
-      onNotification() {
-        dispatch({ type: 'appModel/notification' });
+    }
+    ,
+    (dispatch) => (
+      {
+        dispatch,
+        onRoute(path) {
+          history.push(path);
+        }
+        ,
+        onToggleMenu(collapse) {
+          dispatch({ type: `appModel/toggleMenu`, payload: { collapse } });
+        }
+        ,
+        onActiveTab(payload) {
+          dispatch({ type: 'appModel/checkActiveTab', payload });
+        }
+        ,
+        onQuery() {
+          dispatch({ type: 'appModel/appQuery' });
+        }
+        ,
+        onUpdateDocumentMeta(meta) {
+          dispatch({ type: 'appModel/updateDocumentMeta', payload: { meta } });
+        }
+        ,
+        onNotification() {
+          dispatch({ type: 'appModel/notification' });
+        }
       }
-    })
+    )
   )(withTranslation()(memo(AppLayout)))
 );

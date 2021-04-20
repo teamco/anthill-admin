@@ -18,6 +18,12 @@ import styles from '@/components/Authentication/authentication.module.less';
 
 import Strength from '@/components/Authentication/strength';
 
+/**
+ * @constant
+ * @param props
+ * @return {boolean|JSX.Element}
+ * @constructor
+ */
 const SignUpModal = props => {
 
   const {
@@ -28,7 +34,6 @@ const SignUpModal = props => {
     setIsSignInVisible,
     setIsRegisterVisible,
     onSignUp,
-    onRegisterData,
     loading,
     authModel
   } = props;
@@ -44,8 +49,10 @@ const SignUpModal = props => {
    * @function
    */
   const handleCancel = () => {
-    setIsSignInVisible(true);
-    setIsRegisterVisible(false);
+    if (didMount) {
+      setIsSignInVisible(true);
+      setIsRegisterVisible(false);
+    }
   }
 
   useEffect(() => {

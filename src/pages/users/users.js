@@ -82,6 +82,7 @@ const users = (props) => {
 
   const pageProps = {
     ability,
+    touched,
     pageHeader: true,
     className: styles.users,
     component,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { useParams, history } from 'umi';
 import { withTranslation } from 'react-i18next';
@@ -18,7 +18,8 @@ import {
   DownOutlined,
   PauseCircleOutlined,
   SettingOutlined,
-  TrademarkOutlined
+  GlobalOutlined,
+  UserSwitchOutlined
 } from '@ant-design/icons';
 
 const { GenericPanel, EditableTags } = FormComponents;
@@ -52,22 +53,21 @@ const websiteEdit = (props) => {
   /**
    * @type {{user, website}}
    */
-  const params = useParams();
+  const { user, website } = useParams();
 
-  const { ability } = authModel;
   const component = 'website';
-  const disabled = ability.cannot('update', component);
 
-  const update = ability.can('update', component);
+  const [disabled, setDisabled] = useState(true);
+
+  const { ability, currentUser } = authModel;
 
   useEffect(() => {
-    if (update) {
-      onEditWebsite(params);
+    if (ability) {
+      setDisabled(ability.cannot('update', component));
     }
-  }, [
-    authModel.user,
-    update
-  ]);
+
+    onEditWebsite(user, website);
+  }, [ability]);
 
   const {
     isEdit,
@@ -104,76 +104,74 @@ const websiteEdit = (props) => {
     }
   };
 
-  const subTitle = (
-    <>
-      <TrademarkOutlined style={{ marginRight: 10 }} />
-      {isEdit ?
-        t('actions:edit', { type: t('business') }) :
-        t('actions:addNew', { type: t('business') })
-      }
-    </>
-  );
-
   const menu = (
     <Menu>
       <Menu.Item key={'hold'}
                  disabled={!isEdit}
                  icon={<PauseCircleOutlined />}
-                 onClick={() => onHoldWebsite(params.website)}>
+                 onClick={() => onHoldWebsite(website)}>
         {t('actions:hold')}
       </Menu.Item>
       <Menu.Item key={'delete'}
                  danger
                  disabled={!isEdit}
                  icon={<DeleteOutlined />}
-                 onClick={() => onDeleteWebsite(params.website)}>
+                 onClick={() => onDeleteWebsite(website)}>
         {t('actions:delete')}
       </Menu.Item>
     </Menu>
   );
 
-  /**
-   * Handle save button disable status
-   * @type {boolean|RuleBuilder<AnyAbility>|boolean}
-   */
-  const saveDisabled = disabled ? disabled : !touched;
+  const pageProps = {
+    ability,
+    touched,
+    pageHeader: true,
+    className: styles.website,
+    component,
+    formRef,
+    metadata: {
+      title: (
+        <>
+          <GlobalOutlined style={{ marginRight: 10 }} />
+          {isEdit ?
+            t('actions:edit', { type: t('instance:website') }) :
+            t('actions:addNew', { type: t('instance:website') })
+          }
+        </>
+      )
+    },
+    model: { isEdit },
+    buttons: {
+      closeBtn: {
+        onClick: () => onClose(user),
+        loading: loading.effects['websiteModel/prepareToSave']
+      },
+      saveBtn: {
+        loading: loading.effects['websiteModel/prepareToSave']
+      },
+      extra: (
+        <Dropdown overlay={menu}
+                  disabled={!isEdit || disabled}
+                  overlayClassName={styles.customActionMenu}
+                  key={'custom'}>
+          <Button size={'small'}
+                  icon={<SettingOutlined />}
+                  className={styles.customAction}>
+            {t('actions:manage', { type: t('instance:website') })} <DownOutlined />
+          </Button>
+        </Dropdown>
+      )
+    },
+    spinEffects: [
+      'authModel/defineAbilities',
+      'websiteModel/websitesHandleEdit',
+      'websiteModel/prepareToSave'
+    ]
+  };
 
   return (
-    <Page className={styles.website}
-          component={component}
-          touched={touched}
-          spinEffects={[
-            'websiteModel/websitesHandleEdit',
-            'websiteModel/prepareToSave'
-          ]}>
+    <Page {...pageProps}>
       <div className={styles.websiteFormWrapper}>
-        <PageHeader ghost={false}
-                    subTitle={subTitle}
-                    extra={[
-                      <CloseButton key={'close'}
-                                   isEdit={isEdit}
-                                   onClick={() => onClose(params.user)}
-                                   loading={
-                                     loading.effects['websiteModel/prepareToSave']
-                                   } />,
-                      <SaveButton key={'save'}
-                                  isEdit={isEdit}
-                                  disabled={saveDisabled}
-                                  formRef={formRef}
-                                  loading={
-                                    loading.effects['websiteModel/prepareToSave']
-                                  } />,
-                      <Dropdown overlay={menu}
-                                disabled={!isEdit || disabled}
-                                overlayClassName={styles.customActionMenu}
-                                key={'custom'}>
-                        <Button size={'small'}
-                                icon={<SettingOutlined />}
-                                className={styles.customAction}>
-                          {t('actions:manage', { type: t('instance:website') })} <DownOutlined />
-                        </Button>
-                      </Dropdown>
-                    ]} />
         <Form layout={'vertical'}
               form={formRef}
               fields={entityForm}
@@ -226,19 +224,10 @@ export default connect(
         }
       });
     },
-    onStoreForm(form) {
-      dispatch({
-        type: 'appModel/storeForm',
-        payload: {
-          form: { ...form },
-          model: 'websiteModel'
-        }
-      });
-    },
-    onEditWebsite(params) {
+    onEditWebsite(userKey, websiteKey) {
       dispatch({
         type: 'websiteModel/websitesHandleEdit',
-        payload: { params }
+        payload: { userKey, websiteKey }
       });
     },
     onBeforeUpload(file) {
@@ -253,20 +242,14 @@ export default connect(
         payload: { file, model: 'websiteModel' }
       });
     },
-    onButtonsMetadata(payload) {
-      dispatch({
-        type: 'appModel/activeButtons',
-        payload
-      });
-    },
     onSave(payload) {
       dispatch({ type: 'websiteModel/prepareToSave', payload });
     },
     onDelete() {
       dispatch({ type: 'websiteModel/handleDelete' });
     },
-    onClose() {
-      history.push(`/websites`);
+    onClose(userKey) {
+      history.push(`/accounts/${userKey}/websites`);
     },
     onUpdateTags(tags) {
       dispatch({

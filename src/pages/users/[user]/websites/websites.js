@@ -192,10 +192,10 @@ export default connect(
   },
   (dispatch) => ({
     dispatch,
-    onEdit(user, key) {
+    onEdit(userKey, websiteKey) {
       dispatch({
         type: 'websiteModel/prepareToEdit',
-        payload: { user, key }
+        payload: { userKey, websiteKey }
       });
     },
     onDelete(entityKey) {

@@ -27,16 +27,19 @@ export async function getWebsites({ userKey, token }) {
 
 /**
  * @export
- * @param key
+ * @param userKey
+ * @param websiteKey
  * @param {string} token
  * @return {*}
  */
-export function getWebsite({ key, token }) {
+export function getWebsite({ userKey, websiteKey, token }) {
   const opts = request.config({
     url: API.websites.getWebsite,
     headers: { 'Authorization': getXHRToken({ token }) },
-    key
+    websiteKey,
+    userKey
   });
+
   return request.xhr(
     opts,
     (error) => errorGetMsg(i18n.t('instance:website'), error),

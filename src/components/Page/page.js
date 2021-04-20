@@ -45,7 +45,8 @@ function Page({
     formRef,
     ability,
     component,
-    metadata
+    metadata,
+    touched
   };
 
   return ability ? (
