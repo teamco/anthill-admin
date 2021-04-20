@@ -31,12 +31,11 @@ const users = (props) => {
     onQuery,
     onDeleteUser,
     onSignOutUser,
-    onUnlockUser,
-    onLockUser,
     onFieldsChange,
     onUpdateProfile,
     onFileRemove,
-    onBeforeUpload
+    onBeforeUpload,
+    onButtonsMetadata
   } = props;
 
   const [formRef] = Form.useForm();

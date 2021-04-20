@@ -24,21 +24,13 @@ export default dvaModelExtend(commonModel, {
     layoutOpts: {
       mainHeader: false,
       pageBreadcrumbs: false,
-      pageHeader: false,
       mainFooter: false,
       mainMenu: false
     },
     activeTab: true,
     collapsedMenu: true,
     menus: [],
-    meta: { ...appMeta, ...{ title: '' } },
-    activeForm: {
-      form: null
-    },
-    activeModel: {
-      isEdit: false,
-      title: ''
-    }
+    meta: { ...appMeta, ...{ title: '' } }
   },
 
   effects: {
@@ -72,11 +64,15 @@ export default dvaModelExtend(commonModel, {
           layoutOpts: {
             mainHeader: payload.visible,
             pageBreadcrumbs: payload.visible,
-            pageHeader: payload.visible,
             mainFooter: payload.visible,
             mainMenu: payload.visible
           }
         }
+      });
+
+      yield put({
+        type: 'pageModel/updateState',
+        payload: { pageHeader: payload.visible }
       });
     },
 
@@ -86,33 +82,6 @@ export default dvaModelExtend(commonModel, {
         type: 'updateState',
         payload: {
           meta: { ...meta, ...payload.meta }
-        }
-      });
-    },
-
-    * storeForm({ payload }, { put }) {
-      yield put({
-        type: 'updateState',
-        payload: {
-          activeForm: payload
-        }
-      });
-    },
-
-    * activeModel({ payload }, { put }) {
-      yield put({
-        type: 'updateState',
-        payload: {
-          activeModel: { ...payload }
-        }
-      });
-    },
-
-    * activeButtons({ payload }, { put }) {
-      yield put({
-        type: 'updateState',
-        payload: {
-          activeButtons: { ...payload }
         }
       });
     },
@@ -136,7 +105,7 @@ export default dvaModelExtend(commonModel, {
     },
 
     * notification(_, { put }) {
-      console.log('notification')
+      console.log('notification');
     }
   },
   reducers: {}

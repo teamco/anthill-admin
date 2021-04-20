@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
-import { Layout, Spin } from 'antd';
+import { Form, Layout, Spin } from 'antd';
 import classnames from 'classnames';
 import { withTranslation } from 'react-i18next';
 import { Prompt } from 'umi';
 
-import Login from '@/pages/login';
 import Page403 from '@/pages/403';
 import { Can } from '@/utils/auth/can';
 
 import styles from '@/components/Page/page.module.less';
+import Main from '@/components/Main';
 
 const { Content } = Layout;
 
@@ -21,9 +21,17 @@ function Page({
   children,
   className,
   component,
-  authModel
+  authModel,
+  pageModel,
+  buttons,
+  model,
+  formRef,
+  metadata
 }) {
+
   const { ability, currentUser } = authModel;
+
+  const { pageHeader } = pageModel;
 
   useEffect(() => {
   }, []);
@@ -31,6 +39,15 @@ function Page({
   const spinning = Object.keys(loading.effects).filter(
     (effect) => spinEffects.indexOf(effect) > -1 && loading.effects[effect]
   );
+
+  const headerProps = {
+    model,
+    buttons,
+    formRef,
+    ability,
+    component,
+    metadata
+  };
 
   return ability ? (
     <Layout className={classnames(styles.layout)}>
@@ -40,6 +57,7 @@ function Page({
             <Spin spinning={spinning.length > 0}>
               <Can I={'read'} a={component} ability={ability}>
                 {touched && (<Prompt message={t('msg:unsaved')} />)}
+                {pageHeader && buttons && (<Main.PageHeader {...headerProps} />)}
                 {children}
               </Can>
               <Page403 component={component}

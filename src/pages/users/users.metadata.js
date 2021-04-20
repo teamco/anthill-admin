@@ -166,7 +166,7 @@ export const metadata = ({
           const { key, profile } = record?.metadata;
           const cannotBeDeleted = key === currentUser.metadata.key;
           return data.length ? (
-            <div className={styles.nowrap}>
+            <div className={classnames(styles.nowrap, styles.textEnd)}>
               {list && (
                 <Tooltip title={t('menu:userProfile')}>
                   <NavLink to={`/accounts/${key}`}>

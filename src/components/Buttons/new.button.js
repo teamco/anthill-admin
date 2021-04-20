@@ -1,5 +1,6 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
+import { PlusSquareOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 
 /**
@@ -9,27 +10,28 @@ import { Button } from 'antd';
  * @param props
  * @return {JSX.Element}
  */
-const closeButton = props => {
+const newButton = props => {
   const {
     t,
     loading,
-    icon,
+    icon = <PlusSquareOutlined />,
     disabled = false,
     size = 'small',
-    type = 'default',
+    type = 'primary',
     onClick
   } = props;
 
   return (
+
     <Button size={size}
             disabled={disabled}
             loading={loading}
             icon={icon}
             onClick={onClick}
             type={type}>
-      {t('actions:close')}
+      {t('actions:new')}
     </Button>
   );
 };
 
-export default withTranslation()(closeButton);
+export default withTranslation()(newButton);

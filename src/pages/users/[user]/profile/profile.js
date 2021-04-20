@@ -5,12 +5,19 @@ import { withTranslation } from 'react-i18next';
 
 import Page from '@/components/Page';
 import Users from '@/pages/users';
+import Websites from '@/pages/users/[user]/websites';
 
 import styles from '@/pages/users/[user]/profile/profile.module.less';
 import userStyles from '@/pages/users/users.module.less';
 
 const profile = (props) => {
-  const { t, authModel, userModel, loading, onGetUser } = props;
+  const {
+    t,
+    authModel,
+    userModel,
+    loading,
+    onGetUser
+  } = props;
 
   const params = useParams();
 
@@ -29,7 +36,7 @@ const profile = (props) => {
           component={component}
           spinEffects={['userModel/getUser']}>
       <Users profiled={true} />
-      test
+      <Websites />
     </Page>
   );
 };

@@ -41,13 +41,10 @@ class AppLayout extends Component {
       menus,
       collapsedMenu,
       activeModel,
-      activeButtons,
-      activeForm,
       layoutOpts: {
         mainMenu,
         mainHeader,
         mainFooter,
-        pageHeader,
         pageBreadcrumbs
       },
       meta,
@@ -83,13 +80,6 @@ class AppLayout extends Component {
               {mainHeader && (<Main.Header />)}
               <Content>
                 <Form.Provider>
-                  {pageHeader && (
-                    <Main.PageHeader metadata={{
-                      model: activeModel,
-                      buttons: activeButtons,
-                      form: activeForm.form
-                    }} />
-                  )}
                   {pageBreadcrumbs && (
                     <Main.Breadcrumbs meta={meta}
                                       onUpdateDocumentMeta={onUpdateDocumentMeta} />
