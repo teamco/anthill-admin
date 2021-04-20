@@ -30,17 +30,26 @@ import {
 const raiseConditionMsg = i18n.t('error:notFound', { instance: i18n.t('instance:website') });
 
 /**
+ * @constant
+ * @type {string}
+ */
+const raisePermissionMsg = i18n.t('error:noPermissions');
+
+/**
  * @export
  * @default
  */
 export default dvaModelExtend(commonModel, {
   namespace: 'websiteModel',
   state: {
-    selectedWebsite: null,
     websites: [],
     widgets: [],
-    assignedWidgets: []
+    assignedWidgets: [],
+    selectedWebsite: null,
+    websiteKey: null,
+    userKey: null
   },
+
   effects: {
 
     * websitesQuery({ payload }, { put, call, select }) {
@@ -56,27 +65,31 @@ export default dvaModelExtend(commonModel, {
           type: 'updateState',
           payload: {
             websites,
+            userKey,
             selectedWebsite: null
           }
         });
       }
+
+      yield put({ type: 'cleanForm' });
     },
 
     * websitesHandleNew({ payload }, { put, select }) {
-      let { websites = [] } = yield select((state) => state.websiteModel);
+      let { ability } = yield select(state => state.authModel);
 
-      if (!websites.length) {
-        yield put({ type: 'websitesQuery' });
+      if (ability.can('create', 'websites')) {
+        return yield put({
+          type: 'updateState',
+          payload: { ...payload }
+        });
       }
 
       yield put({
-        type: 'updateState',
+        type: 'raiseCondition',
         payload: {
-          touched: false,
-          entityForm: [],
-          fileList: [],
-          previewUrl: null,
-          isEdit: payload.isEdit
+          message: raisePermissionMsg,
+          type: 403,
+          redirect: true
         }
       });
     },
@@ -84,20 +97,18 @@ export default dvaModelExtend(commonModel, {
     * prepareToEdit({ payload }, { put, call, select }) {
       let { token } = yield select(state => state.authModel);
       const { userKey, websiteKey } = payload;
+
       const res = yield call(getWebsite, { userKey, websiteKey, token });
 
       if (res?.data) {
         const { website, error } = res.data;
         if (website) {
-
-          yield put({ type: 'cleanForm' });
-
           yield put({
             type: 'updateState',
             payload: {
+              websiteKey,
+              userKey,
               selectedWebsite: website,
-              touched: false,
-              fileList: [],
               tags: JSON.parse(website?.tags || '[]'),
               previewUrl: website?.picture.url,
               isEdit: website?.key !== 'new'
@@ -125,9 +136,15 @@ export default dvaModelExtend(commonModel, {
       const { selectedWebsite } = yield select(state => state.websiteModel);
       const { websiteKey } = payload;
 
+      yield put({ type: 'cleanForm' });
+
       if (websiteKey === 'new') {
         // Do nothing.
+        return yield put({ type: 'websitesHandleNew', payload });
+
       } else if (ability.can('read', 'websites')) {
+
+        yield put({ type: 'updateState', payload });
 
         return selectedWebsite ?
           false :
@@ -137,7 +154,7 @@ export default dvaModelExtend(commonModel, {
       yield put({
         type: 'raiseCondition',
         payload: {
-          message: raiseConditionMsg,
+          message: raisePermissionMsg,
           type: 403,
           redirect: true
         }
@@ -147,24 +164,19 @@ export default dvaModelExtend(commonModel, {
     * prepareToSave({ payload }, { put, select, call }) {
       const { isEdit } = yield select((state) => state.websiteModel);
 
-      const _payload = {
-        ...payload,
-        model: 'websiteModel'
-      };
-
       if (!isEdit) {
-        _payload.entityKey = yield call(generateKey);
+        payload.entityKey = yield call(generateKey);
       }
 
       yield put({
         type: 'save',
-        payload: _payload
+        payload: { ...payload, model: 'websiteModel' }
       });
     },
 
     * save({ payload }, { put, call, select }) {
-      const { fileList, isEdit, tags, removeFile } = yield select(state => state.websiteModel);
       const { ability, token } = yield select(state => state.authModel);
+      const { fileList, isEdit, tags, removeFile, websiteKey, userKey } = yield select(state => state.websiteModel);
 
       if (ability.can(isEdit ? 'update' : 'create', 'websites')) {
         const save = yield call(isEdit ? updateWebsite : saveWebsite, {
@@ -172,15 +184,20 @@ export default dvaModelExtend(commonModel, {
           removeFile,
           fileList,
           tags,
-          token
+          token,
+          websiteKey,
+          userKey
         });
 
-        if (request.isSuccess((save || {}).status)) {
+        if (request.isSuccess(save?.status) && !save?.data?.errors) {
           successSaveMsg(isEdit, i18n.t('instance:website'));
 
           yield put({
-            type: 'validateWebsite',
-            payload: { websiteKey: save?.data?.location?.key }
+            type: 'prepareToEdit',
+            payload: {
+              userKey,
+              websiteKey: save?.data?.location?.key
+            }
           });
 
           yield put({

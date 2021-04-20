@@ -127,7 +127,7 @@ export async function getProfileImage({ email, protocol = 'http', format = 'json
  */
 export const updateUserProfile = async ({ entityForm, fileList = [], tags = [], removeFile, token }) => {
   const opts = request.config({
-    url: API.users.updateUser,
+    url: API.users.getUser,
     headers: { 'Authorization': getXHRToken({ token }) },
     userKey: entityForm.entityKey,
     method: 'put'
@@ -179,7 +179,7 @@ export const forceSignOut = async ({ userKey, token }) => {
  */
 export const deleteUser = async ({ userKey, token }) => {
   const opts = request.config({
-    url: API.users.deleteUser,
+    url: API.users.getUser,
     headers: { 'Authorization': getXHRToken({ token }) },
     method: 'delete',
     userKey

@@ -50,10 +50,10 @@ const websites = (props) => {
   /**
    * @type {{user}}
    */
-  const params = useParams();
+  const { user } = useParams();
 
   useEffect(() => {
-    onQuery(params.user);
+    onQuery(user);
   }, []);
 
   /**
@@ -119,7 +119,7 @@ const websites = (props) => {
     component,
     buttons: {
       newBtn: {
-        onClick: () => onNew(params.user),
+        onClick: () => onNew(user),
         loading: loading.effects['websiteModel/handleNew']
       }
     },
@@ -147,7 +147,7 @@ const websites = (props) => {
                   className={`site-card`}
                   actions={[
                     <SettingOutlined key={'setting'} />,
-                    <EditOutlined onClick={() => onEdit(params.user, site.key)}
+                    <EditOutlined onClick={() => onEdit(user, site.key)}
                                   key={'edit'} />,
                     <Dropdown overlay={menu(site.key)}
                               placement={'topLeft'}
@@ -162,7 +162,7 @@ const websites = (props) => {
                   }>
               <Meta className={'site-card-title'}
                     title={site.name}
-                    description={site.description} />
+                    description={site.description || `...`} />
             </Card>
           ))
         ) : (
@@ -193,10 +193,7 @@ export default connect(
   (dispatch) => ({
     dispatch,
     onEdit(userKey, websiteKey) {
-      dispatch({
-        type: 'websiteModel/prepareToEdit',
-        payload: { userKey, websiteKey }
-      });
+      history.push(`/accounts/${userKey}/websites/${websiteKey}`);
     },
     onDelete(entityKey) {
       dispatch({
@@ -207,8 +204,8 @@ export default connect(
     onQuery(userKey) {
       dispatch({ type: 'websiteModel/websitesQuery', payload: { userKey } });
     },
-    onNew(user) {
-      history.push(`/accounts/${user}/websites/new`);
+    onNew(userKey) {
+      history.push(`/accounts/${userKey}/websites/new`);
     },
     onMode(entityKey, mode) {
       history.push(`/pages/websites/${entityKey}/${mode}`);

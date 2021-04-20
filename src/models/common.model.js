@@ -14,23 +14,27 @@ const DEFAULT_FORM = [
   }
 ];
 
+const DEFAULT_STATE = {
+  referrer: document.referrer,
+  resetForm: false,
+  entityForm: DEFAULT_FORM,
+  language: 'en-US',
+  isEdit: false,
+  touched: false,
+  removeFile: false,
+  previewUrl: null,
+  tags: [],
+  fileList: [],
+  fileName: null
+};
+
 /**
  * @constant
  * @export
  */
 const commonModel = {
   state: {
-    referrer: document.referrer,
-    resetForm: false,
-    entityForm: DEFAULT_FORM,
-    language: 'en-US',
-    isEdit: false,
-    touched: false,
-    removeFile: false,
-    previewUrl: null,
-    tags: [],
-    fileList: [],
-    fileName: null
+    ...DEFAULT_STATE
   },
 
   effects: {
@@ -43,9 +47,10 @@ const commonModel = {
     },
 
     * cleanForm({ payload }, { put }) {
+      console.log('cleanForm')
       yield put({
         type: 'updateState',
-        payload: { entityForm: DEFAULT_FORM }
+        payload: { ...DEFAULT_STATE }
       });
     },
 
@@ -82,9 +87,23 @@ const commonModel = {
       });
     },
 
-    * updateFields({ payload }, { put, select }) {
+    * updateFields({ payload }, { call, put, select }) {
       const { entityForm } = yield select((state) => state[payload.model]);
       const _entityForm = [...entityForm];
+
+      for (let i = 0; i < payload.changedFields.length; i++) {
+        const field = payload.changedFields[i];
+        const key = field.name[0];
+
+        const idx = yield call(getEntityFormIdx, { entityForm, key });
+        const formItem = { name: key, value: field.value };
+
+        if (idx > -1) {
+          _entityForm.splice(idx, 1);
+        }
+
+        _entityForm.push(formItem);
+      }
 
       yield put({
         type: 'updateState',

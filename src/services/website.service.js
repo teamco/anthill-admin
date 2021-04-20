@@ -13,7 +13,7 @@ import { getXHRToken } from '@/services/auth.service';
  */
 export async function getWebsites({ userKey, token }) {
   const opts = request.config({
-    url: API.websites.getAllWebsites,
+    url: API.websites.getWebsites,
     headers: { 'Authorization': getXHRToken({ token }) },
     userKey
   });
@@ -67,14 +67,18 @@ export function getAssignedWidgets({ key }) {
 /**
  * @export
  * @param entityForm
+ * @param userKey
+ * @param token
  * @param [fileList]
  * @param [tags]
  * @return {Promise<*>}
  */
-export async function saveWebsite({ entityForm, fileList = [], tags = [] }) {
+export async function saveWebsite({ entityForm, fileList = [], tags = [], userKey, token }) {
   const opts = request.config({
-    url: API.websites.saveWebsite,
-    method: 'post'
+    url: API.websites.getWebsites,
+    headers: { 'Authorization': getXHRToken({ token }) },
+    method: 'post',
+    userKey
   });
 
   const picture = fileList[0] ? await request.toBase64(fileList[0]) : undefined;
@@ -87,7 +91,6 @@ export async function saveWebsite({ entityForm, fileList = [], tags = [] }) {
             description: entityForm.description,
             key: entityForm.entityKey,
             tags: JSON.stringify(tags),
-            user_id: 1,
             picture
           }
         }
@@ -102,16 +105,19 @@ export async function saveWebsite({ entityForm, fileList = [], tags = [] }) {
  * @param entityForm
  * @param token
  * @param removeFile
+ * @param websiteKey
+ * @param userKey
  * @param [fileList]
  * @param [tags]
  * @return {Promise<*>}
  */
-export async function updateWebsite({ entityForm, fileList = [], tags = [], removeFile, token }) {
+export async function updateWebsite({ entityForm, fileList = [], tags = [], removeFile, token, websiteKey, userKey }) {
   const opts = request.config({
-    url: API.websites.updateWebsite,
+    url: API.websites.getWebsite,
     headers: { 'Authorization': getXHRToken({ token }) },
-    key: entityForm.entityKey,
-    method: 'put'
+    websiteKey: entityForm.entityKey,
+    method: 'put',
+    userKey
   });
 
   const picture = fileList[0] ? await request.toBase64(fileList[0]) : undefined;
@@ -141,7 +147,7 @@ export async function updateWebsite({ entityForm, fileList = [], tags = [], remo
  */
 export async function destroyWebsite({ entityKey }) {
   const opts = request.config({
-    url: API.websites.destroyWebsite,
+    url: API.websites.getWebsite,
     key: entityKey,
     method: 'delete'
   });
@@ -159,7 +165,7 @@ export async function destroyWebsite({ entityKey }) {
  */
 export async function saveWebsiteWidgets({ entityForm, widget_ids = [] }) {
   const opts = request.config({
-    url: API.websites.saveWebsiteWidgets,
+    url: API.websites.getWebsiteWidgets,
     method: 'post',
     key: entityForm.entityKey
   });

@@ -33,18 +33,12 @@ export const API = {
   },
   users: {
     getAllUsers: 'all_users',
-    getUser: 'users/:userKey',
-    updateUser: 'users/:userKey',
-    deleteUser: 'users/:userKey'
+    getUser: 'users/:userKey'
   },
   websites: {
-    getAllWebsites: 'users/:userKey/websites',
+    getWebsites: 'users/:userKey/websites',
     getWebsite: 'users/:userKey/websites/:websiteKey',
-    getWebsiteWidgets: 'websites/:id/widgets',
-    saveWebsiteWidgets: 'websites/:id/widgets',
-    updateWebsite: 'websites/:id',
-    destroyWebsite: 'websites/:id',
-    saveWebsite: 'websites'
+    getWebsiteWidgets: 'websites/:websiteKey/widgets'
   },
   widgets: {
     getAllWidgets: 'widgets',

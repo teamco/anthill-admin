@@ -51,11 +51,6 @@ const profile = (props) => {
             'websiteModel/websitesQuery'
           ]}>
       <Users profiled={true} />
-      <Divider plain
-               className={styles.divider}
-               orientation={'left'}>
-        {t('panel:entities')}
-      </Divider>
       <div className={styles.userCardWrapper}>
         <AntHillRow>
           <Card className={classnames(styles.userCard, styles.websites)}

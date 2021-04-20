@@ -8,8 +8,6 @@ import Page from '@/components/Page';
 import { fromForm } from '@/utils/object';
 import FormComponents from '@/components/Form';
 import Main from '@/components/Main';
-import SaveButton from '@/components/Buttons/save.button';
-import CloseButton from '@/components/Buttons/close.button';
 
 import styles from '@/pages/users/[user]/websites/website.module.less';
 
@@ -18,8 +16,7 @@ import {
   DownOutlined,
   PauseCircleOutlined,
   SettingOutlined,
-  GlobalOutlined,
-  UserSwitchOutlined
+  GlobalOutlined
 } from '@ant-design/icons';
 
 const { GenericPanel, EditableTags } = FormComponents;
@@ -65,9 +62,11 @@ const websiteEdit = (props) => {
     if (ability) {
       setDisabled(ability.cannot('update', component));
     }
-
-    onEditWebsite(user, website);
   }, [ability]);
+
+  useEffect(() => {
+    onEditWebsite(user, website);
+  }, []);
 
   const {
     isEdit,

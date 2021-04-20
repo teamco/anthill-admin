@@ -89,7 +89,7 @@ class AppLayout extends Component {
                   </div>
                 </Form.Provider>
               </Content>
-              {mainFooter && (
+              {mainFooter && currentUser && (
                 <Main.Footer author={t('author', {
                   name: 'Team©',
                   year: 2020
