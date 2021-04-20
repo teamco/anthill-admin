@@ -26,12 +26,11 @@ function Page({
   buttons,
   model,
   formRef,
-  metadata
+  metadata,
+  pageHeader
 }) {
 
   const { ability, currentUser } = authModel;
-
-  const { pageHeader } = pageModel;
 
   useEffect(() => {
   }, []);
@@ -57,7 +56,7 @@ function Page({
             <Spin spinning={spinning.length > 0}>
               <Can I={'read'} a={component} ability={ability}>
                 {touched && (<Prompt message={t('msg:unsaved')} />)}
-                {pageHeader && buttons && (<Main.PageHeader {...headerProps} />)}
+                {pageHeader && (<Main.PageHeader {...headerProps} />)}
                 {children}
               </Can>
               <Page403 component={component}

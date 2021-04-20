@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { Form, PageHeader } from 'antd';
 import {
+  GlobalOutlined,
   UserSwitchOutlined
 } from '@ant-design/icons';
 import { withTranslation } from 'react-i18next';
@@ -79,18 +80,27 @@ const users = (props) => {
     onSignOutUser
   };
 
-  const subTitle = (
-    <>
-      <UserSwitchOutlined style={{ marginRight: 10 }} />
-      {t('actions:manage', { type: t('auth:users') })}
-    </>
-  );
+  const pageProps = {
+    ability,
+    pageHeader: true,
+    className: styles.users,
+    component,
+    metadata: {
+      title: (
+        <>
+          <UserSwitchOutlined style={{ marginRight: 10 }} />
+          {t('actions:manage', { type: t('auth:users') })} ({userModel.users?.length || 0})
+        </>
+      )
+    },
+    spinEffects: [
+      'authModel/defineAbilities',
+      'userModel/query'
+    ]
+  };
 
   return (
-    <Page className={styles.users}
-          component={component}
-          spinEffects={['authModel/defineAbilities']}>
-      <PageHeader ghost={false} subTitle={subTitle} />
+    <Page {...pageProps}>
       <div className={styles.grid}>
         <Table data={userModel.users}
                {...Object.assign(tableProps, unifiedProps)}

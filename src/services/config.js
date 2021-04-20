@@ -33,13 +33,13 @@ export const API = {
   },
   users: {
     getAllUsers: 'all_users',
-    getUser: 'user/:id',
-    updateUser: 'user/:id',
-    deleteUser: 'user/:id'
+    getUser: 'users/:userKey',
+    updateUser: 'users/:userKey',
+    deleteUser: 'users/:userKey'
   },
   websites: {
-    getAllWebsites: 'websites',
-    getWebsite: 'websites/:id',
+    getAllWebsites: 'users/:userKey/websites',
+    getWebsite: 'users/:userKey/websites/:websiteKey',
     getWebsiteWidgets: 'websites/:id/widgets',
     saveWebsiteWidgets: 'websites/:id/widgets',
     updateWebsite: 'websites/:id',

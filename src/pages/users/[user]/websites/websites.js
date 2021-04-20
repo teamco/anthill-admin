@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import { withTranslation } from 'react-i18next';
-import { history } from 'umi';
+import { history, useParams } from 'umi';
 import { Button, Card, Dropdown, Menu, PageHeader } from 'antd';
 import {
   ApiOutlined,
@@ -47,8 +47,13 @@ const websites = (props) => {
 
   const { websites } = websiteModel;
 
+  /**
+   * @type {{user}}
+   */
+  const params = useParams();
+
   useEffect(() => {
-    onQuery();
+    onQuery(params.user);
   }, []);
 
   /**
@@ -109,11 +114,12 @@ const websites = (props) => {
 
   const pageProps = {
     ability,
+    pageHeader: true,
     className: styles.websites,
     component,
     buttons: {
       newBtn: {
-        onClick: onNew,
+        onClick: () => onNew(params.user),
         loading: loading.effects['websiteModel/handleNew']
       }
     },
@@ -121,7 +127,7 @@ const websites = (props) => {
       title: (
         <>
           <GlobalOutlined style={{ marginRight: 10 }} />
-          {t('menu:userWebsites')} ({websites.length})
+          {t('menu:userWebsites')} ({websites?.length || 0})
         </>
       )
     },
@@ -134,14 +140,15 @@ const websites = (props) => {
   return (
     <Page {...pageProps}>
       <div className={styles.container}>
-        {websites.length ? (
+        {websites?.length ? (
           websites.map((site, idx) => (
             <Card key={idx}
                   hoverable
                   className={`site-card`}
                   actions={[
                     <SettingOutlined key={'setting'} />,
-                    <EditOutlined onClick={() => onEdit(site.key)} key={'edit'} />,
+                    <EditOutlined onClick={() => onEdit(params.user, site.key)}
+                                  key={'edit'} />,
                     <Dropdown overlay={menu(site.key)}
                               placement={'topLeft'}
                               trigger={['click']}>
@@ -185,10 +192,10 @@ export default connect(
   },
   (dispatch) => ({
     dispatch,
-    onEdit(key) {
+    onEdit(user, key) {
       dispatch({
         type: 'websiteModel/prepareToEdit',
-        payload: { key }
+        payload: { user, key }
       });
     },
     onDelete(entityKey) {
@@ -197,11 +204,11 @@ export default connect(
         payload: { entityKey }
       });
     },
-    onQuery(entityKey) {
-      dispatch({ type: 'websiteModel/websitesQuery' });
+    onQuery(userKey) {
+      dispatch({ type: 'websiteModel/websitesQuery', payload: { userKey } });
     },
-    onNew() {
-      history.push(`/pages/websites/new`);
+    onNew(user) {
+      history.push(`/accounts/${user}/websites/new`);
     },
     onMode(entityKey, mode) {
       history.push(`/pages/websites/${entityKey}/${mode}`);

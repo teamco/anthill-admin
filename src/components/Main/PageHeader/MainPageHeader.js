@@ -11,6 +11,12 @@ import styles from '@/components/Main/PageHeader/pageHeader.module.less';
 
 class MainPageHeader extends React.Component {
   render() {
+
+    /**
+     * @type {{
+     *  buttons:{newBtn, saveBtn, closeBtn, deleteBtn}
+     * }}
+     */
     const {
       component,
       ability,
@@ -27,13 +33,12 @@ class MainPageHeader extends React.Component {
      */
     const newButton = () => {
       const disabled = ability.cannot('create', component);
-      const { onClick, loading } = buttons.newBtn;
-      return (
+      return buttons?.newBtn ? (
         <NewButton key={'new'}
                    disabled={disabled}
-                   onClick={onClick}
-                   loading={loading} />
-      );
+                   onClick={buttons?.newBtn.onClick}
+                   loading={buttons?.newBtn.loading} />
+      ) : null;
     };
 
     /**
@@ -42,14 +47,13 @@ class MainPageHeader extends React.Component {
      */
     const saveButton = () => {
       const disabled = ability.cannot('update', component);
-      const { loading } = buttons.saveBtn;
-      return (
+      return buttons?.saveBtn ? (
         <SaveButton key={'save'}
                     isEdit={model?.isEdit}
                     disabled={disabled}
                     formRef={formRef}
-                    loading={loading} />
-      );
+                    loading={buttons?.saveBtn.loading} />
+      ) : null;
     };
 
     /**
@@ -57,13 +61,12 @@ class MainPageHeader extends React.Component {
      * @return {JSX.Element}
      */
     const closeButton = () => {
-      const { onClick, loading } = buttons.closeBtn;
-      return (
+      return buttons?.closeBtn ? (
         <CloseButton key={'close'}
                      disabled={false}
-                     onClick={onClick}
-                     loading={loading} />
-      );
+                     onClick={buttons?.closeBtn.onClick}
+                     loading={buttons?.closeBtn.loading} />
+      ) : null;
     };
 
     /**
@@ -72,16 +75,15 @@ class MainPageHeader extends React.Component {
      */
     const deleteButton = () => {
       const disabled = ability.cannot('delete', component);
-      const { onClick, loading } = buttons.deleteBtn;
-      return (
+      return buttons?.deleteBtn ? (
         <DeleteButton key={'delete'}
                       disabled={disabled}
-                      onClick={onClick}
-                      loading={loading} />
-      );
+                      onClick={buttons?.deleteBtn.onClick}
+                      loading={buttons?.deleteBtn.loading} />
+      ) : null;
     };
 
-    const _buttons = formRef?.current ? model?.isEdit ? [
+    let _buttons = (formRef?.current ? model?.isEdit ? [
       closeButton(),
       deleteButton(),
       saveButton()
@@ -90,13 +92,18 @@ class MainPageHeader extends React.Component {
       saveButton()
     ] : [
       newButton()
-    ];
+    ]).filter(button => button);
+
+
+    if (!_buttons.length) {
+      _buttons = null;
+    }
 
     return (
       <PageHeader ghost={ghost}
                   subTitle={metadata?.title}
                   className={styles.siteActions}
-                  extra={[_buttons]} />
+                  extra={_buttons} />
     );
   }
 }

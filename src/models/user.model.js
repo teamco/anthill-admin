@@ -4,7 +4,6 @@ import { history } from 'umi';
 import { commonModel } from '@/models/common.model';
 import i18n from '@/utils/i18n';
 import { deleteUser, forceSignOut, getUser, getUsers, updateUserProfile } from '@/services/user.service';
-import { generateKey } from '@/services/common.service';
 import request from '@/utils/request';
 import { successSaveMsg } from '@/utils/message';
 import { message } from 'antd';
@@ -80,7 +79,7 @@ export default dvaModelExtend(commonModel, {
 
       if (ability.can('logout', 'user')) {
         const res = yield call(forceSignOut, {
-          key: payload?.key,
+          userKey: payload?.key,
           token
         });
 
@@ -121,7 +120,7 @@ export default dvaModelExtend(commonModel, {
       if (ability.can('delete', 'user')) {
         const { metadata } = payload?.user;
         const res = yield call(deleteUser, {
-          key: metadata?.key,
+          userKey: metadata?.key,
           token
         });
 
@@ -149,7 +148,7 @@ export default dvaModelExtend(commonModel, {
       const { ability, token } = yield select(state => state.authModel);
 
       if (ability.can('read', 'users')) {
-        const res = yield call(getUser, { key: payload.userKey, token });
+        const res = yield call(getUser, { userKey: payload.userKey, token });
 
         if (res?.data) {
           const { user, errors } = res.data;
@@ -164,7 +163,7 @@ export default dvaModelExtend(commonModel, {
                 model: 'userModel',
                 form: {
                   ...{ name },
-                  ...{ entityKey: key || (yield call(generateKey)) }
+                  ...{ entityKey: key }
                 }
               }
             });

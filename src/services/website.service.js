@@ -7,14 +7,17 @@ import { getXHRToken } from '@/services/auth.service';
 /**
  * @function
  * @export
+ * @param {string} userKey
  * @param {string} token
  * @return {*}
  */
-export function getWebsites({ token }) {
+export async function getWebsites({ userKey, token }) {
   const opts = request.config({
     url: API.websites.getAllWebsites,
-    headers: { 'Authorization': getXHRToken({ token }) }
+    headers: { 'Authorization': getXHRToken({ token }) },
+    userKey
   });
+
   return request.xhr(
     opts,
     (error) => errorGetMsg(i18n.t('menu:websites'), error),

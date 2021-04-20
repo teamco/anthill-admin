@@ -69,11 +69,6 @@ export default dvaModelExtend(commonModel, {
           }
         }
       });
-
-      yield put({
-        type: 'pageModel/updateState',
-        payload: { pageHeader: payload.visible }
-      });
     },
 
     * updateDocumentMeta({ payload }, { put, select }) {

@@ -89,11 +89,11 @@ export function getUsers({ token }) {
  * @param token
  * @return {Q.Promise<*>|undefined}
  */
-export function getUser({ key, token }) {
+export function getUser({ userKey, token }) {
   const opts = request.config({
     url: API.users.getUser,
     headers: { 'Authorization': getXHRToken({ token }) },
-    key
+    userKey
   });
 
   return request.xhr(opts,
@@ -129,7 +129,7 @@ export const updateUserProfile = async ({ entityForm, fileList = [], tags = [], 
   const opts = request.config({
     url: API.users.updateUser,
     headers: { 'Authorization': getXHRToken({ token }) },
-    key: entityForm.entityKey,
+    userKey: entityForm.entityKey,
     method: 'put'
   });
 
@@ -154,37 +154,35 @@ export const updateUserProfile = async ({ entityForm, fileList = [], tags = [], 
 
 /**
  * @export
- * @param key
+ * @param userKey
  * @param token
  * @return {Promise<*|undefined>}
  */
-export const forceSignOut = async ({ key, token }) => {
+export const forceSignOut = async ({ userKey, token }) => {
   const opts = request.config({
     url: API.auth.forceLogout,
     headers: { 'Authorization': getXHRToken({ token }) },
-    method: 'post'
+    method: 'post',
+    userKey
   });
 
-  return request.xhr({
-      ...opts,
-      ...{ data: { key } }
-    },
+  return request.xhr(opts,
     (error) => errorSaveMsg(true, i18n.t('instance:user'), error)
   );
 };
 
 /**
  * @export
- * @param key
+ * @param userKey
  * @param token
  * @return {Promise<*|undefined>}
  */
-export const deleteUser = async ({ key, token }) => {
+export const deleteUser = async ({ userKey, token }) => {
   const opts = request.config({
     url: API.users.deleteUser,
     headers: { 'Authorization': getXHRToken({ token }) },
     method: 'delete',
-    key
+    userKey
   });
 
   return request.xhr(opts,

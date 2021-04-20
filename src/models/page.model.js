@@ -9,7 +9,6 @@ import { commonModel } from '@/models/common.model';
 export default dvaModelExtend(commonModel, {
   namespace: 'pageModel',
   state: {
-    pageHeader: false
   },
 
   subscriptions: {

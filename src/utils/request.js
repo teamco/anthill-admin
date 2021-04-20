@@ -45,12 +45,16 @@ const mergeHeaders = () => {
 
 /**
  * @function
- * @param url
- * @param key
- * @return {*}
+ * @param {string} url
+ * @param args
+ * @return {string}
  */
-function adaptUrlToParams(url, key) {
-  return url.replace(/:id/, key);
+function adaptUrlToParams(url, args) {
+  const { userKey, websiteKey, widgetKey } = args;
+
+  return url.replace(/:userKey/g, userKey).
+    replace(/:websiteKey/g, websiteKey).
+    replace(/:widgetKey/g, widgetKey);
 }
 
 /**
@@ -73,8 +77,8 @@ function adoptUrlToAPI(url, direct) {
  * @return {{headers, method: string, url: *}}
  */
 function config({ url, method = 'get', headers = {}, direct = false, ...args }) {
-  if (url.match(/:id/)) {
-    url = adaptUrlToParams(url, args.key);
+  if (url.match(/:(\w+)Key/)) {
+    url = adaptUrlToParams(url, args);
   }
 
   return {

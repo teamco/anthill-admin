@@ -23,7 +23,6 @@ import {
   updateWebsite
 } from '@/services/website.service';
 
-
 /**
  * @export
  * @default
@@ -31,6 +30,7 @@ import {
 export default dvaModelExtend(commonModel, {
   namespace: 'websiteModel',
   state: {
+    selectedWebsite: null,
     websites: [],
     widgets: [],
     assignedWidgets: []
@@ -39,15 +39,19 @@ export default dvaModelExtend(commonModel, {
 
     * websitesQuery({ payload }, { put, call, select }) {
       let { token } = yield select(state => state.authModel);
+      const { userKey } = payload;
 
-      const res = yield call(getWebsites, { token });
+      const res = yield call(getWebsites, { userKey, token });
 
       if (res?.data) {
         const { websites, error } = res?.data;
 
         yield put({
           type: 'updateState',
-          payload: { websites }
+          payload: {
+            websites,
+            selectedWebsite: null
+          }
         });
       }
     },
@@ -82,12 +86,25 @@ export default dvaModelExtend(commonModel, {
 
     * prepareToEdit({ payload }, { put, call, select }) {
       let { token } = yield select(state => state.authModel);
-      const res = yield call(getWebsite, { key: payload.key, token });
+      const { user, key } = payload;
+      const res = yield call(getWebsite, { user, key, token });
 
       if (res?.data) {
         const { website, error } = res.data;
         if (website) {
-          history.replace(`/websites/${website?.key}`);
+          yield put({
+            type: 'updateState',
+            payload: {
+              selectedWebsite: website,
+              touched: false,
+              fileList: [],
+              tags: JSON.parse(website?.tags || '[]'),
+              previewUrl: website?.picture.url,
+              isEdit: website?.key !== 'new'
+            }
+          });
+
+          history.replace(`/accounts/${user}/websites/${website?.key}`);
         }
       }
     },
@@ -105,17 +122,6 @@ export default dvaModelExtend(commonModel, {
         if (res?.data) {
           const { website, error } = res.data;
           if (website) {
-
-            yield put({
-              type: 'updateState',
-              payload: {
-                touched: false,
-                fileList: [],
-                tags: JSON.parse(website?.tags || '[]'),
-                previewUrl: website?.picture.url,
-                isEdit: websiteKey !== 'new'
-              }
-            });
 
             return yield put({
               type: 'toForm',
