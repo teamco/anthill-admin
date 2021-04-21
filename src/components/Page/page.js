@@ -49,31 +49,27 @@ function Page({
     touched
   };
 
-  return ability ? (
+  return (
     <Layout className={classnames(styles.layout)}>
       <Layout className={'site-layout'}>
         <Content className={classnames(styles.page, className)}>
-          <div style={{ height: '100%' }}>
-            <Spin spinning={spinning.length > 0}>
-              <Can I={'read'} a={component} ability={ability}>
-                {touched && (<Prompt message={t('msg:unsaved')} />)}
-                {pageHeader && (<Main.PageHeader {...headerProps} />)}
-                {children}
-              </Can>
-              <Page403 component={component}
-                       ability={ability} />
-            </Spin>
-          </div>
-        </Content>
-      </Layout>
-    </Layout>
-  ) : (
-    <Layout className={classnames(styles.layout)}>
-      <Layout className={'site-layout'}>
-        <Content className={classnames(styles.page, className)}>
-          <div className={styles.loading}>
-            <Spin spinning={true} />
-          </div>
+          {ability ? (
+            <div style={{ height: '100%' }}>
+              <Spin spinning={spinning.length > 0}>
+                <Can I={'read'} a={component} ability={ability}>
+                  {touched && (<Prompt message={t('msg:unsaved')} />)}
+                  {pageHeader && (<Main.PageHeader {...headerProps} />)}
+                  {children}
+                </Can>
+                <Page403 component={component}
+                         ability={ability} />
+              </Spin>
+            </div>
+          ) : (
+            <div className={styles.loading}>
+              <Spin spinning={true} />
+            </div>
+          )}
         </Content>
       </Layout>
     </Layout>

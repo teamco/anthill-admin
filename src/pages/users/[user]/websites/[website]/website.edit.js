@@ -9,7 +9,7 @@ import { fromForm } from '@/utils/object';
 import FormComponents from '@/components/Form';
 import Main from '@/components/Main';
 
-import styles from '@/pages/users/[user]/websites/website.module.less';
+import styles from '@/pages/users/[user]/websites/websites.module.less';
 import pageStyles from '@/components/Page/page.module.less';
 
 import {

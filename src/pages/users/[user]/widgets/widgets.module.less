@@ -1,0 +1,67 @@
+.widgetPreview {
+  :global {
+    .ant-collapse-content-box {
+      position: relative;
+
+      div[id="widget-undefined"] {
+        position: relative !important;
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+.widgetCard {
+  width: 150px;
+  margin-bottom: 20px !important;
+  margin-right: 20px !important;
+  float: left;
+
+  img {
+    height: 150px;
+    width: 148px;
+    margin-left: 1px;
+  }
+
+  :global {
+    .ant-card-body {
+      padding: 10px;
+
+      .site-card-title {
+        font-size: 12px;
+
+        .ant-card-meta-description,
+        .ant-card-meta-title {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+}
+
+.widgetCardEmpty {
+  span[role="img"] {
+    svg {
+      width: 100px;
+      height: 100px;
+      opacity: 0.2;
+      margin: 20px 0;
+    }
+  }
+
+  :global {
+    .ant-card-body {
+      .site-card-title {
+        .ant-card-meta-description,
+        .ant-card-meta-title {
+          text-overflow: unset;
+          white-space: normal;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+}

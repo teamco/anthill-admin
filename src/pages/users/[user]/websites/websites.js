@@ -16,11 +16,14 @@ import {
 } from '@ant-design/icons';
 
 import Page from '@/components/Page';
+import EmptyCard from '@/components/Card'
+
 import { showConfirm } from '@/utils/modals';
 import { cachedUrl } from '@/utils/file';
 
-import styles from '@/pages/users/[user]/websites/website.module.less';
+import styles from '@/pages/users/[user]/websites/websites.module.less';
 import pageStyles from '@/components/Page/page.module.less';
+import cardStyles from '@/components/Card/card.module.less';
 
 const { Meta } = Card;
 const { SubMenu } = Menu;
@@ -157,8 +160,8 @@ const websites = (props) => {
         {websites?.length ? (
           websites.map((site, idx) => (
             <Card key={idx}
+                  className={cardStyles.card}
                   hoverable
-                  className={`site-card`}
                   actions={[
                     <SettingOutlined key={'setting'} />,
                     <EditOutlined onClick={() => onEdit(user, site.key)}
@@ -170,26 +173,19 @@ const websites = (props) => {
                     </Dropdown>
                   ]}
                   cover={
-                    site.picture.url ?
-                      (<img alt={site.name} src={cachedUrl(site.picture.url)} />) :
+                    site.picture?.url ?
+                      (<img alt={site.name}
+                            src={cachedUrl(site.picture.url)} />) :
                       (<StopOutlined />)
                   }>
-              <Meta className={'site-card-title'}
+              <Meta className={cardStyles.title}
                     title={site.name}
                     description={site.description || `...`} />
             </Card>
           ))
         ) : (
-          <Card key={0}
-                hoverable
-                className={'site-card site-card-empty'}
-                cover={<StopOutlined />}>
-            <Meta className={'site-card-title'}
-                  title={t('empty:title')}
-                  description={t('empty:description', {
-                    instance: '$t(instance:website)'
-                  })} />
-          </Card>
+          <EmptyCard key={0}
+                     instance={t('instance:website')}/>
         )}
       </div>
     </Page>
