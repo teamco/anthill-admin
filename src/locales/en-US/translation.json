@@ -105,8 +105,8 @@
     "signInCount": "SignIn count"
   },
   "msg": {
-    "deleteConfirm": "Are you sure to delete this {{instance}}?",
-    "unassignConfirm": "Are you sure to unassign this {{instance}}?",
+    "deleteConfirm": "Are you sure to delete: {{instance}}?",
+    "unassignConfirm": "Are you sure to unassign {{instance}}?",
     "successSave": "{{instance}} successfully created",
     "successUpdate": "{{instance}} successfully updated",
     "successDelete": "{{instance}} successfully deleted",

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { useParams, history } from 'umi';
 import { withTranslation } from 'react-i18next';
-import { Form, PageHeader, Menu, Button, Dropdown } from 'antd';
+import { Form, Menu, Button, Dropdown } from 'antd';
 
 import Page from '@/components/Page';
 import { fromForm } from '@/utils/object';
@@ -10,6 +10,7 @@ import FormComponents from '@/components/Form';
 import Main from '@/components/Main';
 
 import styles from '@/pages/users/[user]/websites/website.module.less';
+import pageStyles from '@/components/Page/page.module.less';
 
 import {
   DeleteOutlined,
@@ -18,6 +19,7 @@ import {
   SettingOutlined,
   GlobalOutlined
 } from '@ant-design/icons';
+import { showConfirm } from '@/utils/modals';
 
 const { GenericPanel, EditableTags } = FormComponents;
 const { GeneralPanel, Info } = Main;
@@ -34,7 +36,7 @@ const websiteEdit = (props) => {
   const {
     t,
     onEditWebsite,
-    onDeleteWebsite,
+    onDelete,
     onHoldWebsite,
     onSave,
     onClose,
@@ -48,16 +50,14 @@ const websiteEdit = (props) => {
     loading
   } = props;
 
+  const [disabled, setDisabled] = useState(true);
+
   /**
    * @type {{user, website}}
    */
   const { user, website } = useParams();
-
-  const component = 'website';
-
-  const [disabled, setDisabled] = useState(true);
-
   const { ability, currentUser } = authModel;
+  const component = 'website';
 
   useEffect(() => {
     if (ability) {
@@ -76,7 +76,8 @@ const websiteEdit = (props) => {
     previewUrl,
     entityForm,
     tags,
-    touched
+    touched,
+    selectedWebsite
   } = websiteModel;
 
   const {
@@ -117,7 +118,16 @@ const websiteEdit = (props) => {
                  danger
                  disabled={!isEdit}
                  icon={<DeleteOutlined />}
-                 onClick={() => onDeleteWebsite(website)}>
+                 onClick={() => {
+                   showConfirm({
+                     className: pageStyles.deleteConfirm,
+                     onOk: () => onDelete(website),
+                     okText: t('actions:delete'),
+                     okType: 'danger',
+                     instance: t('instance:website'),
+                     name: selectedWebsite?.name
+                   });
+                 }}>
         {t('actions:delete')}
       </Menu.Item>
     </Menu>
@@ -166,6 +176,7 @@ const websiteEdit = (props) => {
     spinEffects: [
       'authModel/defineAbilities',
       'websiteModel/prepareToEdit',
+      'websiteModel/handleDelete',
       'websiteModel/save'
     ]
   };
@@ -249,8 +260,8 @@ export default connect(
     onSave(payload) {
       dispatch({ type: 'websiteModel/prepareToSave', payload });
     },
-    onDelete() {
-      dispatch({ type: 'websiteModel/handleDelete' });
+    onDelete(websiteKey) {
+      dispatch({ type: 'websiteModel/handleDelete', payload: { websiteKey } });
     },
     onClose(userKey) {
       history.push(`/accounts/${userKey}/websites`);

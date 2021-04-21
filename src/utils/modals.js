@@ -1,9 +1,8 @@
 import React from 'react';
 import { Modal } from 'antd';
-
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
-import i18n from './i18n';
+import i18n from '@/utils/i18n';
 
 const { confirm } = Modal;
 
@@ -24,7 +23,7 @@ export const showModal = ({ type, buttons = {}, ...rest }) => {
       cancelText: buttons.okText || DEFAULT_CANCEL,
       ...rest,
       onOk: () => resolve(true),
-      onCancel: () => resolve(false),
+      onCancel: () => resolve(false)
     });
   });
 };
@@ -32,20 +31,27 @@ export const showModal = ({ type, buttons = {}, ...rest }) => {
 /**
  * @export
  * @param onOk
+ * @param name
+ * @param instance
  * @param [okText]
  * @param [okType]
+ * @param [className]
  */
-export function showConfirm(
+export function showConfirm({
   onOk,
   okText = i18n.t('actions:ok'),
   okType = 'primary',
-) {
+  className,
+  instance,
+  name
+}) {
   confirm({
-    title: i18n.t('actions:delete'),
+    className,
+    title: `${i18n.t('actions:delete')} ${instance}`,
     icon: <QuestionCircleOutlined />,
-    content: i18n.t('msg:deleteConfirm', { instance: '$t(instance:website)' }),
+    content: i18n.t('msg:deleteConfirm', { instance: name }),
     onOk,
     okText,
-    okType,
+    okType
   });
 }

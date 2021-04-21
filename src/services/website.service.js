@@ -115,8 +115,8 @@ export async function updateWebsite({ entityForm, fileList = [], tags = [], remo
   const opts = request.config({
     url: API.websites.getWebsite,
     headers: { 'Authorization': getXHRToken({ token }) },
-    websiteKey: entityForm.entityKey,
     method: 'put',
+    websiteKey,
     userKey
   });
 
@@ -145,11 +145,13 @@ export async function updateWebsite({ entityForm, fileList = [], tags = [], remo
  * @param entityKey
  * @return {Promise<Q.Promise<*>|undefined>}
  */
-export async function destroyWebsite({ entityKey }) {
+export async function destroyWebsite({ token, websiteKey, userKey  }) {
   const opts = request.config({
     url: API.websites.getWebsite,
-    key: entityKey,
-    method: 'delete'
+    headers: { 'Authorization': getXHRToken({ token }) },
+    method: 'delete',
+    websiteKey,
+    userKey
   });
 
   return request.xhr(opts,

@@ -103,6 +103,7 @@ export default dvaModelExtend(commonModel, {
       if (res?.data) {
         const { website, error } = res.data;
         if (website) {
+
           yield put({
             type: 'updateState',
             payload: {
@@ -216,18 +217,22 @@ export default dvaModelExtend(commonModel, {
     },
 
     * handleDelete({ payload }, { put, call, select }) {
-      const { entityForm, isEdit } = yield select(
-        (state) => state.websiteModel
-      );
-      const entityKey = isEdit
-        ? fromForm(entityForm).entityKey
-        : payload.entityKey;
+      const { ability, token } = yield select(state => state.authModel);
+      const { isEdit, userKey } = yield select(state => state.websiteModel);
 
-      const destroy = yield call(destroyWebsite, { entityKey });
+      if (ability.can('delete', 'websites')) {
+        const destroy = yield call(destroyWebsite, {
+          websiteKey: payload.websiteKey,
+          userKey,
+          token
+        });
 
-      if (request.isSuccess((destroy || {}).status)) {
-        successDeleteMsg(i18n.t('instance:website'));
-        isEdit && (yield put(history.replace(`/websites`)));
+        if (request.isSuccess((destroy || {}).status)) {
+          successDeleteMsg(i18n.t('instance:website'));
+          isEdit ?
+            history.push(`/accounts/${userKey}/websites`) :
+            (yield put({ type: 'websitesQuery', payload: { userKey } }));
+        }
       }
     },
 

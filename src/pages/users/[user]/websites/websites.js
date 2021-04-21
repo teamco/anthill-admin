@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import { withTranslation } from 'react-i18next';
 import { history, useParams } from 'umi';
-import { Button, Card, Dropdown, Menu, PageHeader } from 'antd';
+import { Button, Card, Dropdown, Menu } from 'antd';
 import {
   ApiOutlined,
   AppstoreAddOutlined,
@@ -15,12 +15,12 @@ import {
   GlobalOutlined
 } from '@ant-design/icons';
 
-import i18n from '@/utils/i18n';
 import Page from '@/components/Page';
 import { showConfirm } from '@/utils/modals';
 import { cachedUrl } from '@/utils/file';
 
 import styles from '@/pages/users/[user]/websites/website.module.less';
+import pageStyles from '@/components/Page/page.module.less';
 
 const { Meta } = Card;
 const { SubMenu } = Menu;
@@ -60,50 +60,61 @@ const websites = (props) => {
 
   /**
    * @constant
-   * @param key
-   * @param siteKey
+   * @param menu
+   * @param {{key, name}} site
    */
-  const onMenuClick = ({ key, siteKey }) => {
-    if (key.key === 'delete') {
-      showConfirm(() => onDelete(siteKey), i18n.t('actions:delete'));
-    } else if (key.key === 'assignWidgets') {
-      onAssignWidgets(siteKey);
-    } else if (key.key === 'development') {
-      onMode(siteKey, key.key);
+  const onMenuClick = ({ menu, site }) => {
+    if (menu.key === 'delete') {
+      showConfirm({
+        className: pageStyles.deleteConfirm,
+        onOk: () => onDelete(site.key),
+        okText: t('actions:delete'),
+        okType: 'danger',
+        instance: t('instance:website'),
+        name: site.name
+      });
+    } else if (menu.key === 'assignWidgets') {
+      onAssignWidgets(site.key);
+    } else if (menu.key === 'development') {
+      onMode(site.key, menu.key);
     }
   };
 
   /**
    * @constant
-   * @param siteKey
+   * @param {{key, name}} site
    * @return {JSX.Element}
    */
-  const menu = (siteKey) => {
+  const menu = (site) => {
     return (
       <Menu className={styles.websiteMenu}
-            onClick={(key) =>
-              onMenuClick({
-                key,
-                siteKey
-              })
-            }>
+            onClick={(menu) => onMenuClick({ menu, site })}>
         <SubMenu title={
-          <Button icon={<ProfileOutlined />} type={'link'}>
+          <Button icon={<ProfileOutlined />}
+                  size={'small'}
+                  type={'link'}>
             {t('website:mode')}
           </Button>}>
           <Menu.Item key={'development'}>
-            <Button icon={<AppstoreAddOutlined />} type={'link'}>
+            <Button icon={<AppstoreAddOutlined />}
+                    size={'small'}
+                    type={'link'}>
               {t('mode:development')}
             </Button>
           </Menu.Item>
         </SubMenu>
         <Menu.Item key={'assignWidgets'}>
-          <Button icon={<ApiOutlined />} type={'link'}>
+          <Button icon={<ApiOutlined />}
+                  size={'small'}
+                  type={'link'}>
             {t('website:assignWidgets')}
           </Button>
         </Menu.Item>
         <Menu.Item key={'delete'}>
-          <Button danger icon={<DeleteOutlined />} type={'link'}>
+          <Button danger
+                  size={'small'}
+                  icon={<DeleteOutlined />}
+                  type={'link'}>
             {t('actions:delete')}
           </Button>
         </Menu.Item>
@@ -135,6 +146,7 @@ const websites = (props) => {
     },
     spinEffects: [
       'authModel/defineAbilities',
+      'websiteModel/handleDelete',
       'websiteModel/websitesQuery'
     ]
   };
@@ -151,8 +163,8 @@ const websites = (props) => {
                     <SettingOutlined key={'setting'} />,
                     <EditOutlined onClick={() => onEdit(user, site.key)}
                                   key={'edit'} />,
-                    <Dropdown overlay={menu(site.key)}
-                              placement={'topLeft'}
+                    <Dropdown overlay={menu(site)}
+                              placement={'topRight'}
                               trigger={['click']}>
                       <EllipsisOutlined key={'ellipsis'} />
                     </Dropdown>
@@ -197,11 +209,8 @@ export default connect(
     onEdit(userKey, websiteKey) {
       history.push(`/accounts/${userKey}/websites/${websiteKey}`);
     },
-    onDelete(entityKey) {
-      dispatch({
-        type: 'websiteModel/handleDelete',
-        payload: { entityKey }
-      });
+    onDelete(websiteKey) {
+      dispatch({ type: 'websiteModel/handleDelete', payload: { websiteKey } });
     },
     onResetState() {
       dispatch({ type: 'websiteModel/resetState' });
