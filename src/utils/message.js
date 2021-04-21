@@ -2,6 +2,21 @@ import { message } from 'antd';
 import i18n from '@/utils/i18n';
 
 /**
+ * @constant
+ * @export
+ * @type {function(*): string}
+ */
+export const raiseConditionMsg = instance => i18n.t('error:notFound', { instance });
+
+/**
+ * @constant
+ * @export
+ * @type {string}
+ */
+export const raisePermissionMsg = i18n.t('error:noPermissions');
+
+
+/**
  * @export
  * @param isEdit
  * @param instance

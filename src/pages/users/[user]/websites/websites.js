@@ -41,6 +41,7 @@ const websites = (props) => {
     onAssignWidgets,
     onDelete,
     onNew,
+    onResetState,
     onMode,
     loading
   } = props;
@@ -54,6 +55,7 @@ const websites = (props) => {
 
   useEffect(() => {
     onQuery(user);
+    return onResetState;
   }, []);
 
   /**
@@ -200,6 +202,9 @@ export default connect(
         type: 'websiteModel/handleDelete',
         payload: { entityKey }
       });
+    },
+    onResetState() {
+      dispatch({ type: 'websiteModel/resetState' });
     },
     onQuery(userKey) {
       dispatch({ type: 'websiteModel/websitesQuery', payload: { userKey } });

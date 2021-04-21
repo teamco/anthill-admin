@@ -19,20 +19,23 @@ import i18n from '@/utils/i18n';
  */
 const apiConfig = API_CONFIG();
 
+const DEFAULT_STATE = {
+  MIN_PASSWORD_LENGTH: 8,
+  currentUser: null,
+  isSignedOut: true,
+  ability: null,
+  token: null,
+  errors: null,
+  registered: false
+};
+
 /**
  * @export
  */
 export default dvaModelExtend(commonModel, {
   namespace: 'authModel',
-  state: {
-    MIN_PASSWORD_LENGTH: 8,
-    currentUser: null,
-    isSignedOut: true,
-    ability: null,
-    token: null,
-    errors: null,
-    registered: false
-  },
+  state: { ...DEFAULT_STATE },
+
   effects: {
 
     * signIn({ payload }, { put, call }) {

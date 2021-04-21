@@ -42,6 +42,7 @@ const websiteEdit = (props) => {
     onFileRemove,
     onFieldsChange,
     onUpdateTags,
+    onResetState,
     websiteModel,
     authModel,
     loading
@@ -66,6 +67,7 @@ const websiteEdit = (props) => {
 
   useEffect(() => {
     onEditWebsite(user, website);
+    return onResetState;
   }, []);
 
   const {
@@ -213,6 +215,9 @@ export default connect(
   },
   (dispatch) => ({
     dispatch,
+    onResetState() {
+      dispatch({ type: 'websiteModel/resetState' });
+    },
     onFieldsChange(changedFields, allFields) {
       dispatch({
         type: 'websiteModel/updateFields',

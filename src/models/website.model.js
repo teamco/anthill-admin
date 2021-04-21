@@ -11,7 +11,12 @@ import request from '@/utils/request';
 import { generateKey } from '@/services/common.service';
 import { getWidgets } from '@/services/widget.service';
 
-import { successDeleteMsg, successSaveMsg } from '@/utils/message';
+import {
+  raiseConditionMsg,
+  raisePermissionMsg,
+  successDeleteMsg,
+  successSaveMsg
+} from '@/utils/message';
 
 import {
   destroyWebsite,
@@ -23,17 +28,14 @@ import {
   updateWebsite
 } from '@/services/website.service';
 
-/**
- * @constant
- * @type {string}
- */
-const raiseConditionMsg = i18n.t('error:notFound', { instance: i18n.t('instance:website') });
-
-/**
- * @constant
- * @type {string}
- */
-const raisePermissionMsg = i18n.t('error:noPermissions');
+const DEFAULT_STATE = {
+  websites: [],
+  widgets: [],
+  assignedWidgets: [],
+  selectedWebsite: null,
+  websiteKey: null,
+  userKey: null
+};
 
 /**
  * @export
@@ -41,16 +43,16 @@ const raisePermissionMsg = i18n.t('error:noPermissions');
  */
 export default dvaModelExtend(commonModel, {
   namespace: 'websiteModel',
-  state: {
-    websites: [],
-    widgets: [],
-    assignedWidgets: [],
-    selectedWebsite: null,
-    websiteKey: null,
-    userKey: null
-  },
+  state: { ...DEFAULT_STATE },
 
   effects: {
+
+    * resetState({ payload }, { put }) {
+      yield put({
+        type: 'cleanForm',
+        payload: { DEFAULT_STATE }
+      });
+    },
 
     * websitesQuery({ payload }, { put, call, select }) {
       let { token } = yield select(state => state.authModel);
@@ -70,8 +72,6 @@ export default dvaModelExtend(commonModel, {
           }
         });
       }
-
-      yield put({ type: 'cleanForm' });
     },
 
     * websitesHandleNew({ payload }, { put, select }) {
@@ -126,8 +126,17 @@ export default dvaModelExtend(commonModel, {
             }
           });
 
-          history.push(`/accounts/${userKey}/websites/${websiteKey}`);
+          return history.push(`/accounts/${userKey}/websites/${websiteKey}`);
         }
+
+        yield put({
+          type: 'raiseCondition',
+          payload: {
+            message: raiseConditionMsg(i18n.t('instance:website')),
+            type: 404,
+            redirect: true
+          }
+        });
       }
     },
 
@@ -135,8 +144,6 @@ export default dvaModelExtend(commonModel, {
       const { ability } = yield select(state => state.authModel);
       const { selectedWebsite } = yield select(state => state.websiteModel);
       const { websiteKey } = payload;
-
-      yield put({ type: 'cleanForm' });
 
       if (websiteKey === 'new') {
         // Do nothing.
@@ -313,5 +320,6 @@ export default dvaModelExtend(commonModel, {
       }
     }
   },
+
   reducers: {}
 });

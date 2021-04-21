@@ -11,27 +11,29 @@ const appMeta = {
   charSet: 'utf-8'
 };
 
+const DEFAULT_STATE = {
+  interval: {
+    timeout: 20000,
+    enabled: true
+  },
+  layoutOpts: {
+    mainHeader: false,
+    pageBreadcrumbs: false,
+    mainFooter: false,
+    mainMenu: false
+  },
+  activeTab: true,
+  collapsedMenu: true,
+  menus: [],
+  meta: { ...appMeta, ...{ title: '' } }
+};
+
 /**
  * @export
  */
 export default dvaModelExtend(commonModel, {
   namespace: 'appModel',
-  state: {
-    interval: {
-      timeout: 20000,
-      enabled: true
-    },
-    layoutOpts: {
-      mainHeader: false,
-      pageBreadcrumbs: false,
-      mainFooter: false,
-      mainMenu: false
-    },
-    activeTab: true,
-    collapsedMenu: true,
-    menus: [],
-    meta: { ...appMeta, ...{ title: '' } }
-  },
+  state: { ...DEFAULT_STATE },
 
   effects: {
 

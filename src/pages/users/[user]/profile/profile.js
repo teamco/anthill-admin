@@ -56,7 +56,7 @@ const profile = (props) => {
           <Card className={classnames(styles.userCard, styles.websites)}
                 hoverable
                 onClick={() => onShowWebsites(user)}>
-            <Statistic title={websites.length}
+            <Statistic title={websites.length || '0'}
                        value={t('menu:websites')}
                        prefix={<GlobalOutlined />} />
           </Card>

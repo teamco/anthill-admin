@@ -5,26 +5,34 @@ import { commonModel } from '@/models/common.model';
 import i18n from '@/utils/i18n';
 import { deleteUser, forceSignOut, getUser, getUsers, updateUserProfile } from '@/services/user.service';
 import request from '@/utils/request';
-import { successSaveMsg } from '@/utils/message';
+import {
+  raiseConditionMsg,
+  raisePermissionMsg,
+  successSaveMsg
+} from '@/utils/message';
 import { message } from 'antd';
 
-/**
- * @constant
- * @type {string}
- */
-const raiseConditionMsg = i18n.t('error:notFound', { instance: i18n.t('instance:user') });
+
+const DEFAULT_STATE = {
+  users: [],
+  selectedUser: null
+};
 
 /**
  * @export
  */
 export default dvaModelExtend(commonModel, {
   namespace: 'userModel',
-  state: {
-    users: [],
-    selectedUser: null
-  },
+  state: { ...DEFAULT_STATE },
 
   effects: {
+
+    * resetState({ payload }, { put }) {
+      yield put({
+        type: 'cleanForm',
+        payload: { DEFAULT_STATE }
+      });
+    },
 
     * query({ payload }, { call, put, select }) {
       const { ability, token } = yield select(state => state.authModel);
@@ -54,7 +62,7 @@ export default dvaModelExtend(commonModel, {
             return yield put({
               type: 'raiseCondition',
               payload: {
-                message: raiseConditionMsg,
+                message: raiseConditionMsg(i18n.t('instance:user')),
                 redirect: true,
                 type: 404
               }
@@ -66,7 +74,7 @@ export default dvaModelExtend(commonModel, {
       yield put({
         type: 'raiseCondition',
         payload: {
-          message: raiseConditionMsg,
+          message: raisePermissionMsg,
           redirect: true,
           type: 403
         }
@@ -105,7 +113,7 @@ export default dvaModelExtend(commonModel, {
         yield put({
           type: 'raiseCondition',
           payload: {
-            message: raiseConditionMsg,
+            message: raiseConditionMsg(i18n.t('instance:user')),
             redirect: false,
             type: 404
           }
@@ -188,7 +196,7 @@ export default dvaModelExtend(commonModel, {
       yield put({
         type: 'raiseCondition',
         payload: {
-          message: raiseConditionMsg,
+          message: raisePermissionMsg,
           redirect: true,
           type: 403
         }
@@ -226,7 +234,7 @@ export default dvaModelExtend(commonModel, {
         yield put({
           type: 'raiseCondition',
           payload: {
-            message: raiseConditionMsg,
+            message: raisePermissionMsg,
             redirect: false,
             type: 403
           }
@@ -234,5 +242,6 @@ export default dvaModelExtend(commonModel, {
       }
     }
   },
+
   reducers: {}
 });
