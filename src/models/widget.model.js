@@ -1,3 +1,6 @@
+/**
+ * @type {Function}
+ */
 import dvaModelExtend from 'dva-model-extend';
 import { history } from 'umi';
 
@@ -14,57 +17,57 @@ import {
   getWidget,
   getWidgets,
   saveWidget,
-  updateWidget,
+  updateWidget
 } from '@/services/widget.service';
+
+const DEFAULT_STATE = {
+  widgets: [],
+  selectedWidget: null
+};
 
 /**
  * @export
+ * @default
  */
 export default dvaModelExtend(commonModel, {
   namespace: 'widgetModel',
-  state: {
-    widgets: [],
-  },
+  state: { ...DEFAULT_STATE },
+
   effects: {
-    *widgetsQuery({ payload }, { put, call, take }) {
-      const widgets = yield call(getWidgets);
 
-      if (payload.global) {
-        yield put({
-          type: 'appModel/storeForm',
-          payload: {
-            form: null,
-            model: 'widgetModel',
-          },
-        });
-
-        yield put({
-          type: 'appModel/activeModel',
-          payload: {
-            isEdit: false,
-            model: 'widgetModel',
-            count: widgets.data.length,
-            title: i18n.t('model:list', { instance: '$t(menu:widgets)' }),
-          },
-        });
-
-        yield take('appModel/activeModel/@@end');
-      }
-
+    * resetState({ payload }, { put }) {
       yield put({
-        type: 'updateState',
-        payload: {
-          widgets: widgets.data,
-        },
+        type: 'cleanForm',
+        payload: { DEFAULT_STATE }
       });
     },
 
-    *widgetsHandleNew({ payload }, { put, select, take }) {
+    * widgetsQuery({ payload }, { put, call, select }) {
+      let { token } = yield select(state => state.authModel);
+      const { userKey } = payload;
+
+      const res = yield call(getWidgets, { userKey, token });
+
+      if (res?.data) {
+        const { widgets, error } = res?.data;
+
+        yield put({
+          type: 'updateState',
+          payload: {
+            selectedWidget: null,
+            widgets,
+            userKey
+          }
+        });
+      }
+    },
+
+    * widgetsHandleNew({ payload }, { put, select, take }) {
       let { widgets = [] } = yield select((state) => state.widgetModel);
       if (!widgets.length) {
         yield put({
           type: 'query',
-          payload: { global: false },
+          payload: { global: false }
         });
       }
 
@@ -75,8 +78,8 @@ export default dvaModelExtend(commonModel, {
           fileList: [],
           tags: [],
           previewUrl: null,
-          isEdit: payload.isEdit,
-        },
+          isEdit: payload.isEdit
+        }
       });
 
       yield put({
@@ -84,26 +87,26 @@ export default dvaModelExtend(commonModel, {
         payload: {
           isEdit: payload.isEdit,
           model: 'widgetModel',
-          title: i18n.t('model:create', { instance: '$t(instance:widget)' }),
-        },
+          title: i18n.t('model:create', { instance: '$t(instance:widget)' })
+        }
       });
 
       yield take('appModel/activeModel/@@end');
     },
 
-    *prepareToEdit({ payload }, { put, call }) {
+    * prepareToEdit({ payload }, { put, call }) {
       const widget = yield call(getWidget, { key: payload.key });
       if ((widget || {}).data) {
         yield put(history.replace(`/pages/widgets/${widget.data.key}`));
       }
     },
 
-    *widgetsHandleEdit({ payload }, { put, call, select, take }) {
+    * widgetsHandleEdit({ payload }, { put, call, select, take }) {
       let { widgets = [] } = yield select((state) => state.widgetModel);
       if (!widgets.length) {
         yield put({
           type: 'query',
-          payload: { global: false },
+          payload: { global: false }
         });
       }
 
@@ -118,7 +121,7 @@ export default dvaModelExtend(commonModel, {
         height,
         tags,
         created_at,
-        updated_at,
+        updated_at
       } = (widget || {}).data || {};
 
       yield put({
@@ -130,9 +133,9 @@ export default dvaModelExtend(commonModel, {
           previewUrl: picture.url,
           timestamp: {
             created_at,
-            updated_at,
-          },
-        },
+            updated_at
+          }
+        }
       });
 
       yield put({
@@ -143,8 +146,8 @@ export default dvaModelExtend(commonModel, {
           name,
           description,
           width,
-          height,
-        },
+          height
+        }
       });
 
       yield put({
@@ -155,21 +158,21 @@ export default dvaModelExtend(commonModel, {
           isEdit: payload.isEdit,
           timestamp: {
             created_at,
-            updated_at,
+            updated_at
           },
-          title: i18n.t('model:edit', { instance: '$t(instance:widget)' }),
-        },
+          title: i18n.t('model:edit', { instance: '$t(instance:widget)' })
+        }
       });
 
       yield take('appModel/activeModel/@@end');
     },
 
-    *prepareToSave({ payload }, { put, select, call }) {
+    * prepareToSave({ payload }, { put, select, call }) {
       const { isEdit } = yield select((state) => state.widgetModel);
 
       const _payload = {
         ...payload,
-        model: 'widgetModel',
+        model: 'widgetModel'
       };
 
       if (!isEdit) {
@@ -178,19 +181,19 @@ export default dvaModelExtend(commonModel, {
 
       yield put({
         type: 'save',
-        payload: _payload,
+        payload: _payload
       });
     },
 
-    *save({ payload }, { put, call, select }) {
+    * save({ payload }, { put, call, select }) {
       const { fileList, isEdit, tags } = yield select(
-        (state) => state.widgetModel,
+        (state) => state.widgetModel
       );
 
       const save = yield call(isEdit ? updateWidget : saveWidget, {
         entityForm: payload,
         fileList,
-        tags,
+        tags
       });
 
       if (request.isSuccess((save || {}).status)) {
@@ -199,13 +202,13 @@ export default dvaModelExtend(commonModel, {
         yield put({
           type: 'prepareToEdit',
           payload: {
-            key: save.data.key,
-          },
+            key: save.data.key
+          }
         });
       }
     },
 
-    *handleDelete({ payload }, { put, call, select }) {
+    * handleDelete({ payload }, { put, call, select }) {
       const { entityForm, isEdit } = yield select((state) => state.widgetModel);
       const entityKey = isEdit
         ? fromForm(entityForm).entityKey
@@ -217,7 +220,7 @@ export default dvaModelExtend(commonModel, {
         successDeleteMsg(i18n.t('instance:widget'));
         isEdit && (yield put(history.replace(`/pages/widgets`)));
       }
-    },
+    }
   },
-  reducers: {},
+  reducers: {}
 });

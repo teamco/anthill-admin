@@ -18,11 +18,8 @@ export async function getWebsites({ userKey, token }) {
     userKey
   });
 
-  return request.xhr(
-    opts,
-    (error) => errorGetMsg(i18n.t('menu:websites'), error),
-    '/home'
-  );
+  return request.xhr(opts,
+    (error) => errorGetMsg(i18n.t('menu:websites'), error));
 }
 
 /**
@@ -40,11 +37,8 @@ export function getWebsite({ userKey, websiteKey, token }) {
     userKey
   });
 
-  return request.xhr(
-    opts,
-    (error) => errorGetMsg(i18n.t('instance:website'), error),
-    '/websites'
-  );
+  return request.xhr(opts,
+    (error) => errorGetMsg(i18n.t('instance:website'), error));
 }
 
 /**
@@ -57,11 +51,8 @@ export function getAssignedWidgets({ key }) {
     url: API.websites.getWebsiteWidgets,
     key
   });
-  return request.xhr(
-    opts,
-    (error) => errorGetMsg(i18n.t('instance:website'), error),
-    '/websites'
-  );
+  return request.xhr(opts,
+    (error) => errorGetMsg(i18n.t('instance:website'), error));
 }
 
 /**
@@ -155,8 +146,7 @@ export async function destroyWebsite({ token, websiteKey, userKey  }) {
   });
 
   return request.xhr(opts,
-    (error) => errorDeleteMsg(i18n.t('instance:website'), error)
-  );
+    (error) => errorDeleteMsg(i18n.t('instance:website'), error));
 }
 
 /**

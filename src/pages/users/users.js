@@ -49,6 +49,9 @@ const users = (props) => {
 
   useEffect(() => {
     onQuery(profiled);
+  }, []);
+
+  useEffect(() => {
     ability && setDisabled(ability.cannot('update', component));
   }, [ability]);
 

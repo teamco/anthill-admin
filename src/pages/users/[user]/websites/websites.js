@@ -136,7 +136,7 @@ const websites = (props) => {
     buttons: {
       newBtn: {
         onClick: () => onNew(user),
-        loading: loading.effects['websiteModel/handleNew']
+        loading: loading.effects['websiteModel/websitesHandleNew']
       }
     },
     metadata: {
@@ -149,7 +149,7 @@ const websites = (props) => {
     },
     spinEffects: [
       'authModel/defineAbilities',
-      'websiteModel/handleDelete',
+      'websiteModel/websitesHandleDelete',
       'websiteModel/websitesQuery'
     ]
   };

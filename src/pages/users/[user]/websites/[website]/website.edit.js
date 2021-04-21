@@ -261,7 +261,7 @@ export default connect(
       dispatch({ type: 'websiteModel/prepareToSave', payload });
     },
     onDelete(websiteKey) {
-      dispatch({ type: 'websiteModel/handleDelete', payload: { websiteKey } });
+      dispatch({ type: 'websiteModel/websitesHandleDelete', payload: { websiteKey } });
     },
     onClose(userKey) {
       history.push(`/accounts/${userKey}/websites`);

@@ -41,7 +41,7 @@ export const API = {
     getWebsiteWidgets: 'websites/:websiteKey/widgets'
   },
   widgets: {
-    getAllWidgets: 'widgets',
+    getWidgets: 'users/:userKey/widgets',
     getWidget: 'widgets/:id',
     updateWidget: 'widgets/:id',
     destroyWidget: 'widgets/:id',

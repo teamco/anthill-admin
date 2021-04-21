@@ -216,7 +216,7 @@ export default dvaModelExtend(commonModel, {
       }
     },
 
-    * handleDelete({ payload }, { put, call, select }) {
+    * websitesHandleDelete({ payload }, { put, call, select }) {
       const { ability, token } = yield select(state => state.authModel);
       const { isEdit, userKey } = yield select(state => state.websiteModel);
 

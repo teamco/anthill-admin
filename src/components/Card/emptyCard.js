@@ -10,15 +10,15 @@ const { Meta } = Card;
 
 /**
  * @constant
- * @param props
+ * @param {{instance, [className], [hoverable]}} props
  * @return {JSX.Element}
  */
 const emptyCard = props => {
-  const { t, instance, hoverable = true } = props;
+  const { t, instance, className, hoverable = true } = props;
 
   return (
     <Card hoverable={hoverable}
-          className={classnames(styles.card, styles.empty)}
+          className={classnames(styles.card, styles.empty, className)}
           cover={<StopOutlined />}>
       <Meta className={styles.title}
             title={t('empty:title')}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { useParams, history } from 'umi';
 import { withTranslation } from 'react-i18next';
@@ -22,52 +22,68 @@ const profile = (props) => {
     authModel,
     userModel,
     websiteModel,
+    widgetModel,
     loading,
     onGetUser,
     onWebsitesQuery,
+    onWidgetsQuery,
     onShowWebsites
   } = props;
 
   const { websites } = websiteModel;
+  const { widgets } = widgetModel;
+  const { ability } = authModel;
 
   const { user } = useParams();
 
-  const { selectedUser } = userModel;
+  const component = 'profile';
+
+  const [readWebsites, setReadWebsites] = useState(false);
+  const [readWidgets, setReadWidgets] = useState(false);
 
   useEffect(() => {
     onGetUser(user);
     onWebsitesQuery(user);
+    onWidgetsQuery(user);
   }, []);
 
-  const { ability } = authModel;
-  const component = 'profile';
-  // const disabled = !ability.can('update', component);
+  useEffect(() => {
+    if (ability) {
+      setReadWebsites(ability.can('read', 'websites'));
+      setReadWidgets(ability.can('read', 'widgets'));
+    }
+  }, [ability]);
 
   return (
     <Page className={userStyles.users}
           component={component}
           spinEffects={[
+            'authModel/defineAbilities',
             'userModel/getUser',
-            'websiteModel/websitesQuery'
+            'websiteModel/websitesQuery',
+            'widgetModel/widgetsQuery'
           ]}>
       <Users profiled={true} />
       <div className={styles.userCardWrapper}>
         <AntHillRow>
-          <Card className={classnames(styles.userCard, styles.websites)}
-                hoverable
-                onClick={() => onShowWebsites(user)}>
-            <Statistic title={websites.length || '0'}
-                       value={t('menu:websites')}
-                       prefix={<GlobalOutlined />} />
-          </Card>
-          <Card className={classnames(styles.userCard, styles.widgets)}
-                hoverable
-                onClick={() => onShowWebsites(user)}>
-            <Statistic title={'0'}
-                       value={t('menu:widgets')}
-                       prefix={<AppstoreOutlined />} />
-          </Card>
-          <></>
+          {readWebsites && (
+            <Card className={classnames(styles.userCard, styles.websites)}
+                  hoverable
+                  onClick={() => onShowWebsites(user)}>
+              <Statistic title={websites.length || '0'}
+                         value={t('menu:websites')}
+                         prefix={<GlobalOutlined />} />
+            </Card>
+          )}
+          {readWidgets && (
+            <Card className={classnames(styles.userCard, styles.widgets)}
+                  hoverable
+                  onClick={() => onShowWebsites(user)}>
+              <Statistic title={widgets.length || '0'}
+                         value={t('menu:widgets')}
+                         prefix={<AppstoreOutlined />} />
+            </Card>
+          )}
         </AntHillRow>
       </div>
     </Page>
@@ -75,11 +91,18 @@ const profile = (props) => {
 };
 
 export default connect(
-  ({ authModel, websiteModel, userModel, loading }) => {
+  ({
+    authModel,
+    websiteModel,
+    widgetModel,
+    userModel,
+    loading
+  }) => {
     return {
       authModel,
       websiteModel,
       userModel,
+      widgetModel,
       loading
     };
   },
@@ -93,6 +116,9 @@ export default connect(
     },
     onWebsitesQuery(userKey) {
       dispatch({ type: 'websiteModel/websitesQuery', payload: { userKey } });
+    },
+    onWidgetsQuery(userKey) {
+      dispatch({ type: 'widgetModel/widgetsQuery', payload: { userKey } });
     }
   })
 )(withTranslation()(profile));

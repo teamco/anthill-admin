@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import { withTranslation } from 'react-i18next';
-import { history } from 'umi';
+import { history, useParams } from 'umi';
 import { Button, Card, Dropdown, Menu } from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
   EllipsisOutlined,
+  AppstoreOutlined,
   SettingOutlined,
   StopOutlined
 } from '@ant-design/icons';
 
-import classnames from 'classnames';
+import EmptyCard from '@/components/Card';
+import cardStyles from '@/components/Card/card.module.less';
 
-import { showConfirm } from '@/utils/modals';
-import i18n from '@/utils/i18n';
-
-import styles from '@/pages/users/[user]/widgets/widgets.module.less';
+import { cachedUrl } from '@/utils/file';
+import styles from '@/pages/users/[user]/websites/websites.module.less';
+import Page from '@/components/Page';
 
 const { Meta } = Card;
 
@@ -29,14 +30,26 @@ const { Meta } = Card;
 const widgets = (props) => {
   const {
     t,
+    authModel,
     widgetModel,
     onEdit,
     onDelete,
     onNew,
+    onQuery,
+    onResetState,
     loading
   } = props;
 
+  const { widgets } = widgetModel;
+
+  /**
+   * @type {{user}}
+   */
+  const { user } = useParams();
+
   useEffect(() => {
+    onQuery(user);
+    return onResetState;
   }, []);
 
   /**
@@ -66,58 +79,84 @@ const widgets = (props) => {
     );
   };
 
+  const { ability } = authModel;
+  const component = 'widgets';
+
+  const pageProps = {
+    ability,
+    pageHeader: true,
+    className: styles.websites,
+    component,
+    buttons: {
+      newBtn: {
+        onClick: () => onNew(user),
+        loading: loading.effects['widgetModel/handleNew']
+      }
+    },
+    metadata: {
+      title: (
+        <>
+          <AppstoreOutlined style={{ marginRight: 10 }} />
+          {t('menu:userWidgets')} ({widgets?.length || 0})
+        </>
+      )
+    },
+    spinEffects: [
+      'authModel/defineAbilities',
+      'widgetModel/handleDelete',
+      'widgetModel/widgetQuery'
+    ]
+  };
+
   return (
-    <div>
-      {widgetModel.widgets.length ? (
-        widgetModel.widgets.map((widget, idx) => (
-          <Card key={idx}
-                hoverable
-                className={styles.widgetCard}
-                actions={[
-                  <SettingOutlined key='setting' />,
-                  <EditOutlined onClick={() => onEdit(widget.key)} key='edit' />,
-                  <Dropdown overlay={menu(widget.key)}
-                            placement={'topLeft'}
-                            trigger={['click']}>
-                    <EllipsisOutlined key='ellipsis' />
-                  </Dropdown>
-                ]}
-                cover={<img alt={widget.name} src={widget.picture.url} />}>
-            <Meta className={'site-card-title'}
-                  title={widget.name}
-                  description={widget.description || '...'} />
-          </Card>
-        ))
-      ) : (
-        <Card key={0}
-              hoverable
-              className={classnames(styles.widgetCard, styles.widgetCardEmpty)}
-              cover={<StopOutlined />}>
-          <Meta className={'site-card-title'}
-                title={t('empty:title')}
-                description={t('empty:description', {
-                  instance: '$t(instance:widget)'
-                })} />
-        </Card>
-      )}
-    </div>
+    <Page {...pageProps}>
+      <div className={styles.container}>
+        {widgetModel.widgets.length ? (
+          widgetModel.widgets.map((widget, idx) => (
+            <Card key={idx}
+                  hoverable
+                  className={cardStyles.card}
+                  actions={[
+                    <SettingOutlined key='setting' />,
+                    <EditOutlined onClick={() => onEdit(widget.key)} key='edit' />,
+                    <Dropdown overlay={menu(widget.key)}
+                              placement={'topLeft'}
+                              trigger={['click']}>
+                      <EllipsisOutlined key='ellipsis' />
+                    </Dropdown>
+                  ]}
+                  cover={
+                    widget.picture?.url ?
+                      (<img alt={widget.name}
+                            src={cachedUrl(widget.picture.url)} />) :
+                      (<StopOutlined />)
+                  }>
+              <Meta className={'site-card-title'}
+                    title={widget.name}
+                    description={widget.description || '...'} />
+            </Card>
+          ))
+        ) : (
+          <EmptyCard key={0}
+                     instance={t('instance:widget')} />
+        )}
+      </div>
+    </Page>
   );
 };
 
 export default connect(
-  ({ widgetModel, loading }) => {
+  ({ authModel, widgetModel, loading }) => {
     return {
+      authModel,
       widgetModel,
       loading
     };
   },
   (dispatch) => ({
     dispatch,
-    onButtonsMetadata(payload) {
-      dispatch({
-        type: 'appModel/activeButtons',
-        payload
-      });
+    onQuery(userKey) {
+      dispatch({ type: 'widgetModel/widgetsQuery', payload: { userKey } });
     },
     onEdit(key) {
       dispatch({
