@@ -42,9 +42,6 @@ export const API = {
   },
   widgets: {
     getWidgets: 'users/:userKey/widgets',
-    getWidget: 'widgets/:id',
-    updateWidget: 'widgets/:id',
-    destroyWidget: 'widgets/:id',
-    saveWidget: 'widgets'
+    getWidget: 'users/:userKey/widgets/:widgetKey'
   }
 };

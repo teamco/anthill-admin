@@ -1,4 +1,4 @@
-import filter from '@/widgets/Picture/src/picture.filter';
+import filter from '@/vendors/widgets/Picture/config/picture.filter';
 
 /**
  * @export

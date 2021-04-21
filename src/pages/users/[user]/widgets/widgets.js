@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { withTranslation } from 'react-i18next';
 import { history, useParams } from 'umi';
@@ -71,7 +71,10 @@ const widgets = (props) => {
     return (
       <Menu onClick={(key) => onMenuClick({ key, widgetKey })}>
         <Menu.Item key={'delete'}>
-          <Button danger icon={<DeleteOutlined />} type='text'>
+          <Button danger
+                  size={'small'}
+                  icon={<DeleteOutlined />}
+                  type='text'>
             {t('actions:delete')}
           </Button>
         </Menu.Item>
@@ -108,17 +111,27 @@ const widgets = (props) => {
     ]
   };
 
+  const [readWidgets, setReadWidgets] = useState(false);
+
+  useEffect(() => {
+    if (ability) {
+      setReadWidgets(ability.can('read', 'widgets'));
+    }
+  }, [ability]);
+
+
   return (
     <Page {...pageProps}>
       <div className={styles.container}>
-        {widgetModel.widgets.length ? (
-          widgetModel.widgets.map((widget, idx) => (
+        {widgets?.length && readWidgets ? (
+          widgets.map((widget, idx) => (
             <Card key={idx}
                   hoverable
                   className={cardStyles.card}
                   actions={[
                     <SettingOutlined key='setting' />,
-                    <EditOutlined onClick={() => onEdit(widget.key)} key='edit' />,
+                    <EditOutlined onClick={() => onEdit(user, widget.key)}
+                                  key='edit' />,
                     <Dropdown overlay={menu(widget.key)}
                               placement={'topLeft'}
                               trigger={['click']}>
@@ -158,11 +171,8 @@ export default connect(
     onQuery(userKey) {
       dispatch({ type: 'widgetModel/widgetsQuery', payload: { userKey } });
     },
-    onEdit(key) {
-      dispatch({
-        type: 'widgetModel/prepareToEdit',
-        payload: { key }
-      });
+    onEdit(userKey, widgetKey) {
+      history.push(`/accounts/${userKey}/widgets/${widgetKey}`);
     },
     onDelete(entityKey) {
       dispatch({

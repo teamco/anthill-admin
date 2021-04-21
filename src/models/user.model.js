@@ -1,5 +1,5 @@
 /** @type {Function} */
-import dvaModelExtend from 'dva-model-extend';
+import modelExtend from 'dva-model-extend';
 import { history } from 'umi';
 import { commonModel } from '@/models/common.model';
 import i18n from '@/utils/i18n';
@@ -21,7 +21,7 @@ const DEFAULT_STATE = {
 /**
  * @export
  */
-export default dvaModelExtend(commonModel, {
+export default modelExtend(commonModel, {
   namespace: 'userModel',
   state: { ...DEFAULT_STATE },
 

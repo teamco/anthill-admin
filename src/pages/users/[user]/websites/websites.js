@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { withTranslation } from 'react-i18next';
 import { history, useParams } from 'umi';
@@ -154,10 +154,20 @@ const websites = (props) => {
     ]
   };
 
+  const [readWebsites, setReadWebsites] = useState(false);
+  const [readWidgets, setReadWidgets] = useState(false);
+
+  useEffect(() => {
+    if (ability) {
+      setReadWebsites(ability.can('read', 'websites'));
+      setReadWidgets(ability.can('read', 'widgets'));
+    }
+  }, [ability]);
+
   return (
     <Page {...pageProps}>
       <div className={styles.container}>
-        {websites?.length ? (
+        {websites?.length && readWebsites ? (
           websites.map((site, idx) => (
             <Card key={idx}
                   className={cardStyles.card}

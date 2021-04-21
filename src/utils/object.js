@@ -35,7 +35,7 @@ export function findObjectValue(values, keys, nsDeep) {
  * @param key
  * @return {*}
  */
-export const fromForm = (entityForm, key) => {
+export const fromForm = (entityForm = [], key) => {
   return (entityForm.find((form) => form.name === key) || {}).value;
 };
 

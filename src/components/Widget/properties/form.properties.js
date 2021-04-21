@@ -14,7 +14,6 @@ import FormComponents from '@/components/Form';
 
 import {mainProperties} from '@/components/Widget/properties/main.properties';
 import {interactionProperties} from '@/components/Widget/properties/interaction.properties';
-import {fillFormEffect} from '@/utils/state';
 
 const {GenericTabs, GenericPanel} = FormComponents;
 
@@ -48,13 +47,13 @@ const FormProperties = props => {
     propertiesModalVisible
   } = contentModel;
 
-  useEffect(() => {
-    if (propertiesModalVisible) {
-      onTransferFormRef(form);
-      fillFormEffect(contentModel, form);
-      setSaving(false);
-    }
-  }, [contentModel]);
+  // useEffect(() => {
+  //   if (propertiesModalVisible) {
+  //     onTransferFormRef(form);
+  //     fillFormEffect(contentModel, form);
+  //     setSaving(false);
+  //   }
+  // }, [contentModel]);
 
   const tabs = [
     (

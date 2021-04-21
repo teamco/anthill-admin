@@ -25,19 +25,21 @@ export function getWidgets({ userKey, token }) {
 
 /**
  * @export
- * @param key
+ * @param userKey
+ * @param widgetKey
+ * @param token
  * @return {*}
  */
-export function getWidget({ key }) {
+export function getWidget({ userKey, widgetKey, token }) {
   const opts = request.config({
     url: API.widgets.getWidget,
-    key
+    headers: { 'Authorization': getXHRToken({ token }) },
+    widgetKey,
+    userKey
   });
-  return request.xhr(
-    opts,
-    () => errorGetMsg(i18n.t('instance:website')),
-    '/pages/widgets'
-  );
+
+  return request.xhr(opts,
+    () => errorGetMsg(i18n.t('instance:website')));
 }
 
 /**

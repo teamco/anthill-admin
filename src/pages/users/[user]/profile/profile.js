@@ -20,13 +20,13 @@ const profile = (props) => {
   const {
     t,
     authModel,
-    userModel,
     websiteModel,
     widgetModel,
     loading,
     onGetUser,
     onWebsitesQuery,
     onWidgetsQuery,
+    onShowWidgets,
     onShowWebsites
   } = props;
 
@@ -38,14 +38,14 @@ const profile = (props) => {
 
   const component = 'profile';
 
-  const [readWebsites, setReadWebsites] = useState(false);
-  const [readWidgets, setReadWidgets] = useState(false);
-
   useEffect(() => {
     onGetUser(user);
     onWebsitesQuery(user);
     onWidgetsQuery(user);
   }, []);
+
+  const [readWebsites, setReadWebsites] = useState(false);
+  const [readWidgets, setReadWidgets] = useState(false);
 
   useEffect(() => {
     if (ability) {
@@ -70,7 +70,7 @@ const profile = (props) => {
             <Card className={classnames(styles.userCard, styles.websites)}
                   hoverable
                   onClick={() => onShowWebsites(user)}>
-              <Statistic title={websites.length || '0'}
+              <Statistic title={websites?.length || '0'}
                          value={t('menu:websites')}
                          prefix={<GlobalOutlined />} />
             </Card>
@@ -78,8 +78,8 @@ const profile = (props) => {
           {readWidgets && (
             <Card className={classnames(styles.userCard, styles.widgets)}
                   hoverable
-                  onClick={() => onShowWebsites(user)}>
-              <Statistic title={widgets.length || '0'}
+                  onClick={() => onShowWidgets(user)}>
+              <Statistic title={widgets?.length || '0'}
                          value={t('menu:widgets')}
                          prefix={<AppstoreOutlined />} />
             </Card>
@@ -95,13 +95,11 @@ export default connect(
     authModel,
     websiteModel,
     widgetModel,
-    userModel,
     loading
   }) => {
     return {
       authModel,
       websiteModel,
-      userModel,
       widgetModel,
       loading
     };
@@ -119,6 +117,9 @@ export default connect(
     },
     onWidgetsQuery(userKey) {
       dispatch({ type: 'widgetModel/widgetsQuery', payload: { userKey } });
+    },
+    onShowWidgets(userKey) {
+      history.push(`/accounts/${userKey}/widgets`);
     }
   })
 )(withTranslation()(profile));

@@ -56,7 +56,7 @@ const websiteEdit = (props) => {
    * @type {{user, website}}
    */
   const { user, website } = useParams();
-  const { ability, currentUser } = authModel;
+  const { ability } = authModel;
   const component = 'website';
 
   useEffect(() => {
@@ -163,11 +163,11 @@ const websiteEdit = (props) => {
       extra: (
         <Dropdown overlay={menu}
                   disabled={!isEdit || disabled}
-                  overlayClassName={styles.customActionMenu}
+                  overlayClassName={pageStyles.customActionMenu}
                   key={'custom'}>
           <Button size={'small'}
                   icon={<SettingOutlined />}
-                  className={styles.customAction}>
+                  className={pageStyles.customAction}>
             {t('actions:manage', { type: t('instance:website') })} <DownOutlined />
           </Button>
         </Dropdown>

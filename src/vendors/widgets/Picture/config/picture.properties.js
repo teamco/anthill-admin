@@ -3,12 +3,13 @@ import {Image, Input, Select, Slider, Tag, Tooltip} from 'antd';
 
 import i18n from '@/utils/i18n';
 import {Html5Outlined} from '@ant-design/icons';
-import styles from '@/core/modules/widgets/Picture/picture.module.less';
+
+import styles from '@/vendors/widgets/Picture/picture.module.less';
 
 const {TextArea} = Input;
 const {Option} = Select;
 
-export const pictureProperties = (onUpdatePreview) => {
+export const pictureProps = (onUpdatePreview) => {
   return [
     [
       (
@@ -53,7 +54,7 @@ export const pictureProperties = (onUpdatePreview) => {
  * @param sliderProps
  * @return {JSX.Element[][]}
  */
-export const pictureFilterProperties = ({
+export const filterProps = ({
   onUpdateFilter,
   onUpdateFilterSlider,
   onUpdateTransform,

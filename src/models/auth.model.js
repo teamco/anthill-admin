@@ -1,7 +1,7 @@
 /**
  * @type {Function}
  */
-import dvaModelExtend from 'dva-model-extend';
+import modelExtend from 'dva-model-extend';
 
 import { commonModel } from '@/models/common.model';
 import { defineAbilityFor } from '@/utils/auth/ability';
@@ -32,7 +32,7 @@ const DEFAULT_STATE = {
 /**
  * @export
  */
-export default dvaModelExtend(commonModel, {
+export default modelExtend(commonModel, {
   namespace: 'authModel',
   state: { ...DEFAULT_STATE },
 

@@ -38,39 +38,28 @@ export const routes = [
       },
       {
         exact: true,
+        path: '/accounts/:user/widgets',
+        component: '@/pages/users/[user]/widgets',
+        wrappers: [
+          '@/wrappers/auth.wrapper'
+        ]
+      },
+      {
+        exact: true,
         path: '/accounts/:user/websites/:website',
         component: '@/pages/users/[user]/websites/[website]',
         wrappers: [
           '@/wrappers/auth.wrapper'
         ]
       },
-      // {
-      //   exact: true,
-      //   path: '/users/:user/websites',
-      //   component: '@/pages/users/[user]/websites',
-      //   breadcrumb: 'route:websites',
-      //   wrappers: [
-      //     '@/wrappers/auth.wrapper'
-      //   ]
-      // },
-      // {
-      //   exact: true,
-      //   path: '/users/:user/websites/:website',
-      //   component: '@/pages/users/[user]/websites/[website]/website.edit',
-      //   breadcrumb: 'route:website',
-      //   wrappers: [
-      //     '@/wrappers/auth.wrapper'
-      //   ]
-      // },
-      // {
-      //   exact: true,
-      //   path: '/users/:user/websites/:website/users',
-      //   component: '@/pages/users/[user]/websites/[website]/users',
-      //   breadcrumb: 'route:websiteUsers',
-      //   wrappers: [
-      //     '@/wrappers/auth.wrapper'
-      //   ]
-      // },
+      {
+        exact: true,
+        path: '/accounts/:user/widgets/:widget',
+        component: '@/pages/users/[user]/widgets/[widget]',
+        wrappers: [
+          '@/wrappers/auth.wrapper'
+        ]
+      },
       {
         exact: true,
         path: '/errors/403',

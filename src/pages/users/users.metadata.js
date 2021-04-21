@@ -25,6 +25,7 @@ import { tsToLocaleDateTime } from '@/utils/timestamp';
 
 import styles from '@/pages/users/users.module.less';
 import tableStyles from '@/components/Main/Table/table.module.less';
+import pageStyles from '@/components/Page/page.module.less';
 
 /**
  * @constant
@@ -192,11 +193,11 @@ export const metadata = ({
               <Dropdown overlay={menu(t, record, onDeleteUser, onSignOutUser, currentUser)}
                         disabled={false}
                         placement={'bottomRight'}
-                        overlayClassName={styles.customActionMenu}
+                        overlayClassName={pageStyles.customActionMenu}
                         key={'custom'}>
                 <Button size={'small'}
                         icon={<SettingOutlined />}
-                        className={styles.customAction}>
+                        className={pageStyles.customAction}>
                   {t('actions:manage', { type: '' })} <DownOutlined />
                 </Button>
               </Dropdown>

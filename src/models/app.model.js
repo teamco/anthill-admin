@@ -1,7 +1,7 @@
 /**
  * @type {Function}
  */
-import dvaModelExtend from 'dva-model-extend';
+import modelExtend from 'dva-model-extend';
 
 import { commonModel } from '@/models/common.model';
 import { menus } from '@/services/menu.service';
@@ -31,7 +31,7 @@ const DEFAULT_STATE = {
 /**
  * @export
  */
-export default dvaModelExtend(commonModel, {
+export default modelExtend(commonModel, {
   namespace: 'appModel',
   state: { ...DEFAULT_STATE },
 

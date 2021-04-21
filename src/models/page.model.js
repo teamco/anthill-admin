@@ -1,12 +1,12 @@
 /** @type {Function} */
-import dvaModelExtend from 'dva-model-extend';
+import modelExtend from 'dva-model-extend';
 
 import { commonModel } from '@/models/common.model';
 
 /**
  * @export
  */
-export default dvaModelExtend(commonModel, {
+export default modelExtend(commonModel, {
   namespace: 'pageModel',
   state: {
   },

@@ -40,13 +40,6 @@ export const mainProperties = ({onChange}) => {
     [
       (
           <Input type={'text'}
-                 label={i18n.t('form:entityKey')}
-                 disabled={true}
-                 key={'entityKey'}
-                 name={'entityKey'}/>
-      ),
-      (
-          <Input type={'text'}
                  label={i18n.t('form:contentKey')}
                  disabled={true}
                  key={'contentKey'}
