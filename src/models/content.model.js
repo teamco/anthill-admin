@@ -53,6 +53,13 @@ export default modelExtend(widgetCommonModel, {
 
   effects: {
 
+    * resetState({ payload }, { put }) {
+      yield put({
+        type: 'cleanForm',
+        payload: { DEFAULT_STATE }
+      });
+    },
+
     * setContentConfig({ payload }, { put }) {
       const {config, model, defaultValues} = payload;
 
@@ -60,52 +67,52 @@ export default modelExtend(widgetCommonModel, {
         type: 'updateState',
         payload: { defaultValues, config, model }
       });
-    }
+    },
 
-    // * propertiesModalVisibility({ payload }, { put, call, select }) {
-    //   const { contentForm } = yield select((state) => state.contentModel);
-    //   const { visible = false, widgetProps, updateForm = false } = payload;
-    //
-    //   yield put({
-    //     type: 'updateState',
-    //     payload: {
-    //       propertiesModalVisible: visible,
-    //       widgetProps,
-    //       updateForm
-    //     }
-    //   });
-    //
-    //   if (widgetProps) {
-    //     const widgetName = widgetProps.name;
-    //     const widgetDescription = widgetProps.description;
-    //
-    //     const model = {
-    //       ...DEFAULTS,
-    //       widgetName,
-    //       widgetDescription,
-    //       ...contentForm,
-    //       contentKey: widgetProps.contentKey,
-    //       entityKey: widgetProps.key,
-    //       entityType: 'widget'
-    //     };
-    //
-    //     const _toEntityForm = yield call(toEntityForm, { model });
-    //
-    //     yield put({
-    //       type: 'updateState',
-    //       payload: {
-    //         entityForm: {
-    //           [widgetProps.key]: { ..._toEntityForm }
-    //         }
-    //       }
-    //     });
-    //   }
-    //
-    //   yield put({
-    //     type: 'pageModel/setActiveWidget',
-    //     payload: { widget: widgetProps }
-    //   });
-    // },
+    * handleSettingModal({ payload }, { put, call, select }) {
+      const { contentForm } = yield select((state) => state.contentModel);
+      const { visible = false, widgetProps, updateForm = false } = payload;
+
+      yield put({
+        type: 'updateState',
+        payload: {
+          propertiesModalVisible: visible,
+          widgetProps,
+          updateForm
+        }
+      });
+
+      if (widgetProps) {
+        const widgetName = widgetProps.name;
+        const widgetDescription = widgetProps.description;
+
+        const model = {
+          ...DEFAULTS,
+          widgetName,
+          widgetDescription,
+          ...contentForm,
+          contentKey: widgetProps.contentKey,
+          entityKey: widgetProps.key,
+          entityType: 'widget'
+        };
+
+        const _toEntityForm = yield call(toEntityForm, { model });
+
+        yield put({
+          type: 'updateState',
+          payload: {
+            entityForm: {
+              [widgetProps.key]: { ..._toEntityForm }
+            }
+          }
+        });
+      }
+
+      yield put({
+        type: 'pageModel/setActiveWidget',
+        payload: { widget: widgetProps }
+      });
+    },
     //
     //
     // * transferFormRef({ payload }, { put, select }) {

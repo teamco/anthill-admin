@@ -19,7 +19,6 @@ import {
   saveWidget,
   updateWidget
 } from '@/services/widget.service';
-import { getWebsite } from '@/services/website.service';
 
 const DEFAULT_STATE = {
   widgets: [],

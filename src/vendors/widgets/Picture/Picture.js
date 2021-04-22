@@ -25,8 +25,9 @@ class Picture extends Component {
     const imageUrl = fromForm(entityForm, 'imageUrl');
 
     return (
-      <Image className={styles.picture}
-             src={imageUrl} />
+      <div className={styles.picture}>
+        <Image src={imageUrl} />
+      </div>
     );
   }
 }

@@ -1,12 +1,12 @@
-import React, { createRef } from 'react';
-import { Card } from 'antd';
+import React, { createRef, useEffect, useState } from 'react';
+import { Card, message } from 'antd';
 import { connect } from 'dva';
 import { withTranslation } from 'react-i18next';
 import { SettingOutlined } from '@ant-design/icons';
 
-import classnames from 'classnames';
-
+import { raiseConditionMsg } from '@/utils/message';
 import widgetsList from '@/components/Widget/widget.list';
+import EmptyCard from '@/components/Card';
 
 import styles from '@/components/Widget/widget.module.less';
 
@@ -19,9 +19,11 @@ import styles from '@/components/Widget/widget.module.less';
 const Widget = props => {
 
   const {
+    t,
     widgetProps,
+    onResetState,
     onInitFormDraft,
-    onPropertiesModalVisibility,
+    onSetting,
     updateForm,
     contentModel
   } = props;
@@ -32,16 +34,9 @@ const Widget = props => {
     widgetStick
   } = widgetProps.entityForm || {};
 
-  const position = {
-    left: offset.x || 0,
-    top: offset.y || 0
-  };
+  const position = { left: 0, top: 0 };
 
   const { opacity, hideContent, targetModel, mode } = contentModel;
-
-  const widget = widgetsList[content];
-  const stickTo = widgetStick ?
-    classnames(styles.stickTo, styles[widgetStick]) : '';
 
   const style = {
     ...position,
@@ -49,34 +44,75 @@ const Widget = props => {
     opacity
   };
 
-  const card = (
+  const [widget, setWidget] = useState(null);
+  const [interactionCss, setInteractionCss] = useState(styles.interactionHide);
+
+  useEffect(() => {
+    if (content) {
+      const widgetContent = widgetsList[content];
+
+      if (widgetContent) {
+        setWidget(widgetContent);
+      } else {
+        message.warning(raiseConditionMsg(`${t('instance:widget')}: ${content}`)).then();
+      }
+    }
+  }, [content]);
+
+  useEffect(() => {
+    // onEditWebsite(user, website);
+    return onResetState;
+  }, []);
+
+  const handleSetting = e => {
+    e.preventDefault();
+
+    onSetting(true, widgetProps, updateForm);
+    // onInitFormDraft(targetModel);
+  };
+
+  const handleInteractions = (e, handle) => {
+    e.preventDefault();
+    setInteractionCss(handle ? '' : styles.interactionHide);
+  };
+
+  /**
+   * To prevent IDE identifying issues after change state.
+   * @constant
+   * @type {DetailedReactHTMLElement<HTMLAttributes<HTMLElement>, HTMLElement>}
+   */
+  const cloningWidget = widget;
+
+  return (
     <div name={content}
          id={`widget-${widgetProps.contentKey}`}
-         className={stickTo}
+         className={styles.widget}
+         onDoubleClick={e => handleInteractions(e, true)}
+         onMouseLeave={e => handleInteractions(e, false)}
          style={style}>
-      <Card hoverable
-            bordered={false}
-            className={styles.widgetCard}
-            actions={[
-              <SettingOutlined key={'setting'}
-                               onClick={() => {
-                                 onPropertiesModalVisibility(true, widgetProps, updateForm);
-                                 onInitFormDraft(targetModel);
-                               }} />
-            ]}
-            cover={(
-              <div style={{ height: '100%' }}>
-                <div className={styles.interactionHide} />
-                <div style={hideContent ? { display: 'none' } : null}>
-                  {React.cloneElement(widget, { opts: { content } })}
+      {cloningWidget ? (
+        <Card hoverable
+              bordered={false}
+              className={styles.widgetCard}
+              actions={[
+                <SettingOutlined key={'setting'}
+                                 onClick={handleSetting} />
+              ]}
+              cover={(
+                <div style={{ height: '100%' }}>
+                  <div className={interactionCss} />
+                  <div style={hideContent ? { display: 'none' } : null}>
+                    {React.cloneElement(cloningWidget, { opts: { content } })}
+                  </div>
                 </div>
-              </div>
-            )}>
-      </Card>
+              )}>
+        </Card>
+      ) : (
+        <EmptyCard className={styles.widgetCard}
+                   bordered={false} />
+      )}
     </div>
   );
-
-  return widget ? card : null;
 };
 
 export default connect(({
@@ -90,9 +126,12 @@ export default connect(({
   },
   dispatch => ({
     dispatch,
-    onPropertiesModalVisibility(visible, widgetProps, updateForm) {
+    onResetState() {
+      dispatch({ type: 'contentModel/resetState' });
+    },
+    onSetting(visible, widgetProps, updateForm) {
       dispatch({
-        type: 'contentModel/propertiesModalVisibility',
+        type: 'contentModel/handleSettingModal',
         payload: {
           visible,
           updateForm,
