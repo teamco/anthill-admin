@@ -9,11 +9,12 @@ import {
   ProfileOutlined
 } from '@ant-design/icons';
 
-import styles from '@/components/Widget/widget.module.less';
 import FormComponents from '@/components/Form';
 
 import {mainProperties} from '@/components/Widget/properties/main.properties';
 import {interactionProperties} from '@/components/Widget/properties/interaction.properties';
+
+import styles from '@/components/Widget/widget.module.less';
 
 const {GenericTabs, GenericPanel} = FormComponents;
 
@@ -44,11 +45,11 @@ const FormProperties = props => {
     modalWidth,
     widgetProps = {},
     contentProperties,
-    propertiesModalVisible
+    settingModalVisible
   } = contentModel;
 
   // useEffect(() => {
-  //   if (propertiesModalVisible) {
+  //   if (settingModalVisible) {
   //     onTransferFormRef(form);
   //     fillFormEffect(contentModel, form);
   //     setSaving(false);
@@ -103,7 +104,7 @@ const FormProperties = props => {
   return (
       <Modal title={t('panel:properties')}
              icon={<ExclamationCircleOutlined/>}
-             visible={propertiesModalVisible}
+             visible={settingModalVisible}
              className={styles.modalProperties}
              width={modalWidth}
              forceRender={true}

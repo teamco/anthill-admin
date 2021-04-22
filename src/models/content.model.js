@@ -61,7 +61,7 @@ export default modelExtend(widgetCommonModel, {
     },
 
     * setContentConfig({ payload }, { put }) {
-      const {config, model, defaultValues} = payload;
+      const { config, model, defaultValues } = payload;
 
       yield put({
         type: 'updateState',
@@ -69,50 +69,41 @@ export default modelExtend(widgetCommonModel, {
       });
     },
 
-    * handleSettingModal({ payload }, { put, call, select }) {
-      const { contentForm } = yield select((state) => state.contentModel);
+    * handleSettingModal({ payload }, { put, select }) {
+      const { contentForm } = yield select(state => state.contentModel);
       const { visible = false, widgetProps, updateForm = false } = payload;
 
       yield put({
         type: 'updateState',
         payload: {
-          propertiesModalVisible: visible,
+          settingModalVisible: visible,
           widgetProps,
           updateForm
         }
       });
 
-      if (widgetProps) {
-        const widgetName = widgetProps.name;
-        const widgetDescription = widgetProps.description;
+      const { name, description, contentKey, key } = widgetProps;
 
-        const model = {
-          ...DEFAULTS,
-          widgetName,
-          widgetDescription,
-          ...contentForm,
-          contentKey: widgetProps.contentKey,
-          entityKey: widgetProps.key,
-          entityType: 'widget'
-        };
-
-        const _toEntityForm = yield call(toEntityForm, { model });
-
-        yield put({
-          type: 'updateState',
-          payload: {
-            entityForm: {
-              [widgetProps.key]: { ..._toEntityForm }
-            }
-          }
-        });
-      }
+      const model = {
+        ...DEFAULT_VALUES,
+        widgetName: name,
+        widgetDescription: description,
+        ...contentForm,
+        contentKey,
+        entityKey: key,
+        entityType: 'widget'
+      };
 
       yield put({
-        type: 'pageModel/setActiveWidget',
-        payload: { widget: widgetProps }
+        type: 'toForm',
+        payload: {
+          model: 'contentModel',
+          form: {
+            [widgetProps?.key]: { ...model }
+          }
+        }
       });
-    },
+    }
     //
     //
     // * transferFormRef({ payload }, { put, select }) {

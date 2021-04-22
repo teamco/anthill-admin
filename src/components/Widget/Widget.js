@@ -28,15 +28,11 @@ const Widget = props => {
     contentModel
   } = props;
 
-  const { content, offset, dimensions } = widgetProps;
-
-  const {
-    widgetStick
-  } = widgetProps.entityForm || {};
+  const { content, dimensions } = widgetProps;
 
   const position = { left: 0, top: 0 };
 
-  const { opacity, hideContent, targetModel, mode } = contentModel;
+  const { opacity, hideContent } = contentModel;
 
   const style = {
     ...position,
@@ -64,6 +60,10 @@ const Widget = props => {
     return onResetState;
   }, []);
 
+  /**
+   * @constant
+   * @param e
+   */
   const handleSetting = e => {
     e.preventDefault();
 
@@ -71,6 +71,11 @@ const Widget = props => {
     // onInitFormDraft(targetModel);
   };
 
+  /**
+   * @constant
+   * @param e
+   * @param handle
+   */
   const handleInteractions = (e, handle) => {
     e.preventDefault();
     setInteractionCss(handle ? '' : styles.interactionHide);
