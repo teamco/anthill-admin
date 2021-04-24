@@ -11,8 +11,11 @@ import styles from '@/vendors/widgets/Picture/picture.module.less';
 class Picture extends Component {
 
   componentDidMount() {
-    const { onSetProperties } = this.props;
-    onSetProperties(<PictureConfig {...this.props} />);
+    const { onDefineProps, opts } = this.props;
+    onDefineProps(
+      <PictureConfig {...this.props} />,
+      opts.contentKey
+    );
   }
 
   render() {
@@ -20,7 +23,6 @@ class Picture extends Component {
       pictureModel
     } = this.props;
 
-    debugger
     const { entityForm } = pictureModel;
     const imageUrl = fromForm(entityForm, 'imageUrl');
 
@@ -32,10 +34,7 @@ class Picture extends Component {
   }
 }
 
-export default connect(({
-    pictureModel,
-    loading
-  }) => {
+export default connect(({ pictureModel, loading }) => {
     return {
       pictureModel,
       loading
@@ -43,15 +42,15 @@ export default connect(({
   },
   dispatch => ({
     dispatch,
-    onSetProperties(properties) {
+    onDefineProps(config, contentKey) {
       dispatch({
-        type: 'pictureModel/setProperties',
-        payload: { properties }
+        type: 'pictureModel/defineProps',
+        payload: { config, contentKey }
       });
     },
     onUpdateContentForm(props) {
       dispatch({
-        type: 'contentModel/updateContentForm',
+        type: 'widgetContentModel/updateContentForm',
         payload: { props }
       });
     }

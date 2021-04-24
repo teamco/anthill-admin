@@ -5,6 +5,8 @@ import modelExtend from 'dva-model-extend';
 
 import { widgetCommonModel } from '@/models/widget.common.model';
 
+import { fromForm } from '@/utils/object';
+
 const DEFAULT_VALUES = {
   widget: {
     overlapping: true,
@@ -33,17 +35,16 @@ const DEFAULT_STATE = {
   opacity: 1,
   hideContent: false,
   propertiesModalVisible: false,
-
-  config: null,
-  model: null,
-  defaultValues: []
+  contentProps: {},
+  widgetForm: {},
+  activeContent: null
 };
 
 /**
  * @export
  */
 export default modelExtend(widgetCommonModel, {
-  namespace: 'contentModel',
+  namespace: 'widgetContentModel',
   state: { ...DEFAULT_STATE },
 
   subscriptions: {
@@ -60,54 +61,71 @@ export default modelExtend(widgetCommonModel, {
       });
     },
 
-    * setContentConfig({ payload }, { put }) {
-      const { config, model, defaultValues } = payload;
+    * setContentConfig({ payload }, { put, select }) {
+      const { entityForm } = yield select(state => state.widgetModel);
+      const { widgetForm, contentProps } = yield select(state => state.widgetContentModel);
+      const { config, model, defaultValues, contentKey } = payload;
 
       yield put({
         type: 'updateState',
-        payload: { defaultValues, config, model }
+        payload: {
+          widgetForm: {
+            ...widgetForm,
+            [contentKey]: { ...entityForm }
+          },
+          contentProps: {
+            ...contentProps,
+            [contentKey]: { defaultValues, config, model }
+          }
+        }
       });
     },
 
     * handleSettingModal({ payload }, { put, select }) {
-      const { contentForm } = yield select(state => state.contentModel);
-      const { visible = false, widgetProps, updateForm = false } = payload;
+      const { contentProps, widgetForm } = yield select(state => state.widgetContentModel);
+
+      const {
+        contentKey,
+        widgetProps,
+        visible = false,
+        updateForm = false
+      } = payload;
 
       yield put({
         type: 'updateState',
         payload: {
-          settingModalVisible: visible,
-          widgetProps,
-          updateForm
+          updateForm,
+          settingModalVisible: visible
         }
       });
 
-      const { name, description, contentKey, key } = widgetProps;
+      if (widgetProps) {
 
-      const model = {
-        ...DEFAULT_VALUES,
-        widgetName: name,
-        widgetDescription: description,
-        ...contentForm,
-        contentKey,
-        entityKey: key,
-        entityType: 'widget'
-      };
+        const { content, description } = widgetProps;
 
-      yield put({
-        type: 'toForm',
-        payload: {
-          model: 'contentModel',
-          form: {
-            [widgetProps?.key]: { ...model }
+        const model = {
+          setting: { ...DEFAULT_VALUES },
+          widgetName: content,
+          widgetDescription: description,
+          contentProps: contentProps[contentKey],
+          entityType: 'widget'
+        };
+
+        yield put({
+          type: 'updateState',
+          payload: {
+            activeContent: {
+              contentKey,
+              ...model
+            }
           }
-        }
-      });
+        });
+      }
     }
     //
     //
     // * transferFormRef({ payload }, { put, select }) {
-    //   const { targetModel } = yield select((state) => state.contentModel);
+    //   const { targetModel } = yield select((state) => state.widgetContentModel);
     //   yield put({
     //     type: `${targetModel}/updateState`,
     //     payload: { widgetForm: payload.form }
@@ -118,7 +136,7 @@ export default modelExtend(widgetCommonModel, {
     //   yield put({
     //     type: 'toForm',
     //     payload: {
-    //       model: 'contentModel',
+    //       model: 'widgetContentModel',
     //       ...payload.props
     //     }
     //   });
@@ -132,7 +150,7 @@ export default modelExtend(widgetCommonModel, {
     // },
     //
     // * hideContent({ payload }, { put, select }) {
-    //   const { widgetProps } = yield select((state) => state.contentModel);
+    //   const { widgetProps } = yield select((state) => state.widgetContentModel);
     //   yield put({
     //     type: 'updateState',
     //     payload: {

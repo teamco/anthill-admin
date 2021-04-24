@@ -1,14 +1,15 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, message } from 'antd';
 import { connect } from 'dva';
 import { withTranslation } from 'react-i18next';
 import { SettingOutlined } from '@ant-design/icons';
 
 import { raiseConditionMsg } from '@/utils/message';
-import widgetsList from '@/components/Widget/widget.list';
+import widgetsList from '@/components/WidgetContent/widgets.list';
 import EmptyCard from '@/components/Card';
 
-import styles from '@/components/Widget/widget.module.less';
+import styles from '@/components/WidgetContent/widgetContent.module.less';
+import { generateKey } from '@/services/common.service';
 
 /**
  * @export
@@ -16,7 +17,7 @@ import styles from '@/components/Widget/widget.module.less';
  * @return {JSX.Element|null|{isDragging: boolean}}
  * @constructor
  */
-const Widget = props => {
+const WidgetContent = props => {
 
   const {
     t,
@@ -25,14 +26,19 @@ const Widget = props => {
     onInitFormDraft,
     onSetting,
     updateForm,
-    contentModel
+    widgetContentModel,
+    contentKey
   } = props;
 
   const { content, dimensions } = widgetProps;
 
   const position = { left: 0, top: 0 };
 
-  const { opacity, hideContent } = contentModel;
+  const {
+    opacity,
+    hideContent,
+    entityForm
+  } = widgetContentModel;
 
   const style = {
     ...position,
@@ -66,8 +72,7 @@ const Widget = props => {
    */
   const handleSetting = e => {
     e.preventDefault();
-
-    onSetting(true, widgetProps, updateForm);
+    onSetting(true, widgetProps, updateForm, contentKey);
     // onInitFormDraft(targetModel);
   };
 
@@ -107,7 +112,9 @@ const Widget = props => {
                 <div style={{ height: '100%' }}>
                   <div className={interactionCss} />
                   <div style={hideContent ? { display: 'none' } : null}>
-                    {React.cloneElement(cloningWidget, { opts: { content } })}
+                    {React.cloneElement(cloningWidget, {
+                      opts: { content, contentKey }
+                    })}
                   </div>
                 </div>
               )}>
@@ -121,28 +128,24 @@ const Widget = props => {
 };
 
 export default connect(({
-    contentModel,
+    widgetContentModel,
     loading
   }) => {
     return {
-      contentModel,
+      widgetContentModel,
       loading
     };
   },
   dispatch => ({
     dispatch,
     onResetState() {
-      dispatch({ type: 'contentModel/resetState' });
+      dispatch({ type: 'widgetContentModel/resetState' });
     },
-    onSetting(visible, widgetProps, updateForm) {
+    onSetting(visible, widgetProps, updateForm, contentKey) {
       dispatch({
-        type: 'contentModel/handleSettingModal',
-        payload: {
-          visible,
-          updateForm,
-          widgetProps
-        }
+        type: 'widgetContentModel/handleSettingModal',
+        payload: { visible, widgetProps, updateForm, contentKey }
       });
     }
   })
-)(withTranslation()(Widget));
+)(withTranslation()(WidgetContent));

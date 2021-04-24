@@ -4,8 +4,8 @@
 import modelExtend from 'dva-model-extend';
 import { widgetCommonModel } from '@/models/widget.common.model';
 
-import { findFilterIdx, handleMultipleFilters } from '@/vendors/widgets/Picture/services/picture.service';
 import { fromForm } from '@/utils/object';
+import { generateKey } from '@/services/common.service';
 
 const DEFAULT_VALUES = {
   picture: {
@@ -40,7 +40,7 @@ const DEFAULT_STATE = {
  */
 export default modelExtend(widgetCommonModel, {
   namespace: 'pictureModel',
-  state: {},
+  state: { ...DEFAULT_STATE },
 
   subscriptions: {
     setup({ dispatch }) {
@@ -49,26 +49,25 @@ export default modelExtend(widgetCommonModel, {
 
   effects: {
 
-    * setProperties({ payload }, { put, select }) {
+    * defineProps({ payload }, { put, select }) {
       const { entityForm } = yield select(state => state.pictureModel);
+      const { config, contentKey } = payload;
 
       yield put({
-        type: 'contentModel/setContentConfig',
+        type: 'widgetContentModel/setContentConfig',
         payload: {
-          config: payload.config,
+          config,
+          contentKey,
           defaultValues: { ...DEFAULT_VALUES },
-          model: 'pictureModel'
+          model: `pictureModel`
         }
       });
 
       yield put({
-        type: 'toForm',
+        type: 'updatePreview',
         payload: {
-          model: 'pictureModel',
-          form: {
-            imageUrl: fromForm(entityForm, 'imageUrl') ||
-              DEFAULT_VALUES.picture.imageUrl
-          }
+          imageUrl: fromForm(entityForm, 'imageUrl') ||
+            DEFAULT_VALUES.picture.imageUrl
         }
       });
     },
@@ -78,7 +77,9 @@ export default modelExtend(widgetCommonModel, {
         type: 'toForm',
         payload: {
           model: 'pictureModel',
-          pictureImageUrlPreview: payload.pictureImageUrlPreview
+          form: {
+            imageUrl: payload.imageUrl
+          }
         }
       });
     }
@@ -129,7 +130,7 @@ export default modelExtend(widgetCommonModel, {
     //       type: 'cleanEntityForm',
     //       payload: {
     //         key: payload.filter,
-    //         model: 'contentModel',
+    //         model: 'widgetContentModel',
     //         namespace: 'picture'
     //       }
     //     });

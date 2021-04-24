@@ -11,7 +11,6 @@ import { API_CONFIG } from '@/services/config';
 import { getCurrentUser, registerUser } from '@/services/user.service';
 import { generateKey } from '@/services/common.service';
 import { message } from 'antd';
-import i18n from '@/utils/i18n';
 
 /**
  * @constant

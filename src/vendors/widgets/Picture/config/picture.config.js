@@ -22,7 +22,7 @@ const { GenericPanel } = Form;
 const pictureConfig = props => {
   const {
     t,
-    pictureImageUrlPreview,
+    imageUrl,
     pictureModel,
     onUpdatePreview
   } = props;
@@ -34,7 +34,7 @@ const pictureConfig = props => {
     entityForm
   } = pictureModel;
 
-  return pictureImageUrlPreview ? (
+  return imageUrl ? (
     <div>
       <GenericPanel header={t('panel:contentProperties')}
                     name={'widget-content-properties'}
@@ -61,10 +61,7 @@ const pictureConfig = props => {
   ) : null;
 };
 
-export default connect(({
-    pictureModel,
-    loading
-  }) => {
+export default connect(({ pictureModel, loading }) => {
     return {
       pictureModel,
       loading
@@ -72,10 +69,10 @@ export default connect(({
   },
   dispatch => ({
     dispatch,
-    onUpdatePreview({target}) {
+    onUpdatePreview({ target }) {
       dispatch({
         type: 'pictureModel/updatePreview',
-        payload: {pictureImageUrlPreview: target.value}
+        payload: { imageUrl: target.value }
       });
     },
     onUpdateFilter(filter, value, unit = '') {
@@ -87,7 +84,7 @@ export default connect(({
     onRemoveFilter(filter) {
       dispatch({
         type: 'pictureModel/removeFilter',
-        payload: {filter}
+        payload: { filter }
       });
     },
     onUpdateTransform(filter, value, unit = '') {
@@ -99,7 +96,7 @@ export default connect(({
     onUpdateFilterSlider(props) {
       dispatch({
         type: 'pictureModel/updateFilterSlider',
-        payload: {props}
+        payload: { props }
       });
     }
   })

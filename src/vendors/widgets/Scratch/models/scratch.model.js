@@ -24,7 +24,7 @@ export default modelExtend(widgetCommonModel, {
 
     * setProperties({payload}, {put}) {
       yield put({
-        type: 'contentModel/setContentConfig',
+        type: 'widgetContentModel/setContentConfig',
         payload: {
           config: payload.config,
           defaultValues: {...DEFAULT_VALUES},

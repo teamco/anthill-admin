@@ -22,7 +22,9 @@ import {
 
 const DEFAULT_STATE = {
   widgets: [],
-  selectedWidget: null
+  selectedWidget: null,
+  contentKey: generateKey(),
+  contentKey1: generateKey()
 };
 
 /**

@@ -47,7 +47,7 @@ export const pictureProps = (onUpdatePreview) => {
  * @param onUpdateTransform
  * @param onUpdateContentForm
  * @param onRemoveFilter
- * @param pictureImageUrlPreview
+ * @param imageUrl
  * @param [style]
  * @param [selectedFilters]
  * @param entityForm
@@ -60,7 +60,7 @@ export const filterProps = ({
   onUpdateTransform,
   onRemoveFilter,
   onUpdateContentForm,
-  pictureImageUrlPreview,
+  imageUrl,
   sliderProps,
   selectedFilters = [],
   style = {}
@@ -205,11 +205,11 @@ export const filterProps = ({
       ),
       (
           <Image label={i18n.t('form:preview')}
-                 key={'pictureImageUrlPreview'}
+                 key={'imageUrl'}
                  width={'100%'}
                  height={'100%'}
                  style={style}
-                 src={pictureImageUrlPreview}/>
+                 src={imageUrl}/>
       )
     ],
     [

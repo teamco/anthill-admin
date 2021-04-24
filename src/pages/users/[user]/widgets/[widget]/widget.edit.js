@@ -7,8 +7,9 @@ import { Button, Dropdown, Form, InputNumber, Menu, Select } from 'antd';
 import Page from '@/components/Page';
 import Main from '@/components/Main';
 import FormComponents, { unitFormatter, unitParser } from '@/components/Form';
-import Widget from '@/components/Widget';
-import FormProperties from '@/components/Widget/properties/form.properties';
+
+import WidgetContent from '@/components/WidgetContent';
+import WidgetFormProperties from '@/components/WidgetContent/properties/form.properties';
 
 import { fromForm } from '@/utils/object';
 
@@ -23,6 +24,7 @@ import { showConfirm } from '@/utils/modals';
 
 import pageStyles from '@/components/Page/page.module.less';
 import styles from '@/pages/users/[user]/widgets/widgets.module.less';
+import { generateKey } from '@/services/common.service';
 
 const { Option } = Select;
 const { GenericPanel, EditableTags } = FormComponents;
@@ -73,6 +75,7 @@ const widgetEdit = (props) => {
    */
   const { user, widget } = useParams();
   const { ability } = authModel;
+  const { widgets, contentKey, contentKey1 } = widgetModel;
 
   const component = 'widget';
 
@@ -101,7 +104,6 @@ const widgetEdit = (props) => {
   const width = fromForm(entityForm, 'width');
   const height = fromForm(entityForm, 'height');
   const name = fromForm(entityForm, 'name');
-  const description = fromForm(entityForm, 'description');
 
   const {
     createdBy,
@@ -112,7 +114,6 @@ const widgetEdit = (props) => {
 
   const widgetProps = {
     content: name,
-    description,
     offset: {
       x: 0,
       y: 0
@@ -251,9 +252,16 @@ const widgetEdit = (props) => {
                           name={'preview'}
                           className={styles.widgetPreview}>
               <div>
-                <Widget label={name}
-                        updateForm={false}
-                        widgetProps={widgetProps} />
+                <WidgetContent label={name}
+                               contentKey={contentKey1}
+                               updateForm={false}
+                               widgetProps={widgetProps} />
+              </div>
+              <div>
+                <WidgetContent label={name}
+                               contentKey={contentKey}
+                               updateForm={false}
+                               widgetProps={widgetProps} />
               </div>
             </GenericPanel>
           ) : (
@@ -262,9 +270,9 @@ const widgetEdit = (props) => {
                 <Select label={t('form:cloneFrom', { instance: '$t(instance:widget)' })}
                         name={'clone'}
                         onChange={handleChangeClone}>
-                  {widgetModel.widgets.map((widget, idx) => (
-                    <Option key={idx} value={widget.key}>
-                      {widget.name}
+                  {widgets.map((widget, idx) => (
+                    <Option key={idx} value={widget?.key}>
+                      {widget?.name}
                     </Option>
                   ))}
                 </Select>
@@ -274,7 +282,7 @@ const widgetEdit = (props) => {
           )}
           <Info {...detailProps} />
         </Form>
-        {isEdit && <FormProperties />}
+        {isEdit && <WidgetFormProperties />}
       </div>
     </Page>
   );
