@@ -82,7 +82,7 @@ export default modelExtend(widgetCommonModel, {
           }
         }
       });
-    }
+    },
 
     // * updateSelectedFilters({payload}, {put, select}) {
     //   const {selectedFilters} = yield select(state => state.pictureModel);
@@ -189,38 +189,40 @@ export default modelExtend(widgetCommonModel, {
     //   });
     // },
     //
-    // * updateFilterSlider({payload}, {put}) {
-    //   const {props} = payload;
-    //
-    //   props.key = props.name;
-    //   props.marks = {
-    //     [props.min]: {
-    //       label: `${props.min}${props.unit || ''}`
-    //     },
-    //     [props.max]: {
-    //       label: `${props.max}${props.unit || ''}`
-    //     }
-    //   };
-    //
-    //   yield put({
-    //     type: 'toForm',
-    //     payload: {
-    //       model: 'pictureModel',
-    //       selectedFilter: props.name
-    //     }
-    //   });
-    //
-    //   yield put({
-    //     type: 'updateState',
-    //     payload: {
-    //       sliderProps: {
-    //         defaultValue: DEFAULTS[props.name],
-    //         visible: true,
-    //         filter: props
-    //       }
-    //     }
-    //   });
-    // }
+    * updateFilterSlider({ payload }, { put }) {
+      const { props } = payload;
+
+      props.key = props.name;
+      props.marks = {
+        [props.min]: {
+          label: `${props.min}${props.unit || ''}`
+        },
+        [props.max]: {
+          label: `${props.max}${props.unit || ''}`
+        }
+      };
+
+      yield put({
+        type: 'toForm',
+        payload: {
+          model: 'pictureModel',
+          form: {
+            selectedFilter: props.name
+          }
+        }
+      });
+
+      yield put({
+        type: 'updateState',
+        payload: {
+          sliderProps: {
+            defaultValue: DEFAULT_VALUES[props.name],
+            visible: true,
+            filter: props
+          }
+        }
+      });
+    }
   },
 
   reducers: {}

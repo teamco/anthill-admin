@@ -131,7 +131,7 @@ export default modelExtend(widgetCommonModel, {
       }
 
       yield put({ type: 'updateState', payload: { activeContent: null } });
-    }
+    },
 
     // * transferFormRef({ payload }, { put, select }) {
     //   const { targetModel } = yield select((state) => state.widgetContentModel);
@@ -140,17 +140,19 @@ export default modelExtend(widgetCommonModel, {
     //     payload: { widgetForm: payload.form }
     //   });
     // },
-    //
-    // * updateContentForm({ payload }, { put }) {
-    //   yield put({
-    //     type: 'toForm',
-    //     payload: {
-    //       model: 'widgetContentModel',
-    //       ...payload.props
-    //     }
-    //   });
-    // },
-    //
+
+    * updateContentForm({ payload }, { put }) {
+      yield put({
+        type: 'toForm',
+        payload: {
+          model: 'widgetContentModel',
+          form: {
+            ...payload.props
+          }
+        }
+      });
+    },
+
     // * setOpacity({ payload }, { put }) {
     //   yield put({
     //     type: 'updateState',

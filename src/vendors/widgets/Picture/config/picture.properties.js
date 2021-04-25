@@ -1,36 +1,36 @@
 import React from 'react';
-import {Image, Input, Select, Slider, Tag, Tooltip} from 'antd';
+import { Image, Input, Select, Slider, Tag, Tooltip } from 'antd';
 
 import i18n from '@/utils/i18n';
-import {Html5Outlined} from '@ant-design/icons';
+import { Html5Outlined } from '@ant-design/icons';
 
 import styles from '@/vendors/widgets/Picture/picture.module.less';
 import { fromForm } from '@/utils/object';
 
-const {TextArea} = Input;
-const {Option} = Select;
+const { TextArea } = Input;
+const { Option } = Select;
 
 export const pictureProps = (onUpdatePreview) => {
   return [
     [
       (
-          <Input type={'text'}
-                 label={i18n.t('form:alt')}
-                 name={['setting', 'picture', 'alt']}
-                 key={'picture.alt'} />
+        <Input type={'text'}
+               label={i18n.t('form:alt')}
+               name={['setting', 'picture', 'alt']}
+               key={'picture.alt'} />
       )
     ],
     [
       (
-          <TextArea label={i18n.t('form:imgUrl')}
-                    name={['setting', 'picture', 'imageUrl']}
-                    key={'picture.imageUrl'}
-                    onChange={onUpdatePreview}
-                    autoSize={{
-                      minRows: 4,
-                      maxRows: 10
-                    }}
-                    type={'textarea'}/>
+        <TextArea label={i18n.t('form:imgUrl')}
+                  name={['setting', 'picture', 'imageUrl']}
+                  key={'picture.imageUrl'}
+                  onChange={onUpdatePreview}
+                  autoSize={{
+                    minRows: 4,
+                    maxRows: 10
+                  }}
+                  type={'textarea'} />
       )
     ]
   ];
@@ -67,7 +67,7 @@ export const filterProps = ({
    * @param filter
    */
   const onChangeFilter = filter => {
-    const props = sliders[filter.replace(/picture\//, '')];
+    const props = sliders[filter[2]];
     props.className = styles.filterSlider;
 
     onUpdateFilterSlider(props);
@@ -182,62 +182,62 @@ export const filterProps = ({
   return [
     [
       (
-          <Select label={i18n.t('filter:filter')}
-                  key={'selectedFilter'}
-                  name={'selectedFilter'}
-                  placeholder={i18n.t('form:placeholder', {field: '$t(filter:filter)'})}
-                  onChange={onChangeFilter}
-                  style={{width: '100%'}}>
-            {Object.keys(sliders).sort().map(slider => {
-              const _filter = sliders[slider];
-              return (
-                  <Option key={_filter.name}
-                          value={_filter.name}>
-                    {_filter.label}
-                  </Option>
-              );
-            })}
-          </Select>
+        <Select label={i18n.t('filter:filter')}
+                key={'selectedFilter'}
+                name={'selectedFilter'}
+                placeholder={i18n.t('form:placeholder', { field: '$t(filter:filter)' })}
+                onChange={onChangeFilter}
+                style={{ width: '100%' }}>
+          {Object.keys(sliders).sort().map(slider => {
+            const _filter = sliders[slider];
+            return (
+              <Option key={_filter.name}
+                      value={_filter.name}>
+                {_filter.label}
+              </Option>
+            );
+          })}
+        </Select>
       ),
       (
-          <Image label={i18n.t('form:preview')}
-                 key={'imageUrl'}
-                 width={'100%'}
-                 height={'100%'}
-                 style={style}
-                 src={fromForm(entityForm, 'imageUrl')}/>
+        <Image label={i18n.t('form:preview')}
+               key={'imageUrl'}
+               width={'100%'}
+               height={'100%'}
+               style={style}
+               src={fromForm(entityForm, 'imageUrl')} />
       )
     ],
     [
       (
-          <Slider disabled={!sliderProps.visible}
-                  key={'active-filter'}
-                  {...sliderProps.filter}/>
+        <Slider disabled={!sliderProps.visible}
+                key={'active-filter'}
+                {...sliderProps.filter} />
       ),
       (
-          <div label={i18n.t('filter:selectedFilters')}
-               key={'selected-filters'}>
-            {selectedFilters.map(selected => {
-              return (
-                  <Tag onClose={() => onRemoveFilter(selected.filter)}
-                       className={styles.filterTag}
-                       icon={<Html5Outlined/>}
-                       color={'success'}
-                       closable
-                       key={selected.filter}>
-                    <Tooltip title={`${selected.value}${selected.unit}`}>
-                      <span style={{cursor: 'pointer'}}
-                            onClick={() => {
-                              onUpdateContentForm({selectedFilter: `picture/${selected.filter}`});
-                              onChangeFilter(selected.filter);
-                            }}>
-                            {selected.filter}
-                              </span>
-                    </Tooltip>
-                  </Tag>
-              );
-            })}
-          </div>
+        <div label={i18n.t('filter:selectedFilters')}
+             key={'selected-filters'}>
+          {selectedFilters.map(selected => {
+            return (
+              <Tag onClose={() => onRemoveFilter(selected.filter)}
+                   className={styles.filterTag}
+                   icon={<Html5Outlined />}
+                   color={'success'}
+                   closable
+                   key={selected.filter}>
+                <Tooltip title={`${selected.value}${selected.unit}`}>
+                  <span style={{ cursor: 'pointer' }}
+                        onClick={() => {
+                          onUpdateContentForm({ selectedFilter: selected.filter });
+                          onChangeFilter(selected.filter);
+                        }}>
+                    {selected.filter}
+                  </span>
+                </Tooltip>
+              </Tag>
+            );
+          })}
+        </div>
       )
     ]
   ];
