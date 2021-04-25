@@ -93,6 +93,7 @@
     "tags": "Tags",
     "preview": "Preview",
     "imgUrl": "Image Url",
+    "alt": "Alternate text",
     "embedUrl": "Embed Url",
     "createdBy": "Created by",
     "updatedBy": "Updated by",

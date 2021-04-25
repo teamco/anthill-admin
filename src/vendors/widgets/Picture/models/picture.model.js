@@ -5,10 +5,10 @@ import modelExtend from 'dva-model-extend';
 import { widgetCommonModel } from '@/models/widget.common.model';
 
 import { fromForm } from '@/utils/object';
-import { generateKey } from '@/services/common.service';
 
 const DEFAULT_VALUES = {
   picture: {
+    alt: '',
     imageUrl: 'https://www.publicdomainpictures.net/pictures/320000/nahled/background-image.png',
     brightness: 1,
     contrast: 1.1,

@@ -40,20 +40,13 @@ const WidgetFormProperties = props => {
   } = props;
 
   const {
+    entityForm,
     targetModel,
     updateForm,
     modalWidth,
     activeContent,
     settingModalVisible
   } = widgetContentModel;
-
-  // useEffect(() => {
-  //   if (settingModalVisible) {
-  //     onTransferFormRef(form);
-  //     fillFormEffect(widgetContentModel, form);
-  //     setSaving(false);
-  //   }
-  // }, [widgetContentModel]);
 
   const tabs = [
     (
@@ -103,7 +96,7 @@ const WidgetFormProperties = props => {
   return (
     <Modal title={t('panel:properties')}
            icon={<ExclamationCircleOutlined />}
-           visible={settingModalVisible}
+           visible={settingModalVisible && activeContent}
            className={styles.modalProperties}
            width={modalWidth}
            forceRender={true}
@@ -111,12 +104,10 @@ const WidgetFormProperties = props => {
            centered={true}
            onOk={handleOk}
            okButtonProps={{ disabled: !updateForm || saving }}
-           onCancel={() => {
-             onResetWidget(targetModel);
-             onSetting(false);
-           }}>
+           onCancel={onSetting}>
       <Form layout={'vertical'}
             form={form}
+            fields={entityForm}
             onFieldsChange={onFieldsChange}
             onFinish={onFinish}>
         <GenericTabs tabs={tabs}
@@ -199,18 +190,12 @@ export default connect(({
         payload: { stickTo }
       });
     },
-    onResetWidget(model) {
-      dispatch({
-        type: 'widgetContentModel/revertFormValues',
-        payload: { model }
-      });
-    },
     onFinish() {
     },
-    onSetting(visible, widgetProps) {
+    onSetting() {
       dispatch({
         type: 'widgetContentModel/handleSettingModal',
-        payload: { visible, widgetProps }
+        payload: { visible: false }
       });
     }
   })

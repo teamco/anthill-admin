@@ -33,7 +33,7 @@ const DEFAULT_VALUES = {
 
 const DEFAULT_STATE = {
   opacity: 1,
-  modalWidth: '90%',
+  modalWidth: '80%',
   hideContent: false,
   propertiesModalVisible: false,
   contentProps: {},
@@ -78,6 +78,7 @@ export default modelExtend(widgetCommonModel, {
 
     * handleSettingModal({ payload }, { put, select }) {
       const { contentProps } = yield select(state => state.widgetContentModel);
+      const { widgetKey } = yield select(state => state.widgetModel);
 
       const {
         contentKey,
@@ -94,35 +95,44 @@ export default modelExtend(widgetCommonModel, {
         }
       });
 
-      if (widgetProps) {
+      if (visible && widgetProps) {
 
         const { content, description } = widgetProps;
         const _contentProps = { ...contentProps[contentKey] };
 
-        const model = {
-          setting: {
-            ...DEFAULT_VALUES,
-            ..._contentProps.defaultValues
-          },
-          widgetName: content,
-          widgetDescription: description,
-          configComponent: _contentProps.config,
-          entityType: 'widget'
-        };
-
         yield put({
+          type: 'toForm',
+          payload: {
+            model: 'widgetContentModel',
+            form: {
+              widgetName: content,
+              widgetDescription: description,
+              setting: {
+                ...DEFAULT_VALUES,
+                ..._contentProps.defaultValues
+              },
+              entityType: 'widget',
+              entityKey: widgetKey,
+              contentKey
+            }
+          }
+        });
+
+        return yield put({
           type: 'updateState',
           payload: {
             activeContent: {
               contentKey,
-              ...model
+              widgetName: content,
+              configComponent: _contentProps.config
             }
           }
         });
       }
+
+      yield put({ type: 'updateState', payload: { activeContent: null } });
     }
-    //
-    //
+
     // * transferFormRef({ payload }, { put, select }) {
     //   const { targetModel } = yield select((state) => state.widgetContentModel);
     //   yield put({

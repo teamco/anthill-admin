@@ -5,6 +5,7 @@ import i18n from '@/utils/i18n';
 import {Html5Outlined} from '@ant-design/icons';
 
 import styles from '@/vendors/widgets/Picture/picture.module.less';
+import { fromForm } from '@/utils/object';
 
 const {TextArea} = Input;
 const {Option} = Select;
@@ -14,21 +15,16 @@ export const pictureProps = (onUpdatePreview) => {
     [
       (
           <Input type={'text'}
-                 label={i18n.t('form:name')}
-                 name={'picture/text'}
-                 key={'pictureText'}
-                 config={{
-                   rules: [
-                     {required: true}
-                   ]
-                 }}/>
+                 label={i18n.t('form:alt')}
+                 name={['setting', 'picture', 'alt']}
+                 key={'picture.alt'} />
       )
     ],
     [
       (
           <TextArea label={i18n.t('form:imgUrl')}
-                    name={'picture/imageUrl'}
-                    key={'pictureImageUrl'}
+                    name={['setting', 'picture', 'imageUrl']}
+                    key={'picture.imageUrl'}
                     onChange={onUpdatePreview}
                     autoSize={{
                       minRows: 4,
@@ -60,7 +56,7 @@ export const filterProps = ({
   onUpdateTransform,
   onRemoveFilter,
   onUpdateContentForm,
-  imageUrl,
+  entityForm,
   sliderProps,
   selectedFilters = [],
   style = {}
@@ -80,7 +76,7 @@ export const filterProps = ({
   const sliders = {
     blur: {
       label: i18n.t('filter:blur'),
-      name: 'picture/blur',
+      name: ['setting', 'picture', 'blur'],
       tipFormatter: value => `${i18n.t('filter:blurRadius')}: ${value}px`,
       onAfterChange: value => onUpdateFilter('blur', value, 'px'),
       unit: 'px',
@@ -90,7 +86,7 @@ export const filterProps = ({
     },
     scaleX: {
       label: i18n.t('filter:scaleHorizontal'),
-      name: 'picture/scaleX',
+      name: ['setting', 'picture', 'scaleX'],
       onAfterChange: value => onUpdateTransform('scaleX', value),
       min: -10,
       max: 10,
@@ -98,7 +94,7 @@ export const filterProps = ({
     },
     scaleY: {
       label: i18n.t('filter:scaleVertical'),
-      name: 'picture/scaleY',
+      name: ['setting', 'picture', 'scaleY'],
       onAfterChange: value => onUpdateTransform('scaleY', value),
       min: -10,
       max: 10,
@@ -106,7 +102,7 @@ export const filterProps = ({
     },
     brightness: {
       label: i18n.t('filter:brightness'),
-      name: 'picture/brightness',
+      name: ['setting', 'picture', 'brightness'],
       onAfterChange: value => onUpdateFilter('brightness', value),
       min: 0.1,
       max: 10,
@@ -114,7 +110,7 @@ export const filterProps = ({
     },
     contrast: {
       label: i18n.t('filter:contrast'),
-      name: 'picture/contrast',
+      name: ['setting', 'picture', 'contrast'],
       onAfterChange: value => onUpdateFilter('contrast', value),
       min: 0.1,
       max: 10,
@@ -122,7 +118,7 @@ export const filterProps = ({
     },
     grayscale: {
       label: i18n.t('filter:grayscale'),
-      name: 'picture/grayscale',
+      name: ['setting', 'picture', 'grayscale'],
       onAfterChange: value => onUpdateFilter('grayscale', value),
       min: 0.1,
       max: 1,
@@ -130,7 +126,7 @@ export const filterProps = ({
     },
     'hue-rotate': {
       label: i18n.t('filter:hueRotate'),
-      name: 'picture/hue-rotate',
+      name: ['setting', 'picture', 'hue-rotate'],
       tipFormatter: value => `${i18n.t('filter:angle')}: ${value}deg`,
       onAfterChange: value => onUpdateFilter('hue-rotate', value, 'deg'),
       unit: 'deg',
@@ -140,7 +136,7 @@ export const filterProps = ({
     },
     scale: {
       label: i18n.t('filter:scale'),
-      name: 'picture/zoom',
+      name: ['setting', 'picture', 'zoom'],
       onAfterChange: value => onUpdateTransform('scale', value, 'deg'),
       unit: 'deg',
       min: -10,
@@ -149,7 +145,7 @@ export const filterProps = ({
     },
     invert: {
       label: i18n.t('filter:invert'),
-      name: 'picture/invert',
+      name: ['setting', 'picture', 'invert'],
       onAfterChange: value => onUpdateFilter('invert', value),
       min: 0.1,
       max: 1,
@@ -157,7 +153,7 @@ export const filterProps = ({
     },
     saturate: {
       label: i18n.t('filter:saturate'),
-      name: 'picture/saturate',
+      name: ['setting', 'picture', 'saturate'],
       onAfterChange: value => onUpdateFilter('saturate', value),
       min: 0.1,
       max: 10,
@@ -165,7 +161,7 @@ export const filterProps = ({
     },
     sepia: {
       label: i18n.t('filter:sepia'),
-      name: 'picture/sepia',
+      name: ['setting', 'picture', 'sepia'],
       onAfterChange: value => onUpdateFilter('sepia', value),
       min: 0.1,
       max: 1,
@@ -173,7 +169,7 @@ export const filterProps = ({
     },
     opacity: {
       label: i18n.t('filter:opacity'),
-      name: 'picture/opacity',
+      name: ['setting', 'picture', 'opacity'],
       tipFormatter: value => `${value}%`,
       onAfterChange: value => onUpdateFilter('opacity', value, '%'),
       unit: '%',
@@ -209,7 +205,7 @@ export const filterProps = ({
                  width={'100%'}
                  height={'100%'}
                  style={style}
-                 src={imageUrl}/>
+                 src={fromForm(entityForm, 'imageUrl')}/>
       )
     ],
     [

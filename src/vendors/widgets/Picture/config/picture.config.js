@@ -22,7 +22,6 @@ const { GenericPanel } = Form;
 const pictureConfig = props => {
   const {
     t,
-    imageUrl,
     pictureModel,
     onUpdatePreview
   } = props;
