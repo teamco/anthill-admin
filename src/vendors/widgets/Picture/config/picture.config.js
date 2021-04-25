@@ -34,19 +34,19 @@ const pictureConfig = props => {
     entityForm
   } = pictureModel;
 
-  return imageUrl ? (
+  return (
     <div>
       <GenericPanel header={t('panel:contentProperties')}
-                    name={'widget-content-properties'}
-                    defaultActiveKey={['widget-content-properties']}>
+                    name={'content-properties'}
+                    defaultActiveKey={['content-properties']}>
         {pictureProps(onUpdatePreview).map((prop, idx) => (
           <div key={idx}>{prop}</div>
         ))}
       </GenericPanel>
       <GenericPanel className={styles.pictureProperties}
                     header={t('panel:contentPropertiesFilter')}
-                    name={'widget-content-properties-filter'}
-                    defaultActiveKey={['widget-content-properties-filter']}>
+                    name={'content-properties-filter'}
+                    defaultActiveKey={['content-properties-filter']}>
         {filterProps({
           ...props,
           selectedFilters,
@@ -58,7 +58,7 @@ const pictureConfig = props => {
         ))}
       </GenericPanel>
     </div>
-  ) : null;
+  );
 };
 
 export default connect(({ pictureModel, loading }) => {

@@ -33,10 +33,10 @@ const DEFAULT_VALUES = {
 
 const DEFAULT_STATE = {
   opacity: 1,
+  modalWidth: '90%',
   hideContent: false,
   propertiesModalVisible: false,
   contentProps: {},
-  widgetForm: {},
   activeContent: null
 };
 
@@ -62,17 +62,12 @@ export default modelExtend(widgetCommonModel, {
     },
 
     * setContentConfig({ payload }, { put, select }) {
-      const { entityForm } = yield select(state => state.widgetModel);
-      const { widgetForm, contentProps } = yield select(state => state.widgetContentModel);
+      const { contentProps } = yield select(state => state.widgetContentModel);
       const { config, model, defaultValues, contentKey } = payload;
 
       yield put({
         type: 'updateState',
         payload: {
-          widgetForm: {
-            ...widgetForm,
-            [contentKey]: { ...entityForm }
-          },
           contentProps: {
             ...contentProps,
             [contentKey]: { defaultValues, config, model }
@@ -82,7 +77,7 @@ export default modelExtend(widgetCommonModel, {
     },
 
     * handleSettingModal({ payload }, { put, select }) {
-      const { contentProps, widgetForm } = yield select(state => state.widgetContentModel);
+      const { contentProps } = yield select(state => state.widgetContentModel);
 
       const {
         contentKey,
@@ -102,12 +97,16 @@ export default modelExtend(widgetCommonModel, {
       if (widgetProps) {
 
         const { content, description } = widgetProps;
+        const _contentProps = { ...contentProps[contentKey] };
 
         const model = {
-          setting: { ...DEFAULT_VALUES },
+          setting: {
+            ...DEFAULT_VALUES,
+            ..._contentProps.defaultValues
+          },
           widgetName: content,
           widgetDescription: description,
-          contentProps: contentProps[contentKey],
+          configComponent: _contentProps.config,
           entityType: 'widget'
         };
 

@@ -43,7 +43,6 @@ const WidgetFormProperties = props => {
     targetModel,
     updateForm,
     modalWidth,
-    widgetProps = {},
     activeContent,
     settingModalVisible
   } = widgetContentModel;
@@ -59,19 +58,19 @@ const WidgetFormProperties = props => {
   const tabs = [
     (
       <span>
-          <AuditOutlined />
+        <AuditOutlined />
         {t('instance:widget')}
-        </span>
+      </span>
     ), (
       <span>
-          <InteractionOutlined />
+        <InteractionOutlined />
         {t('instance:behavior')}
-        </span>
+      </span>
     ), (
       <span>
-          <ProfileOutlined />
-        {widgetProps.name}
-        </span>
+        <ProfileOutlined />
+        {activeContent?.widgetName}
+      </span>
     )
   ];
 
@@ -152,8 +151,8 @@ const WidgetFormProperties = props => {
               ))}
             </GenericPanel>
           </div>
-          <div>
-            {activeContent?.contentProps?.config}
+          <div className={styles.content}>
+            {activeContent?.configComponent}
           </div>
         </GenericTabs>
       </Form>
