@@ -7,7 +7,8 @@ import { widgetCommonModel } from '@/models/widget.common.model';
 import { fromForm } from '@/utils/object';
 import {
   findFilterIdx,
-  handleMultipleFilters, removeFilter,
+  handleMultipleFilters,
+  removeFilter,
   findFilter
 } from '@/vendors/widgets/Picture/services/picture.service';
 
@@ -55,7 +56,7 @@ export default modelExtend(widgetCommonModel, {
   effects: {
 
     * defineProps({ payload }, { put, select }) {
-      const { entityForm } = yield select(state => state.pictureModel);
+      const { entityForm } = yield select(state => state.widgetContentModel);
       const { config, contentKey } = payload;
 
       yield put({
@@ -81,10 +82,8 @@ export default modelExtend(widgetCommonModel, {
       yield put({
         type: 'toForm',
         payload: {
-          model: 'pictureModel',
-          form: {
-            imageUrl: payload.imageUrl
-          }
+          model: 'widgetContentModel',
+          form: { setting: { picture: { imageUrl: payload.imageUrl } } }
         }
       });
     },
@@ -106,6 +105,21 @@ export default modelExtend(widgetCommonModel, {
       });
     },
 
+    * updateSliderProps({ payload }, { put }) {
+      const { props, value, visible = true } = payload;
+
+      yield put({
+        type: 'updateState',
+        payload: {
+          sliderProps: {
+            visible,
+            filter: props,
+            defaultValue: value || DEFAULT_VALUES.picture[props.name] || 0
+          }
+        }
+      });
+    },
+
     * selectFilter({ payload }, { call, put, select }) {
       const { selectedFilters } = yield select(state => state.pictureModel);
       const { props, selected } = payload;
@@ -116,20 +130,14 @@ export default modelExtend(widgetCommonModel, {
         yield put({
           type: 'toForm',
           payload: {
-            model: 'pictureModel',
+            model: 'widgetContentModel',
             form: { selectedFilter: selected.filter }
           }
         });
 
         yield put({
-          type: 'updateState',
-          payload: {
-            sliderProps: {
-              defaultValue: selected.value,
-              visible: true,
-              filter: props
-            }
-          }
+          type: 'updateSliderProps',
+          payload: { props, value: selected.value }
         });
       }
     },
@@ -137,33 +145,36 @@ export default modelExtend(widgetCommonModel, {
     * removeFilter({ payload }, { call, put, select }) {
       let { selectedFilters, style } = yield select(state => state.pictureModel);
       let _selectedFilters = [...selectedFilters];
-      const { filter } = payload;
+      let _style = { ...style };
+
+      const { props, selected } = payload;
 
       let _filter = style.filter.split(' ');
-      const idx = findFilterIdx(style, payload);
+      const idx = yield call(findFilterIdx, { style, filter: selected.filter });
 
       if (idx > -1) {
         _filter.splice(idx, 1);
-        style.filter = _filter.join(' ');
-        _selectedFilters = yield call(removeFilter, { selectedFilters, filter });
-        debugger
-        // yield put({
-        //   type: 'cleanEntityForm',
-        //   payload: {
-        //     key: payload.filter,
-        //     model: 'widgetContentModel',
-        //     namespace: 'picture'
-        //   }
-        // });
+        _style.filter = _filter.join(' ');
+        _selectedFilters = yield call(removeFilter, { selectedFilters, filter: selected.filter });
       }
 
       yield put({
         type: 'updateState',
         payload: {
-          style,
+          style: _style,
           selectedFilters: _selectedFilters
         }
       });
+
+      yield put({
+        type: 'toForm',
+        payload: {
+          model: 'widgetContentModel',
+          form: { selectedFilter: null }
+        }
+      });
+
+      yield put({ type: 'updateSliderProps', payload: { props } });
     },
 
     * updateFilter({ payload }, { put, select, call }) {
@@ -216,23 +227,12 @@ export default modelExtend(widgetCommonModel, {
       yield put({
         type: 'toForm',
         payload: {
-          model: 'pictureModel',
-          form: {
-            selectedFilter: props.name
-          }
+          model: 'widgetContentModel',
+          form: { selectedFilter: props.name }
         }
       });
 
-      yield put({
-        type: 'updateState',
-        payload: {
-          sliderProps: {
-            defaultValue: DEFAULT_VALUES.picture[props.name],
-            visible: true,
-            filter: props
-          }
-        }
-      });
+      yield put({ type: 'updateSliderProps', payload: { props } });
     }
   },
 

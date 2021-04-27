@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { Image } from 'antd';
 import { withTranslation } from 'react-i18next';
@@ -10,6 +10,8 @@ import styles from '@/vendors/widgets/Picture/picture.module.less';
 
 const Picture = props => {
 
+  const [imageUrl, setImageUrl] = useState(null);
+
   useEffect(() => {
     onDefineProps(
       <PictureConfig {...props} />,
@@ -20,11 +22,19 @@ const Picture = props => {
   const {
     onDefineProps,
     pictureModel,
+    widgetContentModel,
     opts
   } = props;
 
-  const { entityForm } = pictureModel;
-  const imageUrl = fromForm(entityForm, 'imageUrl');
+  const { entityForm } = widgetContentModel;
+
+  useEffect(() => {
+    const setting = fromForm(entityForm, 'setting');
+
+    if (setting?.picture?.imageUrl) {
+      setImageUrl(setting?.picture?.imageUrl);
+    }
+  }, [entityForm]);
 
   return (
     <div className={styles.picture}>
@@ -33,12 +43,15 @@ const Picture = props => {
   );
 };
 
-export default connect(({ pictureModel, loading }) => {
-    return {
-      pictureModel,
-      loading
-    };
-  },
+export default connect(({
+    pictureModel,
+    widgetContentModel,
+    loading
+  }) => ({
+    pictureModel,
+    widgetContentModel,
+    loading
+  }),
   dispatch => ({
     dispatch,
     onDefineProps(config, contentKey) {

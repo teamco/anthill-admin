@@ -162,16 +162,16 @@ export default connect(({
   },
   dispatch => ({
     dispatch,
-    // onFieldsChange(changedFields, allFields) {
-    //   dispatch({
-    //     type: 'widgetContentModel/updateFields',
-    //     payload: {
-    //       changedFields,
-    //       allFields,
-    //       model: 'widgetContentModel'
-    //     }
-    //   });
-    // },
+    onFieldsChange(changedFields, allFields) {
+      dispatch({
+        type: 'widgetContentModel/updateFields',
+        payload: {
+          changedFields,
+          allFields,
+          model: 'widgetContentModel'
+        }
+      });
+    },
     onTransferFormRef(form) {
       dispatch({
         type: 'widgetContentModel/transferFormRef',

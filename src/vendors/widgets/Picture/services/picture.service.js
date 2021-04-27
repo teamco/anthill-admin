@@ -17,7 +17,7 @@ export const handleMultipleFilters = ({ style, filterType, payload }) => {
 
   if (style.filter) {
     const _filter = style.filter;
-    const idx = findFilterIdx(style, payload);
+    const idx = findFilterIdx({ style, filter: payload.filter });
 
     _selectedFilters = _filter.split(' ');
 
@@ -38,12 +38,12 @@ export const handleMultipleFilters = ({ style, filterType, payload }) => {
  * @param payload
  * @return {number}
  */
-export const findFilterIdx = (style, payload) => {
+export const findFilterIdx = ({ style, filter }) => {
   let _filter = style.filter.split(' ');
   let idx = -1;
 
-  _filter.forEach((filter, key) => {
-    if (filter.match(payload.filter)) {
+  _filter.forEach((name, key) => {
+    if (name.match(filter)) {
       idx = key;
     }
   });

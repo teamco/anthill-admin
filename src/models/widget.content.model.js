@@ -74,6 +74,21 @@ export default modelExtend(widgetCommonModel, {
           }
         }
       });
+
+      yield put({
+        type: 'toForm',
+        payload: {
+          model: 'widgetContentModel',
+          form: {
+            setting: {
+              ...DEFAULT_VALUES,
+              ...defaultValues
+            },
+            entityType: 'widget',
+            contentKey
+          }
+        }
+      });
     },
 
     * handleSettingModal({ payload }, { put, select }) {

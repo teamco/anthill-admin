@@ -62,6 +62,9 @@ export const filterProps = ({
   style = {}
 }) => {
 
+  const { picture } = fromForm(entityForm, 'setting');
+  const imageUrl = picture?.imageUrl;
+
   /**
    * @constant
    * @param {string} name
@@ -84,10 +87,19 @@ export const filterProps = ({
     onSelectFilter(props, selected);
   };
 
+  /**
+   * @constant
+   * @param {{filter, value}} selected
+   */
+  const handleRemoveFilter = (selected) => {
+    const props = handleChangeFilter(selected.filter);
+    onRemoveFilter(props, selected);
+  };
+
   const sliders = {
     blur: {
       label: i18n.t('filter:blur'),
-      name: 'blur',
+      name: ['setting', 'picture', 'blur'],
       tipFormatter: value => `${i18n.t('filter:blurRadius')}: ${value}px`,
       onAfterChange: value => onUpdateFilter('blur', value, 'px'),
       unit: 'px',
@@ -97,7 +109,7 @@ export const filterProps = ({
     },
     scaleX: {
       label: i18n.t('filter:scaleHorizontal'),
-      name: 'scaleX',
+      name: ['setting', 'picture', 'scaleX'],
       onAfterChange: value => onUpdateTransform('scaleX', value),
       min: -10,
       max: 10,
@@ -105,7 +117,7 @@ export const filterProps = ({
     },
     scaleY: {
       label: i18n.t('filter:scaleVertical'),
-      name: 'scaleY',
+      name: ['setting', 'picture', 'scaleY'],
       onAfterChange: value => onUpdateTransform('scaleY', value),
       min: -10,
       max: 10,
@@ -113,7 +125,7 @@ export const filterProps = ({
     },
     brightness: {
       label: i18n.t('filter:brightness'),
-      name: 'brightness',
+      name: ['setting', 'picture', 'brightness'],
       onAfterChange: value => onUpdateFilter('brightness', value),
       min: 0.1,
       max: 10,
@@ -121,7 +133,7 @@ export const filterProps = ({
     },
     contrast: {
       label: i18n.t('filter:contrast'),
-      name: 'contrast',
+      name: ['setting', 'picture', 'contrast'],
       onAfterChange: value => onUpdateFilter('contrast', value),
       min: 0.1,
       max: 10,
@@ -129,7 +141,7 @@ export const filterProps = ({
     },
     grayscale: {
       label: i18n.t('filter:grayscale'),
-      name: 'grayscale',
+      name: ['setting', 'picture', 'grayscale'],
       onAfterChange: value => onUpdateFilter('grayscale', value),
       min: 0.1,
       max: 1,
@@ -137,7 +149,7 @@ export const filterProps = ({
     },
     'hue-rotate': {
       label: i18n.t('filter:hueRotate'),
-      name: 'hue-rotate',
+      name: ['setting', 'picture', 'hue-rotate'],
       tipFormatter: value => `${i18n.t('filter:angle')}: ${value}deg`,
       onAfterChange: value => onUpdateFilter('hue-rotate', value, 'deg'),
       unit: 'deg',
@@ -147,7 +159,7 @@ export const filterProps = ({
     },
     scale: {
       label: i18n.t('filter:scale'),
-      name: 'zoom',
+      name: ['setting', 'picture', 'zoom'],
       onAfterChange: value => onUpdateTransform('scale', value, 'deg'),
       unit: 'deg',
       min: -10,
@@ -156,7 +168,7 @@ export const filterProps = ({
     },
     invert: {
       label: i18n.t('filter:invert'),
-      name: 'invert',
+      name: ['setting', 'picture', 'invert'],
       onAfterChange: value => onUpdateFilter('invert', value),
       min: 0.1,
       max: 1,
@@ -164,7 +176,7 @@ export const filterProps = ({
     },
     saturate: {
       label: i18n.t('filter:saturate'),
-      name: 'saturate',
+      name: ['setting', 'picture', 'saturate'],
       onAfterChange: value => onUpdateFilter('saturate', value),
       min: 0.1,
       max: 10,
@@ -172,7 +184,7 @@ export const filterProps = ({
     },
     sepia: {
       label: i18n.t('filter:sepia'),
-      name: 'sepia',
+      name: ['setting', 'picture', 'sepia'],
       onAfterChange: value => onUpdateFilter('sepia', value),
       min: 0.1,
       max: 1,
@@ -180,7 +192,7 @@ export const filterProps = ({
     },
     opacity: {
       label: i18n.t('filter:opacity'),
-      name: 'opacity',
+      name: ['setting', 'picture', 'opacity'],
       tipFormatter: value => `${value}%`,
       onAfterChange: value => onUpdateFilter('opacity', value, '%'),
       unit: '%',
@@ -195,7 +207,7 @@ export const filterProps = ({
       (
         <Select label={i18n.t('filter:filter')}
                 key={'selectedFilter'}
-                name={'selectedFilter'}
+                name={['setting', 'picture', 'selectedFilter']}
                 placeholder={i18n.t('form:placeholder', { field: '$t(filter:filter)' })}
                 onChange={handleChangeFilter}
                 style={{ width: '100%' }}>
@@ -220,7 +232,7 @@ export const filterProps = ({
                width={'100%'}
                height={'100%'}
                style={style}
-               src={fromForm(entityForm, 'imageUrl')} />
+               src={imageUrl} />
       )
     ],
     [
@@ -234,7 +246,7 @@ export const filterProps = ({
              key={'selected-filters'}>
           {selectedFilters.map(selected => {
             return (
-              <Tag onClose={() => onRemoveFilter(selected.filter)}
+              <Tag onClose={() => handleRemoveFilter(selected)}
                    className={styles.filterTag}
                    icon={<Html5Outlined />}
                    color={'success'}

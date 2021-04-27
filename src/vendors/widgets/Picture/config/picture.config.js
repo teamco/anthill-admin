@@ -23,15 +23,17 @@ const pictureConfig = props => {
   const {
     t,
     pictureModel,
+    widgetContentModel,
     onUpdatePreview
   } = props;
 
   const {
     style,
     selectedFilters,
-    sliderProps,
-    entityForm
+    sliderProps
   } = pictureModel;
+
+  const { entityForm } = widgetContentModel;
 
   return (
     <div>
@@ -60,12 +62,15 @@ const pictureConfig = props => {
   );
 };
 
-export default connect(({ pictureModel, loading }) => {
-    return {
-      pictureModel,
-      loading
-    };
-  },
+export default connect(({
+    pictureModel,
+    widgetContentModel,
+    loading
+  }) => ({
+    pictureModel,
+    widgetContentModel,
+    loading
+  }),
   dispatch => ({
     dispatch,
     onUpdatePreview({ target }) {
@@ -80,8 +85,8 @@ export default connect(({ pictureModel, loading }) => {
         payload: { filter, value, unit }
       });
     },
-    onRemoveFilter(filter) {
-      dispatch({ type: 'pictureModel/removeFilter', payload: { filter } });
+    onRemoveFilter(props, selected) {
+      dispatch({ type: 'pictureModel/removeFilter', payload: { props, selected } });
     },
     onSelectFilter(props, selected) {
       dispatch({ type: 'pictureModel/selectFilter', payload: { props, selected } });
