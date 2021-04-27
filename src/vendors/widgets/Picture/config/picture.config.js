@@ -81,10 +81,10 @@ export default connect(({ pictureModel, loading }) => {
       });
     },
     onRemoveFilter(filter) {
-      dispatch({
-        type: 'pictureModel/removeFilter',
-        payload: { filter }
-      });
+      dispatch({ type: 'pictureModel/removeFilter', payload: { filter } });
+    },
+    onSelectFilter(props, selected) {
+      dispatch({ type: 'pictureModel/selectFilter', payload: { props, selected } });
     },
     onUpdateTransform(filter, value, unit = '') {
       dispatch({
@@ -93,10 +93,7 @@ export default connect(({ pictureModel, loading }) => {
       });
     },
     onUpdateFilterSlider(props) {
-      dispatch({
-        type: 'pictureModel/updateFilterSlider',
-        payload: { props }
-      });
+      dispatch({ type: 'pictureModel/updateFilterSlider', payload: { props } });
     }
   })
 )(withTranslation()(pictureConfig));

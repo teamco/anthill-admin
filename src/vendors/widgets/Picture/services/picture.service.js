@@ -7,12 +7,12 @@ import filter from '@/vendors/widgets/Picture/config/picture.filter';
  * @param payload
  * @return {string}
  */
-export const handleMultipleFilters = ({style, filterType, payload}) => {
+export const handleMultipleFilters = ({ style, filterType, payload }) => {
   let _selectedFilters = [];
   const newFilter = filter[filterType](
-      payload.filter,
-      payload.value,
-      payload.unit
+    payload.filter,
+    payload.value,
+    payload.unit
   );
 
   if (style.filter) {
@@ -22,9 +22,10 @@ export const handleMultipleFilters = ({style, filterType, payload}) => {
     _selectedFilters = _filter.split(' ');
 
     idx > -1 ?
-        _selectedFilters[idx] = newFilter :
-        _selectedFilters.push(newFilter);
+      _selectedFilters[idx] = newFilter :
+      _selectedFilters.push(newFilter);
   } else {
+
     _selectedFilters.push(newFilter);
   }
 
@@ -40,6 +41,7 @@ export const handleMultipleFilters = ({style, filterType, payload}) => {
 export const findFilterIdx = (style, payload) => {
   let _filter = style.filter.split(' ');
   let idx = -1;
+
   _filter.forEach((filter, key) => {
     if (filter.match(payload.filter)) {
       idx = key;
@@ -47,4 +49,24 @@ export const findFilterIdx = (style, payload) => {
   });
 
   return idx;
+};
+
+/**
+ * @export
+ * @param selectedFilters
+ * @param filter
+ * @return {*}
+ */
+export const findFilter = ({ selectedFilters, filter }) => {
+  return selectedFilters.find(selected => selected.filter === filter);
+};
+
+/**
+ * @export
+ * @param selectedFilters
+ * @param filter
+ * @return {*}
+ */
+export const removeFilter = ({ selectedFilters, filter }) => {
+  return selectedFilters.filter(selected => selected.filter !== filter);
 };

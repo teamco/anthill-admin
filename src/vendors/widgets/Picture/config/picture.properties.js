@@ -6,6 +6,7 @@ import { Html5Outlined } from '@ant-design/icons';
 
 import styles from '@/vendors/widgets/Picture/picture.module.less';
 import { fromForm } from '@/utils/object';
+import { findFilter } from '@/vendors/widgets/Picture/services/picture.service';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -43,7 +44,6 @@ export const pictureProps = (onUpdatePreview) => {
  * @param onUpdateTransform
  * @param onUpdateContentForm
  * @param onRemoveFilter
- * @param imageUrl
  * @param [style]
  * @param [selectedFilters]
  * @param entityForm
@@ -55,7 +55,7 @@ export const filterProps = ({
   onUpdateFilterSlider,
   onUpdateTransform,
   onRemoveFilter,
-  onUpdateContentForm,
+  onSelectFilter,
   entityForm,
   sliderProps,
   selectedFilters = [],
@@ -64,19 +64,30 @@ export const filterProps = ({
 
   /**
    * @constant
-   * @param filter
+   * @param {string} name
+   * @return {*}
    */
-  const onChangeFilter = filter => {
-    const props = sliders[filter[2]];
+  const handleChangeFilter = name => {
+    const props = sliders[name];
     props.className = styles.filterSlider;
-
     onUpdateFilterSlider(props);
+
+    return props;
+  };
+
+  /**
+   * @constant
+   * @param {{filter, value}} selected
+   */
+  const handleSelectFilter = (selected) => {
+    const props = handleChangeFilter(selected.filter);
+    onSelectFilter(props, selected);
   };
 
   const sliders = {
     blur: {
       label: i18n.t('filter:blur'),
-      name: ['setting', 'picture', 'blur'],
+      name: 'blur',
       tipFormatter: value => `${i18n.t('filter:blurRadius')}: ${value}px`,
       onAfterChange: value => onUpdateFilter('blur', value, 'px'),
       unit: 'px',
@@ -86,7 +97,7 @@ export const filterProps = ({
     },
     scaleX: {
       label: i18n.t('filter:scaleHorizontal'),
-      name: ['setting', 'picture', 'scaleX'],
+      name: 'scaleX',
       onAfterChange: value => onUpdateTransform('scaleX', value),
       min: -10,
       max: 10,
@@ -94,7 +105,7 @@ export const filterProps = ({
     },
     scaleY: {
       label: i18n.t('filter:scaleVertical'),
-      name: ['setting', 'picture', 'scaleY'],
+      name: 'scaleY',
       onAfterChange: value => onUpdateTransform('scaleY', value),
       min: -10,
       max: 10,
@@ -102,7 +113,7 @@ export const filterProps = ({
     },
     brightness: {
       label: i18n.t('filter:brightness'),
-      name: ['setting', 'picture', 'brightness'],
+      name: 'brightness',
       onAfterChange: value => onUpdateFilter('brightness', value),
       min: 0.1,
       max: 10,
@@ -110,7 +121,7 @@ export const filterProps = ({
     },
     contrast: {
       label: i18n.t('filter:contrast'),
-      name: ['setting', 'picture', 'contrast'],
+      name: 'contrast',
       onAfterChange: value => onUpdateFilter('contrast', value),
       min: 0.1,
       max: 10,
@@ -118,7 +129,7 @@ export const filterProps = ({
     },
     grayscale: {
       label: i18n.t('filter:grayscale'),
-      name: ['setting', 'picture', 'grayscale'],
+      name: 'grayscale',
       onAfterChange: value => onUpdateFilter('grayscale', value),
       min: 0.1,
       max: 1,
@@ -126,7 +137,7 @@ export const filterProps = ({
     },
     'hue-rotate': {
       label: i18n.t('filter:hueRotate'),
-      name: ['setting', 'picture', 'hue-rotate'],
+      name: 'hue-rotate',
       tipFormatter: value => `${i18n.t('filter:angle')}: ${value}deg`,
       onAfterChange: value => onUpdateFilter('hue-rotate', value, 'deg'),
       unit: 'deg',
@@ -136,7 +147,7 @@ export const filterProps = ({
     },
     scale: {
       label: i18n.t('filter:scale'),
-      name: ['setting', 'picture', 'zoom'],
+      name: 'zoom',
       onAfterChange: value => onUpdateTransform('scale', value, 'deg'),
       unit: 'deg',
       min: -10,
@@ -145,7 +156,7 @@ export const filterProps = ({
     },
     invert: {
       label: i18n.t('filter:invert'),
-      name: ['setting', 'picture', 'invert'],
+      name: 'invert',
       onAfterChange: value => onUpdateFilter('invert', value),
       min: 0.1,
       max: 1,
@@ -153,7 +164,7 @@ export const filterProps = ({
     },
     saturate: {
       label: i18n.t('filter:saturate'),
-      name: ['setting', 'picture', 'saturate'],
+      name: 'saturate',
       onAfterChange: value => onUpdateFilter('saturate', value),
       min: 0.1,
       max: 10,
@@ -161,7 +172,7 @@ export const filterProps = ({
     },
     sepia: {
       label: i18n.t('filter:sepia'),
-      name: ['setting', 'picture', 'sepia'],
+      name: 'sepia',
       onAfterChange: value => onUpdateFilter('sepia', value),
       min: 0.1,
       max: 1,
@@ -169,7 +180,7 @@ export const filterProps = ({
     },
     opacity: {
       label: i18n.t('filter:opacity'),
-      name: ['setting', 'picture', 'opacity'],
+      name: 'opacity',
       tipFormatter: value => `${value}%`,
       onAfterChange: value => onUpdateFilter('opacity', value, '%'),
       unit: '%',
@@ -186,12 +197,16 @@ export const filterProps = ({
                 key={'selectedFilter'}
                 name={'selectedFilter'}
                 placeholder={i18n.t('form:placeholder', { field: '$t(filter:filter)' })}
-                onChange={onChangeFilter}
+                onChange={handleChangeFilter}
                 style={{ width: '100%' }}>
           {Object.keys(sliders).sort().map(slider => {
             const _filter = sliders[slider];
             return (
               <Option key={_filter.name}
+                      disabled={!!findFilter({
+                        selectedFilters,
+                        filter: _filter.name
+                      })}
                       value={_filter.name}>
                 {_filter.label}
               </Option>
@@ -227,10 +242,7 @@ export const filterProps = ({
                    key={selected.filter}>
                 <Tooltip title={`${selected.value}${selected.unit}`}>
                   <span style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          onUpdateContentForm({ selectedFilter: selected.filter });
-                          onChangeFilter(selected.filter);
-                        }}>
+                        onClick={() => handleSelectFilter(selected)}>
                     {selected.filter}
                   </span>
                 </Tooltip>
