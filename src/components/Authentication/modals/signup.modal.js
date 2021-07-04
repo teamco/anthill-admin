@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
 import { onUpdateMeter } from '@/components/Authentication/methods/meter';
-import { emailPartial } from '@/components/partials/email.partial';
+import EmailPartial from '@/components/partials/email.partial';
 
 import styles from '@/components/Authentication/authentication.module.less';
 
@@ -53,7 +53,7 @@ const SignUpModal = props => {
       setIsSignInVisible(true);
       setIsRegisterVisible(false);
     }
-  }
+  };
 
   useEffect(() => {
     setDidMount(true);
@@ -110,11 +110,12 @@ const SignUpModal = props => {
                          }
                        ]}>
               <Input prefix={<ProfileTwoTone />}
+                     autoComplete={'off'}
                      placeholder={t('form:displayName')} />
             </Form.Item>
           </Col>
           <Col span={12}>
-            {emailPartial({ t, name: 'email' })}
+            <EmailPartial />
           </Col>
         </Row>
         <Row gutter={8}>
@@ -138,6 +139,7 @@ const SignUpModal = props => {
                          })
                        ]}>
               <Input.Password prefix={<LockTwoTone />}
+                              autoComplete={'new-password'}
                               placeholder={t('auth:password')} />
             </Form.Item>
           </Col>
@@ -161,6 +163,7 @@ const SignUpModal = props => {
                          })
                        ]}>
               <Input.Password prefix={<LockTwoTone />}
+                              autoComplete={'new-password'}
                               placeholder={t('auth:passwordConfirm')} />
             </Form.Item>
           </Col>

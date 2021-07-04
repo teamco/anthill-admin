@@ -94,11 +94,10 @@ const commonModel = {
       const _entityForm = [...entityForm];
 
       for (let i = 0; i < payload.changedFields.length; i++) {
-        const field = payload.changedFields[i];
-        const key = field.name[0];
+        const { name, value } = payload.changedFields[i];
 
-        const idx = yield call(getEntityFormIdx, { entityForm, key });
-        const formItem = { name: key, value: field.value };
+        const idx = yield call(getEntityFormIdx, { entityForm, key: name });
+        const formItem = { name, value };
 
         if (idx > -1) {
           _entityForm.splice(idx, 1);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { MailTwoTone } from '@ant-design/icons';
 import { Form, Input } from 'antd';
+import { withTranslation } from 'react-i18next';
 
 /**
  * @export
@@ -18,21 +19,29 @@ export const emailProps = (t, helper) => ({
 
 /**
  * @export
- * @param t
- * @param name
- * @param className
- * @param emailRef
- * @param helper
+ * @param props
  * @return {JSX.Element}
  */
-export const emailPartial = ({ t, name, className, emailRef, helper = true }) => {
+const emailPartial = (props) => {
+  const {
+    t,
+    name = 'email',
+    className,
+    emailRef,
+    helper = true,
+    autoComplete = 'off'
+  } = props;
+
   return (
     <Form.Item name={name}
                className={className}
                {...emailProps(t, helper)}>
       <Input prefix={<MailTwoTone />}
              ref={emailRef}
+             autoComplete={autoComplete}
              placeholder={t('auth:email')} />
     </Form.Item>
   );
 };
+
+export default withTranslation()(emailPartial);

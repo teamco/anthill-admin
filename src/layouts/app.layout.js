@@ -102,16 +102,13 @@ class AppLayout extends Component {
       </>
     );
   }
-
 }
 
 export default withRouter(
   connect(
     ({
-        appModel
-        ,
-        authModel
-        ,
+        appModel,
+        authModel,
         loading
       }
     ) => {
@@ -120,31 +117,25 @@ export default withRouter(
         authModel,
         loading
       };
-    }
-    ,
+    },
     (dispatch) => (
       {
         dispatch,
         onRoute(path) {
           history.push(path);
-        }
-        ,
+        },
         onToggleMenu(collapse) {
           dispatch({ type: `appModel/toggleMenu`, payload: { collapse } });
-        }
-        ,
+        },
         onActiveTab(payload) {
           dispatch({ type: 'appModel/checkActiveTab', payload });
-        }
-        ,
+        },
         onQuery() {
           dispatch({ type: 'appModel/appQuery' });
-        }
-        ,
+        },
         onUpdateDocumentMeta(meta) {
           dispatch({ type: 'appModel/updateDocumentMeta', payload: { meta } });
-        }
-        ,
+        },
         onNotification() {
           dispatch({ type: 'appModel/notification' });
         }

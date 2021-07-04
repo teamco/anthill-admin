@@ -33,15 +33,23 @@ export default defineConfig({
   crossorigin: true,
   routes,
   proxy,
+  dynamicImport: {
+    loading: '@/components/Loader'
+  },
+  dynamicImportSyntax: {},
+  fastRefresh: {},
   dva: {
     extraModels,
     immer: true,
     hmr: true
   },
+  mfsu: {},
   lessLoader: {
     lessLoaderOptions: {}
   },
   nodeModulesTransform: {
     type: 'none'
-  }
+  },
+  webpack5: { lazyCompilation: {} }
+  //workerLoader: true
 });

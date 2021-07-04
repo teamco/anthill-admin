@@ -71,7 +71,7 @@ export const filterProps = ({
    * @return {*}
    */
   const handleChangeFilter = name => {
-    const props = sliders[name];
+    const props = sliders[name[2]];
     props.className = styles.filterSlider;
     onUpdateFilterSlider(props);
 

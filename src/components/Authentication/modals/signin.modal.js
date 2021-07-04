@@ -3,7 +3,7 @@ import { Button, Col, Form, Input, Modal, Row, Tooltip } from 'antd';
 import { FormOutlined, LockTwoTone, LoginOutlined } from '@ant-design/icons';
 
 import { withTranslation } from 'react-i18next';
-import { emailPartial } from '@/components/partials/email.partial';
+import EmailPartial from '@/components/partials/email.partial';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
@@ -64,9 +64,9 @@ const SignInModal = (props) => {
             className={styles.loginForm}
             size={'large'}
             onFinish={onFinish}>
-        {emailPartial({ t, name: 'email', helper: false })}
+        <EmailPartial helper={false} />
         <Form.Item name={'password'}
-                   style={{marginTop: 20}}
+                   style={{ marginTop: 20 }}
                    rules={[
                      {
                        required: true,
@@ -74,6 +74,7 @@ const SignInModal = (props) => {
                      }
                    ]}>
           <Input.Password prefix={<LockTwoTone />}
+                          autoComplete={'new-password'}
                           placeholder={t('auth:password')} />
         </Form.Item>
         <Form.Item>
