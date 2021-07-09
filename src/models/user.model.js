@@ -53,6 +53,7 @@ export default modelExtend(commonModel, {
               type: 'updateState',
               payload: {
                 users,
+                touched: false,
                 selectedUser: null
               }
             });

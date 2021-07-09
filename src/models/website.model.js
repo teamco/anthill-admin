@@ -68,6 +68,7 @@ export default modelExtend(commonModel, {
           payload: {
             websites,
             userKey,
+            touched: false,
             selectedWebsite: null
           }
         });
@@ -109,6 +110,7 @@ export default modelExtend(commonModel, {
             payload: {
               websiteKey,
               userKey,
+              touched: false,
               selectedWebsite: website,
               tags: JSON.parse(website?.tags || '[]'),
               previewUrl: website?.picture.url,
