@@ -3,6 +3,9 @@
  */
 import modelExtend from 'dva-model-extend';
 
+import { message } from 'antd';
+import { history } from 'umi';
+
 import { commonModel } from '@/models/common.model';
 import { defineAbilityFor } from '@/utils/auth/ability';
 import { getToken } from '@/services/auth.service';
@@ -10,7 +13,7 @@ import { addStore, deleteStore } from '@/utils/storage';
 import { API_CONFIG } from '@/services/config';
 import { getCurrentUser, registerUser } from '@/services/user.service';
 import { generateKey } from '@/services/common.service';
-import { message } from 'antd';
+import { backToRef } from '@/utils/history';
 
 /**
  * @constant
@@ -58,6 +61,8 @@ export default modelExtend(commonModel, {
           });
 
           yield put({ type: 'defineAbilities', payload: { login: true } });
+
+          backToRef();
         }
 
         if (errors) {
@@ -83,6 +88,8 @@ export default modelExtend(commonModel, {
       });
 
       yield put({ type: 'defineAbilities', payload: { login: false } });
+
+      history.push('/home');
     },
 
     * signUp({ payload }, { put, call, select }) {
@@ -142,6 +149,9 @@ export default modelExtend(commonModel, {
 
             yield call(message.error, errors);
           }
+
+        } else {
+          yield put({ type: 'signOut' });
         }
       }
 

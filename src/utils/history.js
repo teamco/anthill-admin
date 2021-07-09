@@ -1,3 +1,7 @@
+import { history } from 'umi';
+
+const queryString = require('query-string');
+
 /**
  * @export
  * @param {{ history, dispatch }} setup
@@ -19,14 +23,26 @@ export const monitorHistory = (setup, namespace) => {
     const shouldMonitor = skipOn.indexOf(_location.pathname) === -1;
 
     shouldMonitor &&
-      dispatch({
-        type: 'userLogModel/monitor',
-        payload: {
-          eventType: 'Navigation',
-          createdAt: +new Date(),
-          metadata: _location,
-          namespace,
-        },
-      });
+    dispatch({
+      type: 'userLogModel/monitor',
+      payload: {
+        eventType: 'Navigation',
+        createdAt: +new Date(),
+        metadata: _location,
+        namespace
+      }
+    });
   });
+};
+
+/**
+ * @constant
+ * @export
+ */
+export const backToRef = () => {
+  const { search } = window.location;
+  const parsed = queryString.parse(search);
+  if (parsed?.ref) {
+    history.push(decodeURIComponent(parsed.ref.toString()));
+  }
 };

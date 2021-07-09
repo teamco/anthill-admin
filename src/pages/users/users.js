@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'dva';
-import { Form, PageHeader } from 'antd';
+import { Form } from 'antd';
+
 import {
-  GlobalOutlined,
   UserSwitchOutlined
 } from '@ant-design/icons';
-import { withTranslation } from 'react-i18next';
 
 import Page from '@/components/Page';
 import Main from '@/components/Main';
@@ -35,8 +35,7 @@ const users = (props) => {
     onFieldsChange,
     onUpdateProfile,
     onFileRemove,
-    onBeforeUpload,
-    onButtonsMetadata
+    onBeforeUpload
   } = props;
 
   const [formRef] = Form.useForm();
@@ -104,7 +103,7 @@ const users = (props) => {
   };
 
   return (
-    <Page {...pageProps}>
+    <Page >
       <div className={styles.grid}>
         <Table data={userModel.users}
                {...Object.assign(tableProps, unifiedProps)}

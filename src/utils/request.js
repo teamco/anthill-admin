@@ -1,3 +1,4 @@
+import { history } from 'umi';
 import { API_CONFIG } from '@/services/config';
 
 const axios = require('axios');
@@ -49,12 +50,14 @@ const mergeHeaders = () => {
  * @param args
  * @return {string}
  */
-function adaptUrlToParams(url, args) {
-  const { userKey, websiteKey, widgetKey } = args;
+function adaptUrlToParams(url = '', args) {
+  const matchers = url.match(/:\w+/g);
+  matchers && matchers.forEach(matcher => {
+    const instance = matcher.replace(':', '');
+    url = url.replace(new RegExp(matcher), args[instance]);
+  });
 
-  return url.replace(/:userKey/g, userKey).
-    replace(/:websiteKey/g, websiteKey).
-    replace(/:widgetKey/g, widgetKey);
+  return url;
 }
 
 /**
@@ -73,10 +76,19 @@ function adoptUrlToAPI(url, direct) {
  * @param {string} [method]
  * @param [headers]
  * @param {boolean} [direct]
+ * @param {string} [responseType]
  * @param [args]
  * @return {{headers, method: string, url: *}}
  */
-function config({ url, method = 'get', headers = {}, direct = false, ...args }) {
+function config({
+  url = '',
+  method = 'get',
+  headers = {},
+  direct = false,
+  responseType = 'json',
+  ...args
+}) {
+
   if (url.match(/:(\w+)Key/)) {
     url = adaptUrlToParams(url, args);
   }
@@ -85,7 +97,7 @@ function config({ url, method = 'get', headers = {}, direct = false, ...args }) 
     ...{
       url: adoptUrlToAPI(url, direct),
       method,
-      responseType: 'json',
+      responseType,
       headers: { ...mergeHeaders(), ...headers }
     },
     ...args
@@ -114,12 +126,16 @@ function toBase64(file) {
  * @return {Q.Promise<any> | undefined}
  */
 function xhr(opts, errorMsg, fallbackUrl) {
+  const { pathname } = window.location;
   return axios(opts).catch(error => {
-    errorMsg && errorMsg(error.message);
+    errorMsg && errorMsg(error?.message);
     setTimeout(() => {
-      // fallbackUrl && (window.location.href = fallbackUrl);
+      if (fallbackUrl && !pathname.match(new RegExp(fallbackUrl))) {
+        history.replace(`${fallbackUrl}?ref=${encodeURIComponent(pathname)}`);
+      }
     }, 2000);
-    return error.response;
+
+    return error?.response;
   });
 }
 
@@ -136,6 +152,5 @@ export default {
   xhr,
   config,
   toBase64,
-  isSuccess,
-  adoptUrlToAPI
+  isSuccess
 };

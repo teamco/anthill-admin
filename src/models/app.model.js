@@ -38,12 +38,6 @@ export default modelExtend(commonModel, {
   effects: {
 
     * appQuery({ payload }, { put, select }) {
-      const { mode } = yield select((state) => state.appModel);
-
-      if (mode) {
-        return false;
-      }
-
       yield put({
         type: 'updateState',
         payload: {

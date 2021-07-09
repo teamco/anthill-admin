@@ -50,6 +50,6 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none'
   },
-  webpack5: { lazyCompilation: {} }
+  // webpack5: { lazyCompilation: {} }
   //workerLoader: true
 });
