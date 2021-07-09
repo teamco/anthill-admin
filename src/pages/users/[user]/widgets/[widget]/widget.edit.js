@@ -24,7 +24,6 @@ import { showConfirm } from '@/utils/modals';
 
 import pageStyles from '@/components/Page/page.module.less';
 import styles from '@/pages/users/[user]/widgets/widgets.module.less';
-import { generateKey } from '@/services/common.service';
 
 const { Option } = Select;
 const { GenericPanel, EditableTags } = FormComponents;

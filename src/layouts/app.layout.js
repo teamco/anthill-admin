@@ -11,8 +11,9 @@ import Loader from '@/components/Loader';
 import Main from '@/components/Main';
 import Login from '@/pages/login';
 
-import './app.layout.less';
 import { isAdmin } from '@/services/user.service';
+
+import styles from '@/layouts/app.layout.less';
 
 const { Content } = Layout;
 
@@ -76,7 +77,7 @@ class AppLayout extends Component {
                          collapsed={collapsedMenu}
                          onCollapse={onToggleMenu} />
             )}
-            <Layout className={'site-layout'}>
+            <Layout className={styles.siteLayout}>
               {mainHeader && currentUser && (<Main.Header />)}
               <Content>
                 <Form.Provider>
@@ -84,7 +85,7 @@ class AppLayout extends Component {
                     <Main.Breadcrumbs meta={meta}
                                       onUpdateDocumentMeta={onUpdateDocumentMeta} />
                   )}
-                  <div className='site-layout-content'>
+                  <div className={styles.layoutContent}>
                     {currentUser ? children : <Login />}
                   </div>
                 </Form.Provider>

@@ -1,8 +1,8 @@
-.site-panel {
-  margin-bottom: 20px;
+.anthillFormPanel {
+  margin-bottom: 10px;
 }
 
-.anthill-form-item {
+.anthillFormItem {
   margin-bottom: 10px;
 
   label {
@@ -17,58 +17,55 @@
     }
   }
 
-  .ant-radio-button-wrapper {
-    margin-bottom: -1px;
+  :global {
+    .ant-radio-button-wrapper {
+      margin-bottom: -1px;
 
-    span {
-      position: relative;
-      top: -4px;
-    }
+      span {
+        position: relative;
+        top: -4px;
+      }
 
-    span[role="img"] {
-      top: 6px;
-      margin-right: 5px;
-      margin-left: 5px;
-    }
+      span[role="img"] {
+        top: 6px;
+        margin-right: 5px;
+        margin-left: 5px;
+      }
 
-    svg {
-      width: 22px;
-      height: 22px;
-      margin-top: 2px;
+      svg {
+        width: 22px;
+        height: 22px;
+        margin-top: 2px;
+      }
     }
   }
 }
 
-.site-tag-plus {
+.tagPlus {
   background: #fff !important;
   border-style: dashed !important;
   cursor: pointer !important;
 }
 
-.edit-tag {
+.editTag {
   user-select: none;
   margin-bottom: 8px !important;
 }
 
-.tag-input {
+.tagInput {
   width: 78px;
   margin-right: 8px;
   vertical-align: top;
 }
 
-.modal-properties {
-  &.ant-modal-confirm {
-    .ant-modal-body {
-      padding: 20px;
-    }
-  }
-
-  .ant-modal-confirm-content {
-    margin-left: 5px !important;
-    margin-right: 5px !important;
-  }
-}
-
 div[role="alert"] {
   margin-top: 5px;
+}
+
+input, textarea {
+  font-size: 14px;
+
+  &::placeholder {
+    font-size: 12px;
+  }
 }

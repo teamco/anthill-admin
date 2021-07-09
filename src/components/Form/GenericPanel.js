@@ -3,9 +3,9 @@ import {Collapse, Form, Tooltip} from 'antd';
 import {WarningTwoTone} from '@ant-design/icons';
 import {withTranslation} from 'react-i18next';
 
-import './form.less';
+import styles from '@/components/Form/form.less';
 
-import Grid from '../Grid';
+import Grid from '@/components/Grid';
 
 const {AntHillRow} = Grid;
 const {Panel} = Collapse;
@@ -108,7 +108,7 @@ class GenericPanel extends Component {
                        shouldUpdate
                        dependencies={dependencies}
                        key={`${idx}-${_key}`}
-                       className={'anthill-form-item'}
+                       className={styles.anthillFormItem}
                        rules={rules}
                        {...rest}>
               {_isRequired ?
@@ -133,7 +133,7 @@ class GenericPanel extends Component {
 
     return (
         <Collapse accordion
-                  className={'site-panel'}
+                  className={styles.anthillFormPanel}
                   defaultActiveKey={defaultActiveKey}>
           <Panel header={header}
                  key={name}
