@@ -103,7 +103,7 @@ const users = (props) => {
   };
 
   return (
-    <Page >
+    <Page {...pageProps}>
       <div className={styles.grid}>
         <Table data={userModel.users}
                {...Object.assign(tableProps, unifiedProps)}

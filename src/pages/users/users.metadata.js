@@ -23,7 +23,7 @@ import {
 import classnames from 'classnames';
 import { tsToLocaleDateTime } from '@/utils/timestamp';
 
-import styles from '@/pages/users/users.module.less';
+import userStyles from '@/pages/users/users.module.less';
 import tableStyles from '@/components/Main/Table/table.module.less';
 import pageStyles from '@/components/Page/page.module.less';
 
@@ -119,14 +119,14 @@ export const metadata = ({
           };
 
           return (
-            <div className={styles.nowrap}>
+            <div className={userStyles.nowrap}>
               <Tooltip title={signed.title}>
-                <span className={classnames(styles.signed)}>{signed.icon}</span>
+                <span className={classnames(userStyles.signed)}>{signed.icon}</span>
               </Tooltip>
               <img src={profile_image.url ? profile_image.url : gravatar_url}
-                   className={styles.gridImg}
+                   className={userStyles.gridImg}
                    alt={name} />
-              <span className={isCurrentUser ? styles.currentUser : null}>
+              <span className={isCurrentUser ? userStyles.currentUser : null}>
                 {name}
               </span>
             </div>
@@ -140,7 +140,7 @@ export const metadata = ({
         dataIndex: 'provider',
         render: (provider) => (
           <Tag color={'cyan'}
-               className={styles.provider}>
+               className={userStyles.provider}>
             {provider}
           </Tag>
         )
@@ -169,7 +169,7 @@ export const metadata = ({
           const { key, profile } = record?.metadata;
           const cannotBeDeleted = key === currentUser.metadata.key;
           return data.length ? (
-            <div className={classnames(styles.nowrap, styles.textEnd)}>
+            <div className={classnames(userStyles.nowrap, userStyles.textEnd)}>
               {list && (
                 <Tooltip title={t('menu:userProfile')}>
                   <NavLink to={`/accounts/${key}`}>
