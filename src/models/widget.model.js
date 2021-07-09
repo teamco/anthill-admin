@@ -57,6 +57,7 @@ export default modelExtend(commonModel, {
           type: 'updateState',
           payload: {
             selectedWidget: null,
+            touched: false,
             widgets,
             userKey
           }
@@ -111,6 +112,7 @@ export default modelExtend(commonModel, {
             payload: {
               widgetKey,
               userKey,
+              touched: false,
               selectedWidget: widget,
               tags: JSON.parse(widget?.tags || '[]'),
               previewUrl: widget?.picture.url,
