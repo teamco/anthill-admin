@@ -129,13 +129,13 @@ const widgets = (props) => {
                   hoverable
                   className={cardStyles.card}
                   actions={[
-                    <SettingOutlined key='setting' />,
+                    <SettingOutlined key={'setting'} />,
                     <EditOutlined onClick={() => onEdit(user, widget.key)}
-                                  key='edit' />,
+                                  key={'edit'} />,
                     <Dropdown overlay={menu(widget.key)}
                               placement={'topLeft'}
                               trigger={['click']}>
-                      <EllipsisOutlined key='ellipsis' />
+                      <EllipsisOutlined key={'ellipsis'} />
                     </Dropdown>
                   ]}
                   cover={
