@@ -180,8 +180,8 @@ export default connect(
         payload: { entityKey }
       });
     },
-    onNew() {
-      history.push(`/pages/widgets/new`);
+    onNew(userKey) {
+      history.push(`/accounts/${userKey}/widgets/new`);
     }
   })
 )(withTranslation()(widgets));
