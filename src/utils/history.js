@@ -1,6 +1,5 @@
 import { history } from 'umi';
-
-const queryString = require('query-string');
+import queryString from 'query-string';
 
 /**
  * @export

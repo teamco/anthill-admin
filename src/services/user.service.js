@@ -3,6 +3,7 @@ import request from '@/utils/request';
 import { API } from '@/services/config';
 import { errorDeleteMsg, errorGetMsg, errorSaveMsg } from '@/utils/message';
 import { getXHRToken } from '@/services/auth.service';
+import gravatar from 'gravatar.js';
 
 /**
  * @export
@@ -104,15 +105,13 @@ export function getUser({ userKey, token }) {
 
 /**
  * @export
- * @async
  * @param {string} email
  * @param {string} protocol
  * @param {string} format
- * @return {Promise<*>}
+ * @return {*}
  */
-export async function getProfileImage({ email, protocol = 'http', format = 'json' }) {
-  const gravatar = require('gravatar');
-  return await gravatar.url(email, { protocol, format });
+export function getProfileImage({ email, protocol = 'http', format = 'json' }) {
+  return gravatar.url(email, { protocol, format });
 }
 
 /**

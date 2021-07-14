@@ -1,7 +1,6 @@
+import axios from 'axios';
 import { history } from 'umi';
 import { API_CONFIG } from '@/services/config';
-
-const axios = require('axios');
 
 /**
  * @constant

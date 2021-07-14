@@ -3,7 +3,7 @@
  * @link https://github.com/dropbox/zxcvbn
  * @type {function(*=, *): *}
  */
-const zxcvbn = require('zxcvbn');
+import zxcvbn from 'zxcvbn';
 
 /**
  * @constant

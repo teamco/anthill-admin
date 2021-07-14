@@ -2,7 +2,7 @@
  * Generate and translate standard UUIDs into shorter - or just different - formats and back.
  * @link https://github.com/oculus42/short-uuid
  */
-const short = require('short-uuid');
+import shortUUID from 'short-uuid';
 
 /**
  * @constant
@@ -28,7 +28,7 @@ export function generateKey() {
    * Generate short uuid as a key
    * Only in case of new
    */
-  return short.generate();
+  return shortUUID.generate();
 }
 
 /**
