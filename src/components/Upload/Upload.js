@@ -6,7 +6,7 @@ import ImgCrop from 'antd-img-crop';
 import classnames from 'classnames';
 import { cachedUrl } from '@/utils/file';
 
-import './upload.less';
+import styles from './upload.less';
 
 class UploadFile extends React.Component {
   render() {
@@ -93,7 +93,7 @@ class UploadFile extends React.Component {
 
     const _upload = (
       <Upload {...uploadProps}
-              className={classnames(className, 'site-upload')}>
+              className={classnames(className, styles.siteUpload)}>
         {fileList.length < limit && listType === 'picture-card' ? _card : _button}
       </Upload>
     );
@@ -118,10 +118,10 @@ class UploadFile extends React.Component {
     };
 
     return (
-      <div className={'site-upload-wrapper'}>
+      <div className={styles.siteUploadWrapper}>
         {previewUrl && (
-          <div className={'site-upload-preview'}>
-            <div className={'file-info'}>
+          <div className={styles.siteUploadPreview}>
+            <div className={styles.fileInfo}>
               <img src={cachedUrl(previewUrl)}
                    alt={previewUrl} />
             </div>
@@ -131,7 +131,7 @@ class UploadFile extends React.Component {
         {previewUrl && (
           <Button type={'primary'}
                   danger
-                  className={'file-delete'}
+                  className={styles.fileDelete}
                   onClick={handleRemove}
                   icon={<DeleteOutlined />}
                   size={'small'} />

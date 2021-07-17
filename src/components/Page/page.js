@@ -8,8 +8,10 @@ import { Prompt } from 'umi';
 import Page403 from '@/pages/403';
 import { Can } from '@/utils/auth/can';
 
-import styles from '@/components/Page/page.module.less';
 import Main from '@/components/Main';
+
+import layoutStyles from '@/layouts/app.layout.less';
+import styles from '@/components/Page/page.module.less';
 
 const { Content } = Layout;
 
@@ -53,7 +55,7 @@ function Page({
 
   return (
     <Layout className={classnames(styles.layout)}>
-      <Layout className={'site-layout'}>
+      <Layout className={layoutStyles.siteLayout}>
         <Content className={classnames(styles.page, className)}>
           {ability ? (
             <div style={{ height: '100%' }}>

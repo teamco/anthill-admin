@@ -1,28 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withTranslation} from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import classnames from 'classnames';
-import './loader.less';
+import styles from './loader.less';
 
 const Loader = props => {
-  const {contained, fullScreen, text = 'loading', page, sider, t} = props;
+  const { contained, fullScreen, text = 'loading', page, sider, t } = props;
   const spinning = 'spinning' in props ? props.spinning : true;
 
-  const loaderClassNames = classnames('loader', {
-    ['hidden']: !spinning,
-    ['fullScreen']: fullScreen,
-    ['contained']: contained,
-    ['page']: page,
-    ['sider']: sider
+  const loaderClassNames = classnames(styles.loader, {
+    [styles.hidden]: !spinning,
+    [styles.fullScreen]: fullScreen,
+    [styles.contained]: contained,
+    [styles.page]: page,
+    [styles.sider]: sider
   });
 
   return (
-      <div className={loaderClassNames}>
-        <div className={'wrapper'}>
-          <div className={'inner'}/>
-          <div className={'text'}>{t(text)}</div>
-        </div>
+    <div className={loaderClassNames}>
+      <div className={styles.wrapper}>
+        <div className={styles.inner} />
+        <div className={styles.text}>{t(text)}</div>
       </div>
+    </div>
   );
 };
 
