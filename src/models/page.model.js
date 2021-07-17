@@ -14,7 +14,7 @@ export default modelExtend(commonModel, {
   subscriptions: {
     setup({ dispatch, history }, onError) {
       return history.listen((data) => {
-        dispatch({ type: 'authModel/defineAbilities', payload: { login: true } });
+        // dispatch({ type: 'authModel/defineAbilities', payload: { login: true } });
 
       });
     }

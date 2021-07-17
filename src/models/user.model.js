@@ -140,7 +140,7 @@ export default modelExtend(commonModel, {
             return yield call(message.error, errors);
           }
 
-          if (metadata?.key === currentUser.metadata.key) {
+          if (metadata?.key === currentUser?.metadata?.key) {
             return yield put({ type: 'authModel/signOut' });
           }
 

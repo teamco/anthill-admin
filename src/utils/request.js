@@ -1,4 +1,4 @@
-import axios from 'axios';
+import request from 'umi-request';
 import { history } from 'umi';
 import { API_CONFIG } from '@/services/config';
 
@@ -126,16 +126,22 @@ function toBase64(file) {
  */
 function xhr(opts, errorMsg, fallbackUrl) {
   const { pathname } = window.location;
-  return axios(opts).catch(error => {
-    errorMsg && errorMsg(error?.message);
-    setTimeout(() => {
-      if (fallbackUrl && !pathname.match(new RegExp(fallbackUrl))) {
-        history.replace(`${fallbackUrl}?ref=${encodeURIComponent(pathname)}`);
-      }
-    }, 2000);
+  const { url, method } = opts;
+  delete opts.url;
+  delete opts.method;
 
-    return error?.response;
-  });
+  return request[method](url, opts).
+    then(res => ({ data: { ...res } })).
+    catch(error => {
+      errorMsg && errorMsg(error?.data?.error);
+      setTimeout(() => {
+        if (fallbackUrl && !pathname.match(new RegExp(fallbackUrl))) {
+          history.replace(`${fallbackUrl}?ref=${encodeURIComponent(pathname)}`);
+        }
+      }, 2000);
+
+      return error?.response;
+    });
 }
 
 /**

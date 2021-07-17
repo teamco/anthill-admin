@@ -27,13 +27,15 @@ function Page({
   model,
   formRef,
   metadata,
-  pageHeader
+  pageHeader,
+  onCheckAbilities
 }) {
 
   const { ability, currentUser } = authModel;
 
   useEffect(() => {
-  }, []);
+    !ability && onCheckAbilities();
+  }, [ability]);
 
   const spinning = Object.keys(loading.effects).filter(
     (effect) => spinEffects.indexOf(effect) > -1 && loading.effects[effect]
@@ -85,6 +87,12 @@ export default connect(
     };
   },
   (dispatch) => ({
-    dispatch
+    dispatch,
+    onCheckAbilities() {
+      dispatch({
+        type: 'authModel/defineAbilities',
+        payload: { login: true }
+      });
+    }
   })
 )(withTranslation()(Page));
