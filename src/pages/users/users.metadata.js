@@ -8,7 +8,8 @@ import {
   PauseCircleTwoTone,
   SettingOutlined,
   DownOutlined,
-  GlobalOutlined
+  GlobalOutlined,
+  AppstoreOutlined
 } from '@ant-design/icons';
 
 import {
@@ -69,6 +70,13 @@ const menu = (t, record, onDeleteUser, onSignOutUser, currentUser) => {
                  icon={<GlobalOutlined />}>
         <NavLink to={`/accounts/${key}/websites`}>
           {t('menu:userWebsites')}
+        </NavLink>
+      </Menu.Item>
+      <Menu.Item key={'widgets'}
+                 disabled={false}
+                 icon={<AppstoreOutlined />}>
+        <NavLink to={`/accounts/${key}/widgets`}>
+          {t('menu:userWidgets')}
         </NavLink>
       </Menu.Item>
     </Menu>

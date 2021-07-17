@@ -15,19 +15,26 @@
     }
   }
 
-  .action {
-    margin-right: 10px;
-
-    &.disabled {
-      cursor: not-allowed;
-    }
-  }
-
   :global {
+    .ant-table-thead {
+      .ant-table-cell {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
     .ant-table-footer {
       padding: 5px 10px !important;
       text-align: right;
     }
+  }
+}
+
+.action {
+  margin-right: 8px;
+
+  &.disabled {
+    cursor: not-allowed;
   }
 }
 

@@ -16,7 +16,7 @@ import {
 } from '@ant-design/icons';
 
 import Page from '@/components/Page';
-import EmptyCard from '@/components/Card'
+import EmptyCard from '@/components/Card';
 
 import { showConfirm } from '@/utils/modals';
 import { cachedUrl } from '@/utils/file';
@@ -92,12 +92,14 @@ const websites = (props) => {
     return (
       <Menu className={styles.websiteMenu}
             onClick={(menu) => onMenuClick({ menu, site })}>
-        <SubMenu title={
-          <Button icon={<ProfileOutlined />}
-                  size={'small'}
-                  type={'link'}>
-            {t('website:mode')}
-          </Button>}>
+        <SubMenu key={'mode'}
+                 title={(
+                   <Button icon={<ProfileOutlined />}
+                           size={'small'}
+                           type={'link'}>
+                     {t('website:mode')}
+                   </Button>
+                 )}>
           <Menu.Item key={'development'}>
             <Button icon={<AppstoreAddOutlined />}
                     size={'small'}
@@ -195,7 +197,7 @@ const websites = (props) => {
           ))
         ) : (
           <EmptyCard key={0}
-                     instance={t('instance:website')}/>
+                     instance={t('instance:website')} />
         )}
       </div>
     </Page>
