@@ -113,6 +113,7 @@ export const metadata = ({
         dataIndex: 'metadata',
         key: 'metadata',
         width: 250,
+        ellipsis: true,
         render(metadata) {
           const { gravatar_url, profile_image, name } = metadata?.profile;
           const { signed_in, force_sign_out } = metadata?.auth;
@@ -146,6 +147,7 @@ export const metadata = ({
       {
         title: t('auth:provider'),
         dataIndex: 'provider',
+        ellipsis: true,
         render: (provider) => (
           <Tag color={'cyan'}
                className={userStyles.provider}>
@@ -157,6 +159,7 @@ export const metadata = ({
         title: t('auth:lastSignInTime'),
         dataIndex: 'metadata',
         key: 'lastSignInTime',
+        ellipsis: true,
 
         /**
          * @param {{trackable:{last_sign_in_at}}} metadata
