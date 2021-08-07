@@ -256,12 +256,6 @@ const widgetEdit = (props) => {
                                updateForm={false}
                                widgetProps={widgetProps} />
               </div>
-              <div>
-                <WidgetContent label={name}
-                               contentKey={contentKey}
-                               updateForm={false}
-                               widgetProps={widgetProps} />
-              </div>
             </GenericPanel>
           ) : (
             <GenericPanel header={t('panel:clone')} name={'clone'}>

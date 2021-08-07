@@ -89,7 +89,7 @@ const WidgetContent = props => {
   /**
    * To prevent IDE identifying issues after change state.
    * @constant
-   * @type {DetailedReactHTMLElement<HTMLAttributes<HTMLElement>, HTMLElement>}
+   * @type {*}
    */
   const cloningWidget = widget;
 
@@ -130,12 +130,10 @@ const WidgetContent = props => {
 export default connect(({
     widgetContentModel,
     loading
-  }) => {
-    return {
-      widgetContentModel,
-      loading
-    };
-  },
+  }) => ({
+    widgetContentModel,
+    loading
+  }),
   dispatch => ({
     dispatch,
     onResetState() {

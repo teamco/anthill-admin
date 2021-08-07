@@ -120,7 +120,7 @@ export default modelExtend(commonModel, {
             }
           });
 
-          yield put({
+          return yield put({
             type: 'toForm',
             payload: {
               model: 'widgetModel',
@@ -130,8 +130,6 @@ export default modelExtend(commonModel, {
               }
             }
           });
-
-          return history.push(`/accounts/${userKey}/widgets/${widgetKey}`);
         }
 
         yield put({

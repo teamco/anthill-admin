@@ -43,9 +43,8 @@ export const calculateColProps = memoize((colProps, span, width) => {
     const _colProps = { ...colProps };
     _colProps[breakPoint] = span;
     return _colProps;
-  } else {
-    return colProps;
   }
+  return colProps;
 });
 
 /**
@@ -102,7 +101,7 @@ export const layout = {
     },
     3: {
       xs: 24,
-      sm: 24,
+      sm: 12,
       md: 8,
       lg: 8,
       xl: 8,
