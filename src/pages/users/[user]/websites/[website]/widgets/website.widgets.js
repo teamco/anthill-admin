@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { history } from 'umi';
+import React, { useEffect, useState } from 'react';
+import { history, useParams } from 'umi';
 import { connect } from 'dva';
 import { withTranslation } from 'react-i18next';
 import classnames from 'classnames';
@@ -14,22 +14,38 @@ const { GenericPanel } = FormComponents;
 
 const websiteWidgets = props => {
 
-  const formRef = React.createRef();
+  const [formRef] = Form.useForm();
 
   const {
     t,
     loading,
-    onStoreForm,
     onSave,
     onClose,
     onAssignWidgets,
+    onWebsiteWidgets,
     onWidgetEdit,
     onAssignWidget,
+    authModel,
     websiteModel
   } = props;
 
-  useEffect(() => {
+  const [disabled, setDisabled] = useState(true);
 
+  /**
+   * @type {{user, website}}
+   */
+  const { user, website } = useParams();
+  const { ability } = authModel;
+  const component = 'websiteWidgets';
+
+  useEffect(() => {
+    if (ability) {
+      setDisabled(ability.cannot('update', component));
+    }
+  }, [ability]);
+
+  useEffect(() => {
+    onWebsiteWidgets(user, website)
   }, []);
 
   const {
@@ -144,34 +160,27 @@ const websiteWidgets = props => {
 };
 
 export default connect(({
+    authModel,
     websiteModel,
     loading
   }) => {
     return {
+      authModel,
       websiteModel,
       loading
     };
   },
   dispatch => ({
     dispatch,
-    onStoreForm(form) {
+    onWebsiteWidgets(userKey, websiteKey) {
       dispatch({
-        type: 'appModel/storeForm',
-        payload: {
-          form: { ...form },
-          model: 'websiteModel'
-        }
+        type: 'websiteModel/websiteWidgetsQuery',
+        payload: { userKey, websiteKey }
       });
     },
     onSave(payload) {
       dispatch({
         type: 'websiteModel/saveAssignedWidgets',
-        payload
-      });
-    },
-    onButtonsMetadata(payload) {
-      dispatch({
-        type: 'appModel/activeButtons',
         payload
       });
     },

@@ -64,7 +64,7 @@ export const API = {
   websites: {
     getWebsites: 'users/:userKey/websites',
     getWebsite: 'users/:userKey/websites/:websiteKey',
-    getWebsiteWidgets: 'websites/:websiteKey/widgets'
+    getWebsiteWidgets: 'users/:userKey/websites/:websiteKey/widgets'
   },
   widgets: {
     getWidgets: 'users/:userKey/widgets',

@@ -246,36 +246,43 @@ export default modelExtend(commonModel, {
       }
     },
 
-    * websiteWidgetsQuery({ payload }, { put, call }) {
-      const { data } = yield call(getAssignedWidgets, { key: payload.key });
-      const allWidgets = yield call(getWidgets);
+    * websiteWidgetsQuery({ payload }, { put, call, select }) {
+      const { ability, token } = yield select(state => state.authModel);
+      const { userKey, websiteKey } = payload;
 
-      const { website, widgets } = data.assigned;
+      if (ability.can('assign', 'websiteWidgets')) {
 
-      yield put({
-        type: 'toForm',
-        payload: {
-          model: 'websiteModel',
-          entityKey: website.key,
-          name: website.name
+        const { data } = yield call(getAssignedWidgets, {
+          userKey,
+          websiteKey,
+          token
+        });
+
+        const allWidgets = yield call(getWidgets, { userKey, token });
+
+        const { website, widgets = [] } = data?.assigned || {};
+
+        if (website) {
+          yield put({
+            type: 'toForm',
+            payload: {
+              model: 'websiteModel',
+              form: {
+                entityKey: website?.key,
+                name: website?.name
+              }
+            }
+          });
+
+          yield put({
+            type: 'updateState',
+            payload: {
+              assignedWidgets: [...widgets],
+              widgets: allWidgets?.data
+            }
+          });
         }
-      });
-
-      yield put({
-        type: 'appModel/activeModel',
-        payload: {
-          model: 'websiteModel',
-          title: i18n.t('website:assignWidgetsTo', { instance: website.name })
-        }
-      });
-
-      yield put({
-        type: 'updateState',
-        payload: {
-          assignedWidgets: [...widgets],
-          widgets: allWidgets.data
-        }
-      });
+      }
     },
 
     * assignWidget({ payload }, { put, select }) {
