@@ -62,13 +62,12 @@ const websiteEdit = (props) => {
   useEffect(() => {
     if (ability) {
       setDisabled(ability.cannot('update', component));
-      onEditWebsite(user, website);
     }
   }, [ability]);
 
   useEffect(() => {
-
-    //return onResetState;
+    onEditWebsite(user, website);
+    return onResetState;
   }, []);
 
   const {

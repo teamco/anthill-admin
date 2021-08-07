@@ -252,7 +252,7 @@ export default modelExtend(commonModel, {
 
       if (ability.can('assign', 'websiteWidgets')) {
 
-        const { data } = yield call(getAssignedWidgets, {
+        const res = yield call(getAssignedWidgets, {
           userKey,
           websiteKey,
           token
@@ -260,9 +260,9 @@ export default modelExtend(commonModel, {
 
         const allWidgets = yield call(getWidgets, { userKey, token });
 
-        const { website, widgets = [] } = data?.assigned || {};
+        if (res?.data && allWidgets?.data) {
+          const { assigned_widgets = [], website } = res.data;
 
-        if (website) {
           yield put({
             type: 'toForm',
             payload: {
@@ -274,14 +274,23 @@ export default modelExtend(commonModel, {
             }
           });
 
-          yield put({
+          return yield put({
             type: 'updateState',
             payload: {
-              assignedWidgets: [...widgets],
-              widgets: allWidgets?.data
+              assignedWidgets: [...assigned_widgets],
+              widgets: allWidgets.data?.widgets
             }
           });
         }
+
+        yield put({
+          type: 'raiseCondition',
+          payload: {
+            message: raiseConditionMsg(i18n.t('instance:website')),
+            type: 404,
+            redirect: true
+          }
+        });
       }
     },
 

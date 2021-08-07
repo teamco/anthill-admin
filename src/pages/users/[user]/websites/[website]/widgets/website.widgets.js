@@ -25,6 +25,7 @@ const websiteWidgets = props => {
     onWebsiteWidgets,
     onWidgetEdit,
     onAssignWidget,
+    onResetState,
     authModel,
     websiteModel
   } = props;
@@ -41,12 +42,12 @@ const websiteWidgets = props => {
   useEffect(() => {
     if (ability) {
       setDisabled(ability.cannot('update', component));
-      onWebsiteWidgets(user, website);
     }
   }, [ability]);
 
   useEffect(() => {
-
+    onWebsiteWidgets(user, website);
+    return onResetState;
   }, []);
 
   const {
@@ -173,6 +174,9 @@ export default connect(({
   },
   dispatch => ({
     dispatch,
+    onResetState() {
+      dispatch({ type: 'websiteModel/resetState' });
+    },
     onWebsiteWidgets(userKey, websiteKey) {
       dispatch({
         type: 'websiteModel/websiteWidgetsQuery',
