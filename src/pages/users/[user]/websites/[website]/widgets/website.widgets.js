@@ -41,11 +41,12 @@ const websiteWidgets = props => {
   useEffect(() => {
     if (ability) {
       setDisabled(ability.cannot('update', component));
+      onWebsiteWidgets(user, website);
     }
   }, [ability]);
 
   useEffect(() => {
-    onWebsiteWidgets(user, website)
+
   }, []);
 
   const {
@@ -108,7 +109,7 @@ const websiteWidgets = props => {
 
   return (
     <Form layout={'vertical'}
-          ref={formRef}
+          form={formRef}
           onFinish={onFinish}>
       <GenericPanel header={t('website:assignedWidgets')}
                     inRow={false}
