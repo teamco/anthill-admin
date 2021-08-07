@@ -1,4 +1,4 @@
-import { API_CONFIG } from './src/services/config';
+import { API_CONFIG } from '@/services/config';
 
 /**
  * @constant

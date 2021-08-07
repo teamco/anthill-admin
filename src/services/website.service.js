@@ -49,7 +49,7 @@ export function getWebsite({ userKey, websiteKey, token }) {
 export function getAssignedWidgets({ key }) {
   const opts = request.config({
     url: API.websites.getWebsiteWidgets,
-    key
+    websiteKey: key
   });
   return request.xhr(opts,
     (error) => errorGetMsg(i18n.t('instance:website'), error));
@@ -159,7 +159,7 @@ export async function saveWebsiteWidgets({ entityForm, widget_ids = [] }) {
   const opts = request.config({
     url: API.websites.getWebsiteWidgets,
     method: 'post',
-    key: entityForm.entityKey
+    websiteKey: entityForm.entityKey
   });
 
   return request.xhr({
