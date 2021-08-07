@@ -17,14 +17,14 @@ export const pictureProps = (onUpdatePreview) => {
       (
         <Input type={'text'}
                label={i18n.t('form:alt')}
-               name={['setting', 'picture', 'alt']}
+               name={'alt'}
                key={'picture.alt'} />
       )
     ],
     [
       (
         <TextArea label={i18n.t('form:imgUrl')}
-                  name={['setting', 'picture', 'imageUrl']}
+                  name={'imageUrl'}
                   key={'picture.imageUrl'}
                   onChange={onUpdatePreview}
                   autoSize={{
@@ -71,7 +71,7 @@ export const filterProps = ({
    * @return {*}
    */
   const handleChangeFilter = name => {
-    const props = sliders[name[2]];
+    const props = sliders[name];
     props.className = styles.filterSlider;
     onUpdateFilterSlider(props);
 
@@ -99,7 +99,7 @@ export const filterProps = ({
   const sliders = {
     blur: {
       label: i18n.t('filter:blur'),
-      name: ['setting', 'picture', 'blur'],
+      name: 'blur',
       tipFormatter: value => `${i18n.t('filter:blurRadius')}: ${value}px`,
       onAfterChange: value => onUpdateFilter('blur', value, 'px'),
       unit: 'px',
@@ -109,7 +109,7 @@ export const filterProps = ({
     },
     scaleX: {
       label: i18n.t('filter:scaleHorizontal'),
-      name: ['setting', 'picture', 'scaleX'],
+      name: 'scaleX',
       onAfterChange: value => onUpdateTransform('scaleX', value),
       min: -10,
       max: 10,
@@ -117,7 +117,7 @@ export const filterProps = ({
     },
     scaleY: {
       label: i18n.t('filter:scaleVertical'),
-      name: ['setting', 'picture', 'scaleY'],
+      name: 'scaleY',
       onAfterChange: value => onUpdateTransform('scaleY', value),
       min: -10,
       max: 10,
@@ -125,7 +125,7 @@ export const filterProps = ({
     },
     brightness: {
       label: i18n.t('filter:brightness'),
-      name: ['setting', 'picture', 'brightness'],
+      name: 'brightness',
       onAfterChange: value => onUpdateFilter('brightness', value),
       min: 0.1,
       max: 10,
@@ -133,7 +133,7 @@ export const filterProps = ({
     },
     contrast: {
       label: i18n.t('filter:contrast'),
-      name: ['setting', 'picture', 'contrast'],
+      name: 'contrast',
       onAfterChange: value => onUpdateFilter('contrast', value),
       min: 0.1,
       max: 10,
@@ -141,7 +141,7 @@ export const filterProps = ({
     },
     grayscale: {
       label: i18n.t('filter:grayscale'),
-      name: ['setting', 'picture', 'grayscale'],
+      name: 'grayscale',
       onAfterChange: value => onUpdateFilter('grayscale', value),
       min: 0.1,
       max: 1,
@@ -149,7 +149,7 @@ export const filterProps = ({
     },
     'hue-rotate': {
       label: i18n.t('filter:hueRotate'),
-      name: ['setting', 'picture', 'hue-rotate'],
+      name: 'hue-rotate',
       tipFormatter: value => `${i18n.t('filter:angle')}: ${value}deg`,
       onAfterChange: value => onUpdateFilter('hue-rotate', value, 'deg'),
       unit: 'deg',
@@ -159,7 +159,7 @@ export const filterProps = ({
     },
     scale: {
       label: i18n.t('filter:scale'),
-      name: ['setting', 'picture', 'zoom'],
+      name: 'zoom',
       onAfterChange: value => onUpdateTransform('scale', value, 'deg'),
       unit: 'deg',
       min: -10,
@@ -168,7 +168,7 @@ export const filterProps = ({
     },
     invert: {
       label: i18n.t('filter:invert'),
-      name: ['setting', 'picture', 'invert'],
+      name: 'invert',
       onAfterChange: value => onUpdateFilter('invert', value),
       min: 0.1,
       max: 1,
@@ -176,7 +176,7 @@ export const filterProps = ({
     },
     saturate: {
       label: i18n.t('filter:saturate'),
-      name: ['setting', 'picture', 'saturate'],
+      name: 'saturate',
       onAfterChange: value => onUpdateFilter('saturate', value),
       min: 0.1,
       max: 10,
@@ -184,7 +184,7 @@ export const filterProps = ({
     },
     sepia: {
       label: i18n.t('filter:sepia'),
-      name: ['setting', 'picture', 'sepia'],
+      name: 'sepia',
       onAfterChange: value => onUpdateFilter('sepia', value),
       min: 0.1,
       max: 1,
@@ -192,7 +192,7 @@ export const filterProps = ({
     },
     opacity: {
       label: i18n.t('filter:opacity'),
-      name: ['setting', 'picture', 'opacity'],
+      name: 'opacity',
       tipFormatter: value => `${value}%`,
       onAfterChange: value => onUpdateFilter('opacity', value, '%'),
       unit: '%',
@@ -207,7 +207,7 @@ export const filterProps = ({
       (
         <Select label={i18n.t('filter:filter')}
                 key={'selectedFilter'}
-                name={['setting', 'picture', 'selectedFilter']}
+                name={'selectedFilter'}
                 placeholder={i18n.t('form:placeholder', { field: '$t(filter:filter)' })}
                 onChange={handleChangeFilter}
                 style={{ width: '100%' }}>
@@ -285,20 +285,20 @@ export const filterProps = ({
 //
 // , imageSaturate: { type: 'range', disabled:
 // true, visible: true, value: 1, min: 0.1, max: 10, step: 0.1, unit: '', monitor: {
-// events: ['update.preview'], callback: 'updatePreview' } }, imageSepia: { type:
+// events: 'update.preview', callback: 'updatePreview' } }, imageSepia: { type:
 // 'range', disabled: true, visible: true, value: 0.1, min: 0.1, max: 1, step: 0.01,
-// unit: '', monitor: { events: ['update.preview'], callback: 'updatePreview' } },
+// unit: '', monitor: { events: 'update.preview', callback: 'updatePreview' } },
 // imageDropShadow: { type: 'range', disabled: true, visible: true, value: 0, min: 0,
-// max: 50, step: 1, unit: 'px', monitor: { events: ['update.preview'], callback:
+// max: 50, step: 1, unit: 'px', monitor: { events: 'update.preview', callback:
 // 'updatePreview' } }, imageBorder: { type: 'range', disabled: true, visible: true,
 // value: 0, min: 0, max: 20, step: 0.01, unit: 'rem', monitor: { events:
-// ['update.preview'], callback: 'updatePreview' } }, imageRadius: { type: 'range',
+// 'update.preview', callback: 'updatePreview' } }, imageRadius: { type: 'range',
 // disabled: true, visible: true, value: 0, min: 0, max: 50, step: 0.05, unit: '%',
-// monitor: { events: ['update.preview'], callback: 'updatePreview' } }, imageZoom: { type: 'range', disabled: true,
-// visible: true, value: 100, min: 1, max: 200, step: 0.1, unit: '%', monitor: { events: ['update.preview'], callback:
+// monitor: { events: 'update.preview', callback: 'updatePreview' } }, imageZoom: { type: 'range', disabled: true,
+// visible: true, value: 100, min: 1, max: 200, step: 0.1, unit: '%', monitor: { events: 'update.preview', callback:
 // 'updatePreview' } }, imageRotate: { type: 'range', disabled: true, visible: true, value: 0, min: -360, max: 360,
-// step: 1, unit: 'deg', monitor: { events: ['update.preview'], callback: 'updatePreview' } }, imageSkewY: { type:
+// step: 1, unit: 'deg', monitor: { events: 'update.preview', callback: 'updatePreview' } }, imageSkewY: { type:
 // 'range', disabled: true, visible: true, value: 0, min: -100, max: 100, step: 1, unit: 'deg', monitor: { events:
-// ['update.preview'], callback: 'updatePreview' } }, imageSkewX: { type: 'range', disabled: true, visible: true,
-// value: 0, min: -100, max: 100, step: 1, unit: 'deg', monitor: { events: ['update.preview'], callback:
+// 'update.preview', callback: 'updatePreview' } }, imageSkewX: { type: 'range', disabled: true, visible: true,
+// value: 0, min: -100, max: 100, step: 1, unit: 'deg', monitor: { events: 'update.preview', callback:
 // 'updatePreview' } } };

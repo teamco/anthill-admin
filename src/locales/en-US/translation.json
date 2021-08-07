@@ -170,6 +170,7 @@
   },
   "panel": {
     "configuration": "Configuration",
+    "details": "Details",
     "general": "General",
     "profileDetails": "Profile Details",
     "widgetProps": "Main Properties",

@@ -14,7 +14,6 @@ export default class MainInfo extends React.Component {
       isEdit = false,
       info: {
         createdBy = {},
-        updatedBy = {},
         createdAt,
         updatedAt
       }
@@ -25,15 +24,12 @@ export default class MainInfo extends React.Component {
                     name={'entityInfo'}>
         <div>
           <div label={t('form:createdBy')}>
-            <Link to={`/users/${createdBy.id}`}>{createdBy.displayName}</Link>
-          </div>
-          <div label={t('form:updatedBy')}>
-            <Link to={`/users/${updatedBy.id}`}>{updatedBy.displayName}</Link>
+            <Link to={`/accounts/${createdBy.key}`}>{createdBy.displayName}</Link>
           </div>
         </div>
         <div>
-          <div label={t('form:createdAt')}>{createdAt}</div>
-          <div label={t('form:updatedAt')}>{updatedAt}</div>
+          <div label={t('form:createdAt')}>{localeDateTimeString(createdAt)}</div>
+          <div label={t('form:updatedAt')}>{localeDateTimeString(updatedAt)}</div>
         </div>
       </GenericPanel>
     );

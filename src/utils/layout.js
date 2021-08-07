@@ -93,7 +93,7 @@ export const layout = {
     },
     2: {
       xs: 24,
-      sm: 24,
+      sm: 12,
       md: 12,
       lg: 8,
       xl: 8,

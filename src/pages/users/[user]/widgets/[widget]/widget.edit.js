@@ -106,7 +106,6 @@ const widgetEdit = (props) => {
 
   const {
     createdBy,
-    updatedBy,
     createdAt,
     updatedAt
   } = fromForm(entityForm, 'metadata') || {};
@@ -197,7 +196,6 @@ const widgetEdit = (props) => {
     isEdit,
     info: {
       createdBy,
-      updatedBy,
       createdAt,
       updatedAt
     }

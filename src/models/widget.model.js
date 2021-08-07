@@ -101,10 +101,17 @@ export default modelExtend(commonModel, {
       let { token } = yield select(state => state.authModel);
       const { userKey, widgetKey } = payload;
 
+      /**
+       * @constant
+       * @type {{data: {
+       *  widget: {tags, picture, key, created_at, updated_at},
+       *  error
+       * }}}
+       */
       const res = yield call(getWidget, { userKey, widgetKey, token });
 
       if (res?.data) {
-        const { widget, error } = res.data;
+        const { widget, user, error } = res.data;
         if (widget) {
 
           yield put({
@@ -125,6 +132,14 @@ export default modelExtend(commonModel, {
             payload: {
               model: 'widgetModel',
               form: {
+                metadata: {
+                  createdAt: widget?.created_at,
+                  updatedAt: widget?.updated_at,
+                  createdBy: {
+                    key: user?.key,
+                    displayName: user?.name
+                  }
+                },
                 ...widget,
                 ...{ entityKey: widgetKey }
               }

@@ -102,7 +102,7 @@ export default modelExtend(commonModel, {
       const res = yield call(getWebsite, { userKey, websiteKey, token });
 
       if (res?.data) {
-        const { website, error } = res.data;
+        const { website, user, error } = res.data;
         if (website) {
 
           yield put({
@@ -123,6 +123,14 @@ export default modelExtend(commonModel, {
             payload: {
               model: 'websiteModel',
               form: {
+                metadata: {
+                  createdAt: website?.created_at,
+                  updatedAt: website?.updated_at,
+                  createdBy: {
+                    key: user?.key,
+                    displayName: user?.name
+                  }
+                },
                 ...website,
                 ...{ entityKey: websiteKey }
               }
