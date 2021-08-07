@@ -23,29 +23,14 @@ const websiteWidgets = props => {
     onSave,
     onClose,
     onAssignWidgets,
-    onButtonsMetadata,
     onWidgetEdit,
     onAssignWidget,
     websiteModel
   } = props;
 
   useEffect(() => {
-    onButtonsMetadata({
-      saveBtn: {
-        onClick: onAssignWidgets,
-        loading: loading.effects[`websiteModel/saveAssignedWidgets`]
-      },
-      closeBtn: {
-        onClick: onClose,
-        loading: false
-      }
-    });
 
-    onStoreForm(formRef);
-
-    fillFormEffect(websiteModel, formRef.current);
-
-  }, [websiteModel]);
+  }, []);
 
   const {
     widgets,

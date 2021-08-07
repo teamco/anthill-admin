@@ -54,6 +54,14 @@ export const routes = [
       },
       {
         exact: true,
+        path: '/accounts/:user/websites/:website/widgets',
+        component: '@/pages/users/[user]/websites/[website]/widgets',
+        wrappers: [
+          '@/wrappers/auth.wrapper'
+        ]
+      },
+      {
+        exact: true,
         path: '/accounts/:user/widgets/:widget',
         component: '@/pages/users/[user]/widgets/[widget]',
         wrappers: [
