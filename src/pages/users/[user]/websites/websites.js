@@ -15,6 +15,7 @@ import {
   GlobalOutlined
 } from '@ant-design/icons';
 
+import request from '@/utils/request';
 import Page from '@/components/Page';
 import EmptyCard from '@/components/Card';
 
@@ -230,7 +231,8 @@ export default connect(
       history.push(`/accounts/${userKey}/websites/new`);
     },
     onMode(entityKey, mode) {
-      history.push(`/pages/websites/${entityKey}/${mode}`);
+      const { UI_URL, UI_PORT } = request.apiConfig;
+      window.open(`${UI_URL}:${UI_PORT}/websites/${entityKey}/${mode}`, '_blank').focus();
     },
     onAssignWidgets(entityKey) {
       history.push(`/pages/websites/${entityKey}/widgets`);

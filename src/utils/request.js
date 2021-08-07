@@ -154,6 +154,7 @@ function isSuccess(status) {
 }
 
 export default {
+  apiConfig,
   xhr,
   config,
   toBase64,
