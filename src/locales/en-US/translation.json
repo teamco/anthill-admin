@@ -158,10 +158,10 @@
   },
   "menu": {
     "websites": "Websites",
-    "userWebsites": "User Websites",
-    "userWidgets": "User Widgets",
+    "userWebsites": "Websites",
+    "userWidgets": "Widgets",
     "pages": "Pages",
-    "userProfile": "User Profile",
+    "userProfile": "Profile",
     "widgets": "Widgets",
     "pageWidgets": "Page Widgets",
     "systemLogs": "System Logs",

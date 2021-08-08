@@ -17,7 +17,8 @@ import {
   DownOutlined,
   PauseCircleOutlined,
   SettingOutlined,
-  GlobalOutlined
+  GlobalOutlined,
+  ApiOutlined
 } from '@ant-design/icons';
 import { showConfirm } from '@/utils/modals';
 
@@ -45,12 +46,14 @@ const websiteEdit = (props) => {
     onFieldsChange,
     onUpdateTags,
     onResetState,
+    onAssignWidgets,
     websiteModel,
     authModel,
     loading
   } = props;
 
   const [disabled, setDisabled] = useState(true);
+  const [assign, setAssign] = useState(false);
 
   /**
    * @type {{user, website}}
@@ -62,6 +65,7 @@ const websiteEdit = (props) => {
   useEffect(() => {
     if (ability) {
       setDisabled(ability.cannot('update', component));
+      setAssign(ability.can('assign', component));
     }
   }, [ability]);
 
@@ -108,6 +112,12 @@ const websiteEdit = (props) => {
 
   const menu = (
     <Menu>
+      <Menu.Item key={'assign'}
+                 disabled={!isEdit || !assign}
+                 icon={<ApiOutlined />}
+                 onClick={() => onAssignWidgets(user, website)}>
+        {t('actions:hold')}
+      </Menu.Item>
       <Menu.Item key={'hold'}
                  disabled={!isEdit}
                  icon={<PauseCircleOutlined />}
@@ -271,6 +281,9 @@ export default connect(
         type: 'websiteModel/updateTags',
         payload: { tags }
       });
+    },
+    onAssignWidgets(userKey, websiteKey) {
+      history.push(`/accounts/${userKey}/websites/${websiteKey}/widgets`);
     }
   })
 )(withTranslation()(websiteEdit));

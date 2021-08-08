@@ -234,8 +234,8 @@ export default connect(
       const { UI_URL, UI_PORT } = request.apiConfig;
       window.open(`${UI_URL}:${UI_PORT}/websites/${entityKey}/${mode}`, '_blank').focus();
     },
-    onAssignWidgets(entityKey) {
-      history.push(`/pages/websites/${entityKey}/widgets`);
+    onAssignWidgets(userKey, websiteKey) {
+      history.push(`/accounts/${userKey}/websites/${websiteKey}/widgets`);
     }
   })
 )(withTranslation()(websites));
